@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment
+.env
+.env.local
+
+# Local data (raw archives must not be committed)
+data/
+*.tmp
+
+# Node
+node_modules/
