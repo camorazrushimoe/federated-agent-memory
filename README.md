@@ -38,6 +38,9 @@ We use [OpenSpec](https://github.com/Fission-AI/openspec) — specs before code.
   change folder (`proposal.md` + delta spec + `design.md` + `tasks.md`), and on
   archive its deltas merge back into `specs/`.
 
+> 👉 **New here?** Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full
+> Spec-Driven Development workflow.
+
 ## Component spec backlog
 
 | # | Component | Spec status |
