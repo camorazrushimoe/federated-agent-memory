@@ -297,11 +297,13 @@ This is the **flagship innovation** — the mechanism that lets agents learn fro
  │  │ STEP 4: RELEVANCE SCORING & RANKING                         │ │
  │  │                                                              │ │
  │  │   enrichment_score =                                          │ │
- │  │     (semantic_similarity × 0.5)                               │ │
- │  │     + (graph_proximity × 0.3)    ← how connected in graph    │ │
- │  │     + (recency_boost × 0.2)      ← fresher = more relevant   │ │
+ │  │     (semantic_similarity × 0.40)                              │ │
+ │  │     + (graph_proximity × 0.25)    ← how connected in graph    │ │
+ │  │     + (recency_weight × 0.15)     ← fresher = more relevant   │ │
+ │  │     + (source_reputation × 0.10)  ← agent reliability         │ │
+ │  │     + (cross_reference × 0.10)    ← consensus across agents   │ │
  │  │                                                              │ │
- │  │   Threshold: enrichment_score >= 0.75 → include in packet    │ │
+ │  │   Threshold: enrichment_score >= 0.70 → include in packet    │ │
  │  └──────────────────────────┬──────────────────────────────────┘ │
  │                             │                                     │
  │  ┌──────────────────────────▼──────────────────────────────────┐ │

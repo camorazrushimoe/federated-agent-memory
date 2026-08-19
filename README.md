@@ -45,13 +45,15 @@ We use [OpenSpec](https://github.com/Fission-AI/openspec) — specs before code.
 | L1 | MCP Server | 📋 to spec |
 | **L2** | **Raw Archive** | ✅ **reference example** |
 | L3 | Memory Compiler (DSPy) | 📋 to spec |
+| — | · Visibility Classifier (L3, step 8) | ✅ spec |
 | L4 | Graph Core (Neo4j + Graphiti) | 📋 to spec |
 | L5 | Vector Index (Qdrant) | 📋 to spec |
 | L6 | Metadata Store (PostgreSQL) | 📋 to spec |
 | L7 | Retrieval Service | 📋 to spec |
-| L8 | Cross-Agent Enrichment | 📋 to spec |
+| L8 | Cross-Agent Enrichment | ✅ spec |
 | L9 | Agent Injection | 📋 to spec |
 | L10 | Dashboard & Observability | 📋 to spec |
+| L11 | Outcome & Escalation Feedback | 🔄 change proposal |
 
 **When you spec a component,** open `openspec/specs/raw-archive/spec.md` and copy
 its shape: `## Purpose` → `### Requirement` (with SHALL/MUST) → `#### Scenario`

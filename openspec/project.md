@@ -33,6 +33,7 @@ Three key ideas:
 | L8 | Cross-Agent Enrichment | Finds other agents' relevant experience, scores and injects it. |
 | L9 | Agent Injection | Formats and injects the `memory_packet` into the agent's prompt. |
 | L10 | Dashboard | Live ops view: health, growth, scopes, quality signals. |
+| L11 | Outcome Feedback | Captures post-action outcome, feeds it back into the graph (proposed — see `changes/add-outcome-feedback`). |
 
 See `docs/02-architecture.md` for the full diagram.
 
