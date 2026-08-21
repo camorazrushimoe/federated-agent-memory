@@ -1,6 +1,15 @@
 # Federated Agent Memory — PRD & High-Level Technical Design
 
-**Version:** 0.1 · **Status:** Draft  
+> ⚠️ **SUPERSEDED (2026-08-21).** The L1–L10 layer breakdown below describes the
+> **v1 self-built stack**, which has been replaced. We now build a *smarter
+> memory service* on top of **Google Memory Bank** (Compiler + Ranker only).
+> See [`docs/02-architecture.md`](02-architecture.md) and
+> [`openspec/changes/adopt-google-memory-bank/`](../openspec/changes/adopt-google-memory-bank/)
+> for the current architecture. Sections 4–7 are updated below; the detailed
+> layer-by-layer breakdown (Section 5) is kept as historical reference pending a
+> full rewrite.
+
+**Version:** 0.2 · **Status:** Draft (v2 direction)  
 **Hackathon:** Gemini Enterprise Hackathon · Track 2 — Custom Agent Challenge (MCP)  
 **Team:** Sergey Ryabushko (Lead, Architecture, DSPy), Azam Turgunboev  
 **Codebase:** [graphiti-memory-system](https://github.com/camorazrushimoe/flat-white)
@@ -369,78 +378,44 @@ Without enrichment, the Support Agent would troubleshoot the login bug from scra
 
 ---
 
-## 4. Architecture Overview
+## 4. Architecture Overview (v2)
 
+**Supersedes the v1 L1–L10 diagram below.** Current architecture:
+
+```mermaid
+flowchart TB
+    subgraph AG["Agent layer — any Gemini Enterprise / ADK agent"]
+        SUP["Support Agent"]
+        SAL["Sales Agent"]
+        ENG["Eng Agent"]
+    end
+
+    MS["OURS · Memory Service<br/>(extends ADK BaseMemoryService)"]
+
+    subgraph CORE["OURS · the differentiator"]
+        CMP["Compiler (DSPy)<br/>what to store, how to structure it"]
+        RNK["Ranker<br/>rerank + novelty/trend<br/>what to surface, for whom"]
+    end
+
+    MB["GOOGLE · Memory Bank<br/>(managed storage + retrieval)"]
+    SES["GOOGLE · Gemini Enterprise session scoping"]
+
+    AG -->|"memory tools"| MS
+    MS --> CMP
+    MS --> RNK
+    CMP --> MB
+    RNK <--> MB
+    MB <--> SES
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                     FEDERATED AGENT MEMORY — ARCHITECTURE                  │
-│                                                                            │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │ SUPPORT  │  │    HR    │  │  SALES   │  │   ENG    │   AGENT LAYER   │
-│  │  AGENT   │  │  AGENT   │  │  AGENT   │  │  AGENT   │                 │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘                 │
-│       │             │             │             │                         │
-│       │  POST /ingest/turn       │  POST /retrieve                       │
-│       │  (real-time streaming)   │  (start of session)                   │
-│       │             │             │             │                         │
-│       └─────────────┼─────────────┼─────────────┘                        │
-│                     │             │                                       │
-│                     ▼             ▼                                       │
-│  ┌─────────────────────────────────────────────────────────────────┐     │
-│  │                    LAYER 1: MCP SERVER                            │     │
-│  │                    (FastAPI + MCP protocol)                       │     │
-│  │  • /ingest/turn — real-time turn ingestion                       │     │
-│  │  • /ingest/close — session flush                                 │     │
-│  │  • /retrieve — memory_packet generation                          │     │
-│  │  • /dashboard — ops visibility                                   │     │
-│  │  • Tenant isolation via API key                                  │     │
-│  └──────────────────────────┬───────────────────────────────────────┘     │
-│                             │                                              │
-│              ┌──────────────┼──────────────┐                               │
-│              ▼              ▼              ▼                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                     │
-│  │  LAYER 2     │  │  LAYER 7     │  │  LAYER 8     │                     │
-│  │  RAW ARCHIVE │  │  FEDERATED   │  │  CROSS-AGENT │                     │
-│  │  (filesystem)│  │  RETRIEVAL   │  │  ENRICHMENT  │                     │
-│  └──────┬───────┘  │  SERVICE     │  │  ENGINE      │                     │
-│         │          └──────┬───────┘  └──────┬───────┘                     │
-│         ▼                 │                 │                               │
-│  ┌──────────────────────────────────────────────────────────────────┐     │
-│  │                    LAYER 3: MEMORY COMPILER                       │     │
-│  │                    (DSPy Pipeline + Gemma)                        │     │
-│  │                                                                   │     │
-│  │  Normalizer → Splitter → Classifier → Extractor →                │     │
-│  │  Entity Resolver → Contradiction Checker →                       │     │
-│  │  Memory Selector → Visibility Classifier (NEW)                   │     │
-│  └──────────────────────────┬───────────────────────────────────────┘     │
-│                             │                                              │
-│          ┌──────────────────┼──────────────────┐                          │
-│          ▼                  ▼                  ▼                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                     │
-│  │  LAYER 4     │  │  LAYER 5     │  │  LAYER 6     │                     │
-│  │  FEDERATED   │  │  VECTOR      │  │  METADATA    │                     │
-│  │  GRAPH CORE  │  │  INDEX       │  │  STORE       │                     │
-│  │  Neo4j +     │  │  Qdrant      │  │  PostgreSQL  │                     │
-│  │  Graphiti    │  │              │  │              │                     │
-│  └──────────────┘  └──────────────┘  └──────────────┘                     │
-│                                                                            │
-│  ┌──────────────────────────────────────────────────────────────────┐     │
-│  │                    LAYER 0: TENANT & ISOLATION                    │     │
-│  │  • Multi-tenant PostgreSQL schemas                                │     │
-│  │  • Per-tenant Neo4j databases (or subgraph labels)               │     │
-│  │  • Qdrant collection namespacing                                  │     │
-│  │  • API key → tenant resolution                                    │     │
-│  └──────────────────────────────────────────────────────────────────┘     │
-│                                                                            │
-│  ┌──────────────────────────────────────────────────────────────────┐     │
-│  │                    LAYER 10: DASHBOARD & OBSERVABILITY            │     │
-│  │  • Service health (Neo4j, Qdrant, Postgres, LLM)                  │     │
-│  │  • Memory growth & throughput stats                               │     │
-│  │  • Compiler queue depth & quality signals                         │     │
-│  │  • Per-tenant stats (for SaaS deployment)                         │     │
-│  └──────────────────────────────────────────────────────────────────┘     │
-└──────────────────────────────────────────────────────────────────────────┘
-```
+
+- **Compiler (DSPy)** — turns raw turns into structured memory entries.
+- **Ranker** — reranks retrieved memory for the requesting agent + query, with
+  novelty / trend detection (real-time RAG).
+- **Google Memory Bank** — managed storage + retrieval (replaces Raw Archive,
+  Neo4j, Qdrant, PostgreSQL).
+- **Gemini Enterprise session scoping** — scopes memory per session / agent.
+
+The detailed v1 diagram is retained below for reference only.
 
 ---
 
@@ -1212,25 +1187,17 @@ Live snapshot of system health — is every store up, is the compiler running, h
 
 ---
 
-## 6. Technology Stack Summary
+## 6. Technology Stack Summary (v2)
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Ingest** | FastAPI + MCP SDK | Agent communication protocol |
-| **Compiler** | DSPy + Instructor + Gemma 4B | LLM-driven memory extraction |
-| **Graph** | Neo4j 5 + Graphiti | Temporal knowledge graph |
-| **Vector** | Qdrant + nomic-embed-text | Semantic search |
-| **Metadata** | PostgreSQL 16 | Relational bookkeeping |
-| **NLP** | spaCy + rapidfuzz | Entity recognition, fuzzy matching |
-| **Embeddings** | sentence-transformers | Semantic similarity |
-| **Infrastructure** | Docker Compose | Container orchestration |
-| **Observability** | Static HTML + FastAPI metrics | Dashboard |
-| **Token counting** | tiktoken | Token budget management |
-
-**Why Gemma 4B (not a cloud model):**
-- Fully local — zero latency, zero cost per inference
-- Good enough for structured extraction (the DSPy pipeline constrains output to JSON schemas via Instructor)
-- Swappable: replace `LLM_URL` env var to use Gemini, Claude, or any OpenAI-compatible API for production
+| Concern | Technology | Purpose |
+|---------|-----------|---------|
+| **Agent framework** | Google ADK (`google-adk`) | integration surface — we extend `BaseMemoryService` |
+| **Memory storage + retrieval** | Google Memory Bank | managed memory (no self-built graph / vector / DB) |
+| **Scoping** | Gemini Enterprise session mechanism | per-session / per-agent access control |
+| **Compiler** | DSPy | LLM-driven memory compilation |
+| **Ranker** | custom (DSPy-adjacent) | rerank + novelty / trend detection |
+| **Deployment** | GCP Cloud Run | serverless hosting |
+| **Observability** | GCP logging / Memory Bank telemetry | ops visibility |
 
 **Why DSPy (not raw prompts):**
 - The compiler is a pipeline of programmatic steps, not a single mega-prompt
@@ -1241,47 +1208,44 @@ Live snapshot of system health — is every store up, is the compiler running, h
 
 ## 7. Hackathon MVP Scope
 
-### What we'll demo
+### What we'll demo (v2)
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| **MCP Server** | 🔨 Build | Wrap existing ingest/retrieve endpoints as MCP tools |
-| **Ingest endpoint** | ✅ Working | Real-time turn streaming |
-| **Memory Compiler** | ✅ Working | Full 7-step DSPy pipeline |
-| **Neo4j + Graphiti** | ✅ Working | Temporal knowledge graph |
-| **Qdrant** | ✅ Working | Semantic search |
-| **PostgreSQL** | ✅ Working | Metadata + job queue |
-| **Retrieval Service** | ✅ Working | Returns memory_packet |
-| **Dashboard** | ✅ Working | Health + throughput stats |
-| **Visibility Classifier** | 🔨 Build | DSPy module #8 in compiler pipeline |
-| **Federated Retrieval** | 🔨 Build | Multi-scope query merging |
-| **Cross-Agent Enrichment** | 🔨 MVP | Semantic search across agents, basic scoring |
-| **Multi-tenancy** | 📋 Post-MVP | Single-tenant for hackathon |
-| **DSPy Optimizer** | 📋 Stretch | Self-improvement loop demo |
+| **Memory Service (ADK `BaseMemoryService` extension)** | 🔨 Build | the deliverable |
+| **Compiler (DSPy)** | 🔨 Build | turns → structured memory entries |
+| **Ranker (rerank + novelty)** | 🔨 Build | the differentiator — real-time RAG |
+| **Google Memory Bank** | ✅ Reuse | managed storage + retrieval |
+| **Gemini Enterprise session scoping** | ✅ Reuse | per-session/agent access control |
+| **Multi-tenancy** | 📋 Post-MVP | single-tenant for hackathon |
+| **DSPy Optimizer** | 📋 Stretch | self-improvement loop demo |
 
 ### Demo scenario
 
-**Two agents, one memory:**
+**Two agents, one memory, one fresh signal:**
 
-1. **Agent A (Engineering)** discusses an auth service bottleneck with a developer. The compiler extracts: `"Auth microservice bottleneck: RS256 validation under peak load"`, classifies it as `shared` (target: `[engineering, support]`).
+1. **Agent A (Sales)** discusses a shopper wanting "a laptop for video editing."
+   The **Compiler** writes a structured memory entry into Google Memory Bank.
 
-2. **Agent B (Support)** receives a customer complaint about login failures. It queries: `"Customer X login issues"`.
+2. **Agent B (Support)** gets a different customer asking about a laptop that
+   "shuts down when rendering 4K." The **Compiler** stores this too.
 
-3. The **Federated Retrieval Service** runs parallel queries:
-   - Private memory: finds Customer X's preferences
-   - Shared memory: finds recent support team solutions
-   - **Enrichment Engine**: finds Engineering's auth bottleneck — semantically similar, graph-connected via `auth-service` entity
+3. The **Ranker** detects a rising novelty signal — "video-editing laptops +
+   cooling" is spiking across sessions — and reranks Memory Bank results so the
+   fresh cross-agent insight surfaces.
 
-4. Agent B's `memory_packet` includes: *"Enriched context: Auth microservice bottleneck — fix ETA Aug 14. Relevance: 0.87 — auth service is upstream dependency for login."*
+4. **Agent A** returns to its original shopper: the Ranker now injects the
+   cooling insight, and Agent A recommends the right model on the first try.
 
-5. Agent B immediately knows: this is likely the auth bottleneck, not a new bug. It tells the customer the fix is coming and doesn't escalate to engineering — saving hours of duplicate investigation.
+The point: Agent A got smarter *without* anyone retraining a model or rebuilding
+an index — the Ranker closed the real-time gap.
 
 ### Post-hackathon roadmap
 
 | Phase | Features |
 |-------|----------|
-| **Phase 1** (1 month post-hackathon) | Multi-tenancy, DSPy optimizer, enrichment feedback loop |
-| **Phase 2** (3 months) | Gemini Enterprise ADK integration, GCP Cloud Run deployment |
+| **Phase 1** (1 month post-hackathon) | Pin Memory Bank artifact, DSPy optimizer for the Compiler, Ranker novelty tuning |
+| **Phase 2** (3 months) | Full ADK Memory Service polish, GCP Cloud Run deployment, eval harness for the Ranker |
 | **Phase 3** (6 months) | Cross-tenant anonymized learning, enterprise SSO, SLA guarantees |
 
 ---

@@ -1,6 +1,17 @@
-# Federated Agent Memory — Architecture
+# Federated Agent Memory — Architecture (v2)
 
-Component-level view. One diagram, one short line per component.
+> Updated 2026-08-21 after the architecture grooming call. Replaces the previous
+> self-built L1–L10 stack. See
+> [`openspec/changes/adopt-google-memory-bank`](../openspec/changes/adopt-google-memory-bank/)
+> for the change proposal and delta specs.
+
+---
+
+## The one-line idea
+
+We don't build a memory store. We build a **smarter memory service** on top of
+Google's managed memory — owning only *what to store* (Compiler) and *what to
+surface* (Ranker).
 
 ---
 
@@ -8,75 +19,69 @@ Component-level view. One diagram, one short line per component.
 
 ```mermaid
 flowchart TB
-    subgraph AG["Agent Layer — any MCP-compatible agent"]
+    subgraph AG["Agent layer — any Gemini Enterprise / ADK agent"]
         direction LR
         SUP["Support Agent"]
-        ENG["Engineering Agent"]
         SAL["Sales Agent"]
-        HR["HR Agent"]
+        ENG["Eng Agent"]
     end
 
-    API["L1 · MCP Server<br/>(FastAPI + MCP)<br/>ingest / retrieve / search / status"]
+    MS["OURS · Memory Service<br/>(extends ADK BaseMemoryService)"]
 
-    RAW["L2 · Raw Archive<br/>immutable session JSON"]
-
-    subgraph COMP["L3 · Memory Compiler (DSPy pipeline)"]
+    subgraph CORE["OURS · the differentiator"]
         direction LR
-        C1["Normalize"] --> C2["Split"] --> C3["Classify"] --> C4["Extract"]
-        C4 --> C5["Resolve Entities"] --> C6["Contradiction"] --> C7["Select"] --> C8["Visibility"]
+        CMP["Compiler<br/>(DSPy pipeline)<br/>what to store, how to structure it"]
+        RNK["Ranker<br/>rerank + novelty/trend<br/>what to surface, for whom"]
     end
 
-    GRAPH["L4 · Graph Core<br/>Neo4j + Graphiti<br/>temporal entities / facts"]
-    VEC["L5 · Vector Index<br/>Qdrant<br/>semantic search"]
-    META["L6 · Metadata Store<br/>PostgreSQL<br/>agents / sessions / facts"]
+    MB["GOOGLE · Memory Bank<br/>(managed storage + retrieval)"]
+    SES["GOOGLE · Gemini Enterprise session scoping"]
 
-    RET["L7 · Retrieval Service<br/>hybrid query + fusion"]
-    ENR["L8 · Cross-Agent Enrichment<br/>other agents' experience"]
-    INJ["L9 · Agent Injection<br/>memory_packet"]
-    DASH["L10 · Dashboard & Observability"]
-
-    AG -->|"turns"| API
-    API --> RAW
-    RAW --> COMP
-    COMP --> GRAPH
-    COMP --> VEC
-    COMP --> META
-    GRAPH --> RET
-    VEC --> RET
-    META --> RET
-    RET --> ENR
-    ENR --> INJ
-    INJ -->|"memory_packet"| API
-    API -->|"memory_packet"| AG
-
-    GRAPH -.-> DASH
-    VEC -.-> DASH
-    META -.-> DASH
-    API -.-> DASH
+    AG -->|"memory tools"| MS
+    MS --> CMP
+    MS --> RNK
+    CMP --> MB
+    RNK <--> MB
+    MB <--> SES
 ```
 
 ---
 
-## Components (top to bottom)
+## Components
 
-| # | Component | What it does |
-|---|-----------|--------------|
-| **L1** | **MCP Server** | Single entry point for all agents. Exposes `memory_ingest_turn`, `memory_ingest_close`, `memory_retrieve`, `memory_search`, `memory_status`. MCP-native, with a REST fallback for non-MCP agents. |
-| **L2** | **Raw Archive** | Immutable store of every raw session (append-only JSON). Source of truth for replay and re-processing. Never modified after write. |
-| **L3** | **Memory Compiler** | The brain. An 8-step DSPy pipeline turns raw turns into structured memory events: `Normalize → Split → Classify → Extract → Resolve Entities → Contradiction Check → Select → Visibility`. |
-| **L4** | **Graph Core** | Temporal knowledge graph (Neo4j + Graphiti). Entities/facts as nodes with bi-temporal tracking (when true + when recorded). Carries `visibility`, `source_agent`, `agent_group`. |
-| **L5** | **Vector Index** | Embeddings for every entity, fact, and episode (Qdrant). Enables semantic search and cross-agent similarity. Collections split private vs shared. |
-| **L6** | **Metadata Store** | Relational bookkeeping (PostgreSQL): agent registry, group definitions, sessions, entity registry, fact lifecycle, visibility audit log, compiler job queue. |
-| **L7** | **Retrieval Service** | Answers "what memory is relevant *for this agent, right now*?" Runs parallel queries (semantic + graph + metadata), fuses, dedupes, ranks, and builds the packet. |
-| **L8** | **Cross-Agent Enrichment** | The flagship. Finds experiences from *other* agents relevant to the current query, scores them, and injects them as "enriched context". |
-| **L9** | **Agent Injection** | Formats the final `memory_packet` (your memory / shared team memory / enriched context) and injects it into the agent's system prompt. Token-budget aware. |
-| **L10** | **Dashboard** | Live ops view: service health, memory growth, scope distribution, agent activity, quality signals. |
+| Component | Owner | What it does |
+|-----------|-------|--------------|
+| **Agents** | consumer | Any Gemini Enterprise / ADK agent calls memory through the standard Memory Service tools. |
+| **Memory Service** | **OURS** | A drop-in memory implementation that extends ADK `BaseMemoryService`. The deliverable. |
+| **Compiler** (DSPy) | **OURS** | Turns raw conversation turns into structured memory entries. A DSPy pipeline — what to store, how to structure it. |
+| **Ranker** | **OURS** | Reranks retrieved memory for the requesting agent + query, with novelty / trend detection (real-time RAG). |
+| **Google Memory Bank** | GOOGLE | Managed memory storage + retrieval. Replaces the self-built graph, vector, and metadata stores. |
+| **Gemini Enterprise session scoping** | GOOGLE | Scopes memory per session / agent. Replaces the custom visibility model. |
+
+---
+
+## What changed vs v1
+
+| v1 (self-built, L1–L10) | v2 (Google + our layer) |
+|---|---|
+| L1 · MCP Server (FastAPI + MCP) | Memory Service extending ADK `BaseMemoryService` |
+| L2 · Raw Archive (append-only JSON) | Google Memory Bank |
+| L3 · Memory Compiler (8-step DSPy) | **Compiler (DSPy)** — kept, sharpened |
+| L4 · Graph Core (Neo4j + Graphiti) | Google Memory Bank |
+| L5 · Vector Index (Qdrant) | Google Memory Bank |
+| L6 · Metadata Store (PostgreSQL) | Google Memory Bank |
+| L7 · Retrieval Service (hybrid + fusion) | Memory Bank retrieval + **Ranker** |
+| L8 · Cross-Agent Enrichment | folded into the **Ranker** |
+| L9 · Agent Injection | Memory Service return path (ADK) |
+| L10 · Dashboard & Observability | GCP logging / Memory Bank observability |
+| — visibility scope model | Gemini Enterprise session scoping |
 
 ---
 
 ## Memory scope model
 
-Every memory event is tagged with a visibility at compile time:
+Unchanged in spirit — `private`, `shared`, `global` — but now enforced through
+Gemini Enterprise session scoping rather than custom graph labels.
 
 | Scope | Readable by | Example |
 |-------|-------------|---------|
@@ -86,14 +91,10 @@ Every memory event is tagged with a visibility at compile time:
 
 ---
 
-## MVP status
+## Open questions
 
-| Piece | Status |
-|-------|--------|
-| Ingest / Raw Archive / Compiler (7 steps) | ✅ working |
-| Graph (Neo4j+Graphiti) / Vector (Qdrant) / Metadata (Postgres) | ✅ working |
-| Retrieval + Dashboard | ✅ working |
-| MCP Server wrapper | 🔨 to build |
-| Visibility Classifier (step 8) | 🔨 to build |
-| Federated Retrieval + Cross-Agent Enrichment | 🔨 MVP |
-| Multi-tenancy | 📋 post-MVP |
+- Target artifact: Agent Platform Memory Bank vs Vertex AI Memory Bank (exact ADK
+  entry point to pin).
+- MCP tool surface for non-ADK agents: keep or go ADK-only for the hackathon?
+- Novelty trigger: how to measure "trend novelty" concretely (rolling-window
+  topic/entity spike)?
