@@ -8,6 +8,11 @@ architecture, the docs, and — most importantly — the OpenSpec specs that def
 each component before any code is written.
 
 > **Gemini Enterprise Hackathon · Track 2 (Custom Agent / MCP)**
+>
+> **Architecture v2 (2026-08-21):** we now build a *smarter memory service* on
+> top of Google Memory Bank instead of a self-built storage stack. See
+> [`docs/02-architecture.md`](docs/02-architecture.md) and the
+> [`adopt-google-memory-bank`](openspec/changes/adopt-google-memory-bank/) change.
 
 ---
 
@@ -41,22 +46,23 @@ We use [OpenSpec](https://github.com/Fission-AI/openspec) — specs before code.
 > 👉 **New here?** Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full
 > Spec-Driven Development workflow.
 
-## Component spec backlog
+## Component spec backlog (v2)
 
-| # | Component | Spec status |
-|---|-----------|-------------|
-| L1 | MCP Server | 📋 to spec |
-| **L2** | **Raw Archive** | ✅ **reference example** |
-| L3 | Memory Compiler (DSPy) | 📋 to spec |
-| — | · Visibility Classifier (L3, step 8) | ✅ spec |
-| L4 | Graph Core (Neo4j + Graphiti) | 📋 to spec |
-| L5 | Vector Index (Qdrant) | 📋 to spec |
-| L6 | Metadata Store (PostgreSQL) | 📋 to spec |
-| L7 | Retrieval Service | 📋 to spec |
-| L8 | Cross-Agent Enrichment | ✅ spec |
-| L9 | Agent Injection | 📋 to spec |
-| L10 | Dashboard & Observability | 📋 to spec |
-| L11 | Outcome & Escalation Feedback | 🔄 change proposal |
+| Component | Owner | Spec status |
+|-----------|-------|-------------|
+| Memory Service (ADK `BaseMemoryService` extension) | OURS | 🔄 change proposal (`adopt-google-memory-bank`) |
+| Compiler (DSPy) | OURS | 🔄 change proposal |
+| Ranker (rerank + novelty) | OURS | 🔄 change proposal |
+| Google Memory Bank | GOOGLE | not ours to spec |
+| Gemini Enterprise session scoping | GOOGLE | not ours to spec |
+
+**Removed from v1 (replaced by Google Memory Bank):** MCP Server (L1), Raw
+Archive (L2), Graph Core (L4), Vector Index (L5), Metadata Store (L6),
+Retrieval Service (L7), Cross-Agent Enrichment (L8, folded into Ranker),
+Agent Injection (L9), Dashboard (L10).
+
+> **Reference example** for spec shape: `openspec/specs/raw-archive/spec.md`
+> (kept as a template even though the component itself is superseded).
 
 **When you spec a component,** open `openspec/specs/raw-archive/spec.md` and copy
 its shape: `## Purpose` → `### Requirement` (with SHALL/MUST) → `#### Scenario`
