@@ -1,71 +1,1200 @@
 {
-  "scheme": "N//5",
-  "res": {
-    "kind": "twcs",
-    "columns": [
-      "conversation_id",
-      "company",
-      "conversation",
-      "summary"
-    ],
-    "n_rows_in_sample": 500,
-    "text": {
-      "n_messages": 1918,
-      "real_min_count": 50,
-      "median_words": 18.0,
-      "median_real_words": 9.0,
-      "median_padding_share": 0.5,
-      "distinct_tokens": 5309,
-      "hapax": 2998,
-      "hapax_share": 0.565,
-      "real_vocabulary_size": 96,
-      "_verdict_hint": "natural language"
-    },
-    "median_turns": 3.0,
+  "generated_by": "research/phase0/twcs_resample_scan.py",
+  "generated_at": "2026-08-27T18:21:36+00:00",
+  "ticket": "BON-35 round 2 \u2014 lab-side pin of the cited-constants finding (product-side doc fix: BON-40, PR #10 \u2014 do not duplicate)",
+  "corpus": "TNE-AI/customer-support-on-twitter-conversation (HF mirror, CC BY-NC-SA 4.0 upstream)",
+  "path": "twcs_conversations.parquet",
+  "n_rows_full": 794335,
+  "probe": "research/probe_dataset.py::probe_twcs(real_min_count=50), unmodified \u2014 every figure is what the probe prints on that sample",
+  "cited_block": {
+    "median_real_words_per_turn": 18,
+    "distinct_tokens_in_sample": 5836,
+    "hapax_share": 0.56,
+    "median_turns": 3,
     "max_turns": 48,
-    "distinct_turn_patterns": 88,
-    "top_turn_patterns": [
-      [
-        "CS",
-        225
-      ],
-      [
-        "CSC",
-        38
-      ],
-      [
-        "CSCS",
-        38
-      ],
-      [
-        "CCS",
-        24
-      ],
-      [
-        "C",
-        14
-      ],
-      [
-        "CSS",
-        13
-      ]
-    ],
-    "turn_pattern_hint": "TEMPLATED - reject",
-    "final_customer_turn_signal": {
-      "clearly_positive": 0.127,
-      "clearly_negative": 0.014,
-      "no_signal": 0.859
+    "distinct_turn_patterns_per_500": 103,
+    "amazon_help_in_sample": 52,
+    "apple_support_in_sample": 36,
+    "signal_clearly_positive": 0.11,
+    "signal_clearly_negative": 0.04,
+    "signal_no_signal": 0.85
+  },
+  "tolerance_rule": "per-metric: 'abs' = absolute tolerance, 'rel' = tolerance x |cited| (declared per metric in the generator's CITED)",
+  "rows": [
+    {
+      "scheme": "head_500",
+      "description": "df.head(500) \u2014 the documented reproduce_with (probe_dataset.py --kind twcs --sample 500)",
+      "sample": {
+        "method": "head",
+        "n": 500
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 3967,
+          "real_min_count": 50,
+          "median_words": 15,
+          "median_real_words": 8,
+          "median_padding_share": 0.4,
+          "distinct_tokens": 7067,
+          "hapax": 3867,
+          "hapax_share": 0.547,
+          "real_vocabulary_size": 165,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 5.0,
+        "max_turns": 448,
+        "distinct_turn_patterns": 175,
+        "top_turn_patterns": [
+          [
+            "CCS",
+            50
+          ],
+          [
+            "CSC",
+            50
+          ],
+          [
+            "CSCC",
+            35
+          ],
+          [
+            "CSCS",
+            26
+          ],
+          [
+            "SCS",
+            16
+          ],
+          [
+            "S",
+            14
+          ]
+        ],
+        "turn_pattern_hint": "varied structure - ok",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.116,
+          "clearly_negative": 0.031,
+          "no_signal": 0.853
+        },
+        "n_companies": 88,
+        "companies_appearing_more_than_once": 71,
+        "top_companies": {
+          "Safaricom_Care": 27,
+          "AskPlayStation": 24,
+          "AmazonHelp": 23,
+          "Uber_Support": 19,
+          "TMobileHelp": 17,
+          "AirAsiaSupport": 16
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 8,
+        "distinct_tokens_in_sample": 7067,
+        "hapax_share": 0.547,
+        "median_turns": 5.0,
+        "max_turns": 448,
+        "distinct_turn_patterns_per_500": 175,
+        "amazon_help_in_sample": 23,
+        "apple_support_in_sample": null,
+        "signal_clearly_positive": 0.116,
+        "signal_clearly_negative": 0.031,
+        "signal_no_signal": 0.853
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "near",
+        "median_turns": "miss",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "miss",
+        "apple_support_in_sample": "miss",
+        "signal_clearly_positive": "pin",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 3,
+      "n_near": 1
     },
-    "n_companies": 74,
-    "companies_appearing_more_than_once": 59,
-    "top_companies": {
-      "AmazonHelp": 40,
-      "AppleSupport": 34,
-      "TMobileHelp": 25,
-      "Uber_Support": 19,
-      "": 16,
-      "Delta": 16
+    {
+      "scheme": "offsets_doc",
+      "description": "100 rows at each documented offset [0, 5000, 120000, 400000, 700000] \u2014 office-confirmed method of the cited block (HF rows API equivalent: positional slice, parquet written from HF train split)",
+      "sample": {
+        "method": "positional_slices",
+        "slices": [
+          "0:100",
+          "5000:5100",
+          "120000:120100",
+          "400000:400100",
+          "700000:700100"
+        ]
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 2199,
+          "real_min_count": 50,
+          "median_words": 18,
+          "median_real_words": 9,
+          "median_padding_share": 0.484,
+          "distinct_tokens": 5836,
+          "hapax": 3277,
+          "hapax_share": 0.562,
+          "real_vocabulary_size": 110,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 3.0,
+        "max_turns": 48,
+        "distinct_turn_patterns": 103,
+        "top_turn_patterns": [
+          [
+            "CS",
+            184
+          ],
+          [
+            "CSC",
+            46
+          ],
+          [
+            "CSCS",
+            38
+          ],
+          [
+            "CCS",
+            30
+          ],
+          [
+            "C",
+            15
+          ],
+          [
+            "CSS",
+            14
+          ]
+        ],
+        "turn_pattern_hint": "varied structure - ok",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.11,
+          "clearly_negative": 0.026,
+          "no_signal": 0.863
+        },
+        "n_companies": 93,
+        "companies_appearing_more_than_once": 77,
+        "top_companies": {
+          "AmazonHelp": 52,
+          "AppleSupport": 36,
+          "Uber_Support": 18,
+          "": 17,
+          "TMobileHelp": 16,
+          "AirAsiaSupport": 14
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 9,
+        "distinct_tokens_in_sample": 5836,
+        "hapax_share": 0.562,
+        "median_turns": 3.0,
+        "max_turns": 48,
+        "distinct_turn_patterns_per_500": 103,
+        "amazon_help_in_sample": 52,
+        "apple_support_in_sample": 36,
+        "signal_clearly_positive": 0.11,
+        "signal_clearly_negative": 0.026,
+        "signal_no_signal": 0.863
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "pin",
+        "hapax_share": "pin",
+        "median_turns": "pin",
+        "max_turns": "pin",
+        "distinct_turn_patterns_per_500": "pin",
+        "amazon_help_in_sample": "pin",
+        "apple_support_in_sample": "pin",
+        "signal_clearly_positive": "pin",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 10,
+      "n_near": 0
     },
-    "repeat_sources_hint": "present -> can study source reputation"
+    {
+      "scheme": "n_div_5",
+      "description": "100 rows at i*len//5 = [0, 158867, 317734, 476601, 635468] \u2014 round-1 RECONSTRUCTION of the documented '5 offsets' sample; NOT the doc's method (office confirmed the cited block used 0/5000/120000/400000/700000 \u2014 see offsets_doc; its metrics miss the cited block: 5309 tokens, 88 patterns, AmazonHelp 40). Row committed in phase0/corpora-reproduction.",
+      "sample": {
+        "method": "positional_slices",
+        "slices": [
+          "0:100",
+          "158867:158967",
+          "317734:317834",
+          "476601:476701",
+          "635468:635568"
+        ]
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 1918,
+          "real_min_count": 50,
+          "median_words": 18.0,
+          "median_real_words": 9.0,
+          "median_padding_share": 0.5,
+          "distinct_tokens": 5309,
+          "hapax": 2998,
+          "hapax_share": 0.565,
+          "real_vocabulary_size": 96,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 3.0,
+        "max_turns": 48,
+        "distinct_turn_patterns": 88,
+        "top_turn_patterns": [
+          [
+            "CS",
+            225
+          ],
+          [
+            "CSC",
+            38
+          ],
+          [
+            "CSCS",
+            38
+          ],
+          [
+            "CCS",
+            24
+          ],
+          [
+            "C",
+            14
+          ],
+          [
+            "CSS",
+            13
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.127,
+          "clearly_negative": 0.014,
+          "no_signal": 0.859
+        },
+        "n_companies": 74,
+        "companies_appearing_more_than_once": 59,
+        "top_companies": {
+          "AmazonHelp": 40,
+          "AppleSupport": 34,
+          "TMobileHelp": 25,
+          "Uber_Support": 19,
+          "": 16,
+          "Delta": 16
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 9.0,
+        "distinct_tokens_in_sample": 5309,
+        "hapax_share": 0.565,
+        "median_turns": 3.0,
+        "max_turns": 48,
+        "distinct_turn_patterns_per_500": 88,
+        "amazon_help_in_sample": 40,
+        "apple_support_in_sample": 34,
+        "signal_clearly_positive": 0.127,
+        "signal_clearly_negative": 0.014,
+        "signal_no_signal": 0.859
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "near",
+        "hapax_share": "pin",
+        "median_turns": "pin",
+        "max_turns": "pin",
+        "distinct_turn_patterns_per_500": "near",
+        "amazon_help_in_sample": "miss",
+        "apple_support_in_sample": "near",
+        "signal_clearly_positive": "near",
+        "signal_clearly_negative": "near",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 4,
+      "n_near": 5
+    },
+    {
+      "scheme": "random500_s1",
+      "description": "df.sample(n=500, random_state=1) \u2014 seeded random 500",
+      "sample": {
+        "method": "df.sample",
+        "n": 500,
+        "random_state": 1
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 1645,
+          "real_min_count": 50,
+          "median_words": 19,
+          "median_real_words": 9,
+          "median_padding_share": 0.5,
+          "distinct_tokens": 4732,
+          "hapax": 2678,
+          "hapax_share": 0.566,
+          "real_vocabulary_size": 91,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 2.0,
+        "max_turns": 27,
+        "distinct_turn_patterns": 63,
+        "top_turn_patterns": [
+          [
+            "CS",
+            281
+          ],
+          [
+            "CSCS",
+            53
+          ],
+          [
+            "CSC",
+            20
+          ],
+          [
+            "CSCSCS",
+            16
+          ],
+          [
+            "CSS",
+            16
+          ],
+          [
+            "C",
+            15
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.1,
+          "clearly_negative": 0.046,
+          "no_signal": 0.853
+        },
+        "n_companies": 73,
+        "companies_appearing_more_than_once": 53,
+        "top_companies": {
+          "AmazonHelp": 55,
+          "AppleSupport": 37,
+          "Uber_Support": 31,
+          "SpotifyCares": 22,
+          "comcastcares": 18,
+          "TMobileHelp": 17
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 9,
+        "distinct_tokens_in_sample": 4732,
+        "hapax_share": 0.566,
+        "median_turns": 2.0,
+        "max_turns": 27,
+        "distinct_turn_patterns_per_500": 63,
+        "amazon_help_in_sample": 55,
+        "apple_support_in_sample": 37,
+        "signal_clearly_positive": 0.1,
+        "signal_clearly_negative": 0.046,
+        "signal_no_signal": 0.853
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "pin",
+        "median_turns": "near",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "near",
+        "apple_support_in_sample": "pin",
+        "signal_clearly_positive": "pin",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 5,
+      "n_near": 2
+    },
+    {
+      "scheme": "random500_s2",
+      "description": "df.sample(n=500, random_state=2) \u2014 seeded random 500",
+      "sample": {
+        "method": "df.sample",
+        "n": 500,
+        "random_state": 2
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 1655,
+          "real_min_count": 50,
+          "median_words": 19,
+          "median_real_words": 10,
+          "median_padding_share": 0.474,
+          "distinct_tokens": 4834,
+          "hapax": 2771,
+          "hapax_share": 0.573,
+          "real_vocabulary_size": 100,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 2.0,
+        "max_turns": 36,
+        "distinct_turn_patterns": 69,
+        "top_turn_patterns": [
+          [
+            "CS",
+            277
+          ],
+          [
+            "CSCS",
+            53
+          ],
+          [
+            "CSC",
+            38
+          ],
+          [
+            "C",
+            13
+          ],
+          [
+            "CCS",
+            10
+          ],
+          [
+            "CSCCS",
+            9
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.108,
+          "clearly_negative": 0.034,
+          "no_signal": 0.857
+        },
+        "n_companies": 80,
+        "companies_appearing_more_than_once": 56,
+        "top_companies": {
+          "AmazonHelp": 50,
+          "AppleSupport": 43,
+          "Uber_Support": 30,
+          "AmericanAir": 22,
+          "SpotifyCares": 20,
+          "comcastcares": 17
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 10,
+        "distinct_tokens_in_sample": 4834,
+        "hapax_share": 0.573,
+        "median_turns": 2.0,
+        "max_turns": 36,
+        "distinct_turn_patterns_per_500": 69,
+        "amazon_help_in_sample": 50,
+        "apple_support_in_sample": 43,
+        "signal_clearly_positive": 0.108,
+        "signal_clearly_negative": 0.034,
+        "signal_no_signal": 0.857
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "near",
+        "median_turns": "near",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "pin",
+        "apple_support_in_sample": "miss",
+        "signal_clearly_positive": "pin",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 4,
+      "n_near": 2
+    },
+    {
+      "scheme": "random500_s3",
+      "description": "df.sample(n=500, random_state=3) \u2014 seeded random 500",
+      "sample": {
+        "method": "df.sample",
+        "n": 500,
+        "random_state": 3
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 1610,
+          "real_min_count": 50,
+          "median_words": 19.0,
+          "median_real_words": 9.0,
+          "median_padding_share": 0.489,
+          "distinct_tokens": 4638,
+          "hapax": 2638,
+          "hapax_share": 0.569,
+          "real_vocabulary_size": 89,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 2.0,
+        "max_turns": 19,
+        "distinct_turn_patterns": 69,
+        "top_turn_patterns": [
+          [
+            "CS",
+            266
+          ],
+          [
+            "CSCS",
+            49
+          ],
+          [
+            "CSC",
+            41
+          ],
+          [
+            "CCS",
+            17
+          ],
+          [
+            "C",
+            13
+          ],
+          [
+            "CSS",
+            13
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.137,
+          "clearly_negative": 0.034,
+          "no_signal": 0.829
+        },
+        "n_companies": 74,
+        "companies_appearing_more_than_once": 60,
+        "top_companies": {
+          "AppleSupport": 62,
+          "AmazonHelp": 54,
+          "Uber_Support": 30,
+          "": 16,
+          "SpotifyCares": 16,
+          "TMobileHelp": 16
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 9.0,
+        "distinct_tokens_in_sample": 4638,
+        "hapax_share": 0.569,
+        "median_turns": 2.0,
+        "max_turns": 19,
+        "distinct_turn_patterns_per_500": 69,
+        "amazon_help_in_sample": 54,
+        "apple_support_in_sample": 62,
+        "signal_clearly_positive": 0.137,
+        "signal_clearly_negative": 0.034,
+        "signal_no_signal": 0.829
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "pin",
+        "median_turns": "near",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "pin",
+        "apple_support_in_sample": "miss",
+        "signal_clearly_positive": "near",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "near"
+      },
+      "n_pinned": 3,
+      "n_near": 3
+    },
+    {
+      "scheme": "random500_s42",
+      "description": "df.sample(n=500, random_state=42) \u2014 seeded random 500",
+      "sample": {
+        "method": "df.sample",
+        "n": 500,
+        "random_state": 42
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 1543,
+          "real_min_count": 50,
+          "median_words": 19,
+          "median_real_words": 10,
+          "median_padding_share": 0.478,
+          "distinct_tokens": 4628,
+          "hapax": 2659,
+          "hapax_share": 0.575,
+          "real_vocabulary_size": 92,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 2.0,
+        "max_turns": 20,
+        "distinct_turn_patterns": 61,
+        "top_turn_patterns": [
+          [
+            "CS",
+            279
+          ],
+          [
+            "CSCS",
+            47
+          ],
+          [
+            "CSC",
+            32
+          ],
+          [
+            "CSS",
+            23
+          ],
+          [
+            "C",
+            22
+          ],
+          [
+            "CSCSCS",
+            11
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.131,
+          "clearly_negative": 0.028,
+          "no_signal": 0.841
+        },
+        "n_companies": 83,
+        "companies_appearing_more_than_once": 61,
+        "top_companies": {
+          "AmazonHelp": 52,
+          "AppleSupport": 46,
+          "": 23,
+          "Uber_Support": 23,
+          "SpotifyCares": 21,
+          "comcastcares": 20
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 10,
+        "distinct_tokens_in_sample": 4628,
+        "hapax_share": 0.575,
+        "median_turns": 2.0,
+        "max_turns": 20,
+        "distinct_turn_patterns_per_500": 61,
+        "amazon_help_in_sample": 52,
+        "apple_support_in_sample": 46,
+        "signal_clearly_positive": 0.131,
+        "signal_clearly_negative": 0.028,
+        "signal_no_signal": 0.841
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "near",
+        "median_turns": "near",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "pin",
+        "apple_support_in_sample": "miss",
+        "signal_clearly_positive": "near",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 3,
+      "n_near": 3
+    },
+    {
+      "scheme": "random500_s123",
+      "description": "df.sample(n=500, random_state=123) \u2014 seeded random 500",
+      "sample": {
+        "method": "df.sample",
+        "n": 500,
+        "random_state": 123
+      },
+      "n_rows_in_sample": 500,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 500,
+        "text": {
+          "n_messages": 1620,
+          "real_min_count": 50,
+          "median_words": 19.0,
+          "median_real_words": 9.0,
+          "median_padding_share": 0.5,
+          "distinct_tokens": 4850,
+          "hapax": 2858,
+          "hapax_share": 0.589,
+          "real_vocabulary_size": 91,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 2.0,
+        "max_turns": 25,
+        "distinct_turn_patterns": 61,
+        "top_turn_patterns": [
+          [
+            "CS",
+            282
+          ],
+          [
+            "CSCS",
+            50
+          ],
+          [
+            "CSC",
+            41
+          ],
+          [
+            "CCS",
+            13
+          ],
+          [
+            "C",
+            11
+          ],
+          [
+            "CSCSC",
+            10
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.148,
+          "clearly_negative": 0.026,
+          "no_signal": 0.826
+        },
+        "n_companies": 83,
+        "companies_appearing_more_than_once": 61,
+        "top_companies": {
+          "AmazonHelp": 49,
+          "AppleSupport": 41,
+          "Uber_Support": 27,
+          "TMobileHelp": 23,
+          "comcastcares": 19,
+          "Delta": 17
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 9.0,
+        "distinct_tokens_in_sample": 4850,
+        "hapax_share": 0.589,
+        "median_turns": 2.0,
+        "max_turns": 25,
+        "distinct_turn_patterns_per_500": 61,
+        "amazon_help_in_sample": 49,
+        "apple_support_in_sample": 41,
+        "signal_clearly_positive": 0.148,
+        "signal_clearly_negative": 0.026,
+        "signal_no_signal": 0.826
+      },
+      "pins": {
+        "median_real_words_per_turn": "miss",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "miss",
+        "median_turns": "near",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "near",
+        "apple_support_in_sample": "near",
+        "signal_clearly_positive": "miss",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "near"
+      },
+      "n_pinned": 1,
+      "n_near": 4
+    },
+    {
+      "scheme": "random20000_s42",
+      "description": "df.sample(n=20000, random_state=42) \u2014 corpus-truth row (round 1: the only row that matches the cited text block)",
+      "sample": {
+        "method": "df.sample",
+        "n": 20000,
+        "random_state": 42
+      },
+      "n_rows_in_sample": 20000,
+      "res": {
+        "kind": "twcs",
+        "columns": [
+          "conversation_id",
+          "company",
+          "conversation",
+          "summary"
+        ],
+        "n_rows_in_sample": 20000,
+        "text": {
+          "n_messages": 65291,
+          "real_min_count": 50,
+          "median_words": 19,
+          "median_real_words": 17,
+          "median_padding_share": 0.095,
+          "distinct_tokens": 41918,
+          "hapax": 24867,
+          "hapax_share": 0.593,
+          "real_vocabulary_size": 2003,
+          "_verdict_hint": "natural language"
+        },
+        "median_turns": 2.0,
+        "max_turns": 80,
+        "distinct_turn_patterns": 730,
+        "top_turn_patterns": [
+          [
+            "CS",
+            10839
+          ],
+          [
+            "CSCS",
+            1932
+          ],
+          [
+            "CSC",
+            1527
+          ],
+          [
+            "CSS",
+            636
+          ],
+          [
+            "C",
+            488
+          ],
+          [
+            "CCS",
+            463
+          ]
+        ],
+        "turn_pattern_hint": "TEMPLATED - reject",
+        "final_customer_turn_signal": {
+          "clearly_positive": 0.129,
+          "clearly_negative": 0.033,
+          "no_signal": 0.838
+        },
+        "n_companies": 108,
+        "companies_appearing_more_than_once": 108,
+        "top_companies": {
+          "AmazonHelp": 2038,
+          "AppleSupport": 1923,
+          "Uber_Support": 999,
+          "SpotifyCares": 676,
+          "Delta": 671,
+          "AmericanAir": 630
+        },
+        "repeat_sources_hint": "present -> can study source reputation"
+      },
+      "cited_extract": {
+        "median_real_words_per_turn": 17,
+        "distinct_tokens_in_sample": 41918,
+        "hapax_share": 0.593,
+        "median_turns": 2.0,
+        "max_turns": 80,
+        "distinct_turn_patterns_per_500": 18.2,
+        "amazon_help_in_sample": 2038,
+        "apple_support_in_sample": 1923,
+        "signal_clearly_positive": 0.129,
+        "signal_clearly_negative": 0.033,
+        "signal_no_signal": 0.838
+      },
+      "pins": {
+        "median_real_words_per_turn": "pin",
+        "distinct_tokens_in_sample": "miss",
+        "hapax_share": "miss",
+        "median_turns": "near",
+        "max_turns": "miss",
+        "distinct_turn_patterns_per_500": "miss",
+        "amazon_help_in_sample": "miss",
+        "apple_support_in_sample": "miss",
+        "signal_clearly_positive": "near",
+        "signal_clearly_negative": "pin",
+        "signal_no_signal": "pin"
+      },
+      "n_pinned": 3,
+      "n_near": 2
+    }
+  ],
+  "pinning": {
+    "median_real_words_per_turn": {
+      "cited": 18,
+      "nearest_row": "random20000_s42",
+      "nearest_value": 17,
+      "status": "pin"
+    },
+    "distinct_tokens_in_sample": {
+      "cited": 5836,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 5836,
+      "status": "pin"
+    },
+    "hapax_share": {
+      "cited": 0.56,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 0.562,
+      "status": "pin"
+    },
+    "median_turns": {
+      "cited": 3,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 3.0,
+      "status": "pin"
+    },
+    "max_turns": {
+      "cited": 48,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 48,
+      "status": "pin"
+    },
+    "distinct_turn_patterns_per_500": {
+      "cited": 103,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 103,
+      "status": "pin"
+    },
+    "amazon_help_in_sample": {
+      "cited": 52,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 52,
+      "status": "pin"
+    },
+    "apple_support_in_sample": {
+      "cited": 36,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 36,
+      "status": "pin"
+    },
+    "signal_clearly_positive": {
+      "cited": 0.11,
+      "nearest_row": "offsets_doc",
+      "nearest_value": 0.11,
+      "status": "pin"
+    },
+    "signal_clearly_negative": {
+      "cited": 0.04,
+      "nearest_row": "random500_s1",
+      "nearest_value": 0.046,
+      "status": "pin"
+    },
+    "signal_no_signal": {
+      "cited": 0.85,
+      "nearest_row": "head_500",
+      "nearest_value": 0.853,
+      "status": "pin"
+    }
+  },
+  "round1_anchors": {
+    "head_500": {
+      "all_match": true,
+      "checks": {
+        "text.hapax_share": {
+          "expected": 0.547,
+          "got": 0.547,
+          "match": true
+        },
+        "text.median_real_words": {
+          "expected": 8.0,
+          "got": 8,
+          "match": true
+        },
+        "n_companies": {
+          "expected": 88,
+          "got": 88,
+          "match": true
+        },
+        "top_companies.AmazonHelp": {
+          "expected": 23,
+          "got": 23,
+          "match": true
+        },
+        "final_customer_turn_signal": {
+          "expected": {
+            "clearly_positive": 0.116,
+            "clearly_negative": 0.031,
+            "no_signal": 0.853
+          },
+          "got": {
+            "clearly_positive": 0.116,
+            "clearly_negative": 0.031,
+            "no_signal": 0.853
+          },
+          "match": true
+        }
+      }
+    },
+    "n_div_5": {
+      "all_match": true,
+      "checks": {
+        "text.median_real_words": {
+          "expected": 9.0,
+          "got": 9.0,
+          "match": true
+        },
+        "median_turns": {
+          "expected": 3.0,
+          "got": 3.0,
+          "match": true
+        },
+        "max_turns": {
+          "expected": 48,
+          "got": 48,
+          "match": true
+        },
+        "distinct_turn_patterns": {
+          "expected": 88,
+          "got": 88,
+          "match": true
+        },
+        "text.distinct_tokens": {
+          "expected": 5309,
+          "got": 5309,
+          "match": true
+        },
+        "n_companies": {
+          "expected": 74,
+          "got": 74,
+          "match": true
+        },
+        "top_companies.AmazonHelp": {
+          "expected": 40,
+          "got": 40,
+          "match": true
+        }
+      }
+    },
+    "offsets_doc": {
+      "all_match": true,
+      "checks": {
+        "text.distinct_tokens": {
+          "expected": 5836,
+          "got": 5836,
+          "match": true
+        },
+        "text.hapax_share": {
+          "expected": 0.562,
+          "got": 0.562,
+          "match": true
+        },
+        "median_turns": {
+          "expected": 3.0,
+          "got": 3.0,
+          "match": true
+        },
+        "max_turns": {
+          "expected": 48,
+          "got": 48,
+          "match": true
+        },
+        "distinct_turn_patterns": {
+          "expected": 103,
+          "got": 103,
+          "match": true
+        },
+        "top_companies.AmazonHelp": {
+          "expected": 52,
+          "got": 52,
+          "match": true
+        },
+        "top_companies.AppleSupport": {
+          "expected": 36,
+          "got": 36,
+          "match": true
+        },
+        "text.median_words": {
+          "expected": 18,
+          "got": 18,
+          "match": true
+        }
+      }
+    }
+  },
+  "verdict": {
+    "hypothesis": "cited block = one concrete 500-sample (the documented 5-offset scheme) for 10 of 11 figures + a ~20k-sample estimate (or total-words read) for the median; head(500) reproduces none of the text-level figures",
+    "median_pinned_by": "random20000_s42",
+    "median_cited": 18,
+    "median_random20000": 17,
+    "any_500_sample_in_cited_band": false,
+    "anchors_reproduced": {
+      "head_500": true,
+      "n_div_5": true,
+      "offsets_doc": true
+    },
+    "notes": [
+      "random20000_s42 is the ONLY row that pins cited median_real_words_per_turn (17 vs cited 18; no 500-sample reaches the cited band of 17..19: they range 8..10).",
+      "offsets_doc pins 10/11 cited figures (all except the median) \u2014 it is the concrete sample the cited block was measured on (office-confirmed, re-run by the research lead in BON-35 r3: 7/8 hard cited cells match to the digit); head_500 and n_div_5 pin far fewer.",
+      "Office-confirmed mislabel of the 8th cited cell: cited median_real_words_per_turn=18 is the median TOTAL words of the offsets_doc sample (18 at every padding threshold; the real-words median on that sample is 9, thresh 50).",
+      "n_div_5 (i*len//5) was a round-1 reconstruction, not the doc's method \u2014 kept for provenance of the round-1 committed row.",
+      "D14 satisfied: every cited number is now pinned to a concrete, regenerable sample (this scan). BON-40 (PR #10) is the product-side doc fix; this scan is the lab-side pin it cites. Do not duplicate that work."
+    ]
   }
 }

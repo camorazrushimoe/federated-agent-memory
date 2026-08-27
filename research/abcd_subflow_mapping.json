@@ -119,7 +119,7 @@
       "guidelines_subflow": "Shipping Cost",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'cost' is the ontology's entry for the guidelines subflow 'Shipping Cost' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "credit_card",
@@ -128,7 +128,7 @@
       "guidelines_subflow": "Invalid Credit Card",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'credit_card' is the ontology's entry for the guidelines subflow 'Invalid Credit Card' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "jacket_how_1",
@@ -281,7 +281,7 @@
       "guidelines_subflow": "Manage Shipping",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'manage' is the ontology's entry for the guidelines subflow 'Manage Shipping' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "manage_cancel",
@@ -425,7 +425,7 @@
       "guidelines_subflow": "Missing Item",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'missing' is the ontology's entry for the guidelines subflow 'Missing Item' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "mistimed_billing_already_returned",
@@ -578,7 +578,7 @@
       "guidelines_subflow": "Initiate Refund",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'refund_initiate' is the ontology's entry for the guidelines subflow 'Initiate Refund' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "refund_status",
@@ -596,7 +596,7 @@
       "guidelines_subflow": "Update Refund",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'refund_update' is the ontology's entry for the guidelines subflow 'Update Refund' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "reset_2fa",
@@ -605,7 +605,7 @@
       "guidelines_subflow": "Reset Two-Factor Auth",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'reset_2fa' is the ontology's entry for the guidelines subflow 'Reset Two-Factor Auth' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "return_color",
@@ -614,7 +614,7 @@
       "guidelines_subflow": "Return Due to Color",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'return_color' is the ontology's entry for the guidelines subflow 'Return Due to Color' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "return_size",
@@ -623,7 +623,7 @@
       "guidelines_subflow": "Return Due to Size",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'return_size' is the ontology's entry for the guidelines subflow 'Return Due to Size' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "return_stain",
@@ -632,7 +632,7 @@
       "guidelines_subflow": "Return Due to Stain",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'return_stain' is the ontology's entry for the guidelines subflow 'Return Due to Stain' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "search_results",
@@ -641,7 +641,7 @@
       "guidelines_subflow": "Search Not Working",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'search_results' is the ontology's entry for the guidelines subflow 'Search Not Working' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "shirt_how_1",
@@ -722,7 +722,7 @@
       "guidelines_subflow": "Cart Not Updating",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'shopping_cart' is the ontology's entry for the guidelines subflow 'Cart Not Updating' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "slow_speed",
@@ -731,7 +731,7 @@
       "guidelines_subflow": "Website Too Slow",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'slow_speed' is the ontology's entry for the guidelines subflow 'Website Too Slow' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "status",
@@ -740,7 +740,7 @@
       "guidelines_subflow": "Shipping Status",
       "method": "DIRECT",
       "confidence": "high",
-      "reason": "Name matches the ontology/guidelines subflow."
+      "reason": "Joined via ontology.json: data subflow 'status' is the ontology's entry for the guidelines subflow 'Shipping Status' (names differ, so the naive data->guidelines name join does not get it)."
     },
     {
       "subflow": "status_credit_missing",
