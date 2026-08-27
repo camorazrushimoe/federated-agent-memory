@@ -1,6 +1,6 @@
 {
   "generated_by": "research/phase0/twcs_resample_scan.py",
-  "generated_at": "2026-08-27T17:50:43+00:00",
+  "generated_at": "2026-08-27T18:21:36+00:00",
   "ticket": "BON-35 round 2 \u2014 lab-side pin of the cited-constants finding (product-side doc fix: BON-40, PR #10 \u2014 do not duplicate)",
   "corpus": "TNE-AI/customer-support-on-twitter-conversation (HF mirror, CC BY-NC-SA 4.0 upstream)",
   "path": "twcs_conversations.parquet",
@@ -239,7 +239,7 @@
     },
     {
       "scheme": "n_div_5",
-      "description": "100 rows at i*len//5 = [0, 158867, 317734, 476601, 635468] (round-1 reconstruction; row already committed in phase0/corpora-reproduction)",
+      "description": "100 rows at i*len//5 = [0, 158867, 317734, 476601, 635468] \u2014 round-1 RECONSTRUCTION of the documented '5 offsets' sample; NOT the doc's method (office confirmed the cited block used 0/5000/120000/400000/700000 \u2014 see offsets_doc; its metrics miss the cited block: 5309 tokens, 88 patterns, AmazonHelp 40). Row committed in phase0/corpora-reproduction.",
       "sample": {
         "method": "positional_slices",
         "slices": [
@@ -1131,6 +1131,51 @@
           "match": true
         }
       }
+    },
+    "offsets_doc": {
+      "all_match": true,
+      "checks": {
+        "text.distinct_tokens": {
+          "expected": 5836,
+          "got": 5836,
+          "match": true
+        },
+        "text.hapax_share": {
+          "expected": 0.562,
+          "got": 0.562,
+          "match": true
+        },
+        "median_turns": {
+          "expected": 3.0,
+          "got": 3.0,
+          "match": true
+        },
+        "max_turns": {
+          "expected": 48,
+          "got": 48,
+          "match": true
+        },
+        "distinct_turn_patterns": {
+          "expected": 103,
+          "got": 103,
+          "match": true
+        },
+        "top_companies.AmazonHelp": {
+          "expected": 52,
+          "got": 52,
+          "match": true
+        },
+        "top_companies.AppleSupport": {
+          "expected": 36,
+          "got": 36,
+          "match": true
+        },
+        "text.median_words": {
+          "expected": 18,
+          "got": 18,
+          "match": true
+        }
+      }
     }
   },
   "verdict": {
@@ -1141,13 +1186,15 @@
     "any_500_sample_in_cited_band": false,
     "anchors_reproduced": {
       "head_500": true,
-      "n_div_5": true
+      "n_div_5": true,
+      "offsets_doc": true
     },
     "notes": [
       "random20000_s42 is the ONLY row that pins cited median_real_words_per_turn (17 vs cited 18; no 500-sample reaches the cited band of 17..19: they range 8..10).",
-      "offsets_doc pins 10/11 cited figures (all except the median) \u2014 it is the concrete sample the cited block was measured on; head_500 and the committed n_div_5 row pin far fewer.",
-      "cited 18 == median TOTAL words (real+padding) of the offsets_doc sample (18) \u2014 the doc's '18 real words' most plausibly reports total median words, or total words of a slightly different 500-sample; 2x real-median is also 18 on most 500-samples.",
-      "BON-40 (PR #10) is the product-side doc fix; this scan is the lab-side pin it cites. Do not duplicate that work."
+      "offsets_doc pins 10/11 cited figures (all except the median) \u2014 it is the concrete sample the cited block was measured on (office-confirmed, re-run by the research lead in BON-35 r3: 7/8 hard cited cells match to the digit); head_500 and n_div_5 pin far fewer.",
+      "Office-confirmed mislabel of the 8th cited cell: cited median_real_words_per_turn=18 is the median TOTAL words of the offsets_doc sample (18 at every padding threshold; the real-words median on that sample is 9, thresh 50).",
+      "n_div_5 (i*len//5) was a round-1 reconstruction, not the doc's method \u2014 kept for provenance of the round-1 committed row.",
+      "D14 satisfied: every cited number is now pinned to a concrete, regenerable sample (this scan). BON-40 (PR #10) is the product-side doc fix; this scan is the lab-side pin it cites. Do not duplicate that work."
     ]
   }
 }

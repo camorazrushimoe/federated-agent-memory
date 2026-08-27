@@ -114,6 +114,19 @@ ANCHORS = {
         "n_companies": 74,
         "top_companies.AmazonHelp": 40,
     },
+    # round-3 (BON-35 r3): the research lead re-ran the office-confirmed
+    # 5x100 scheme (offsets 0/5000/120000/400000/700000) on the full parquet
+    # with the repo's own probe — 7/8 hard cited cells matched to the digit.
+    "offsets_doc": {
+        "text.distinct_tokens": 5836,
+        "text.hapax_share": 0.562,
+        "median_turns": 3.0,
+        "max_turns": 48,
+        "distinct_turn_patterns": 103,
+        "top_companies.AmazonHelp": 52,
+        "top_companies.AppleSupport": 36,
+        "text.median_words": 18,          # cited 18 == median TOTAL words (mislabel)
+    },
 }
 
 
@@ -173,9 +186,12 @@ def main() -> None:
          "sample": {"method": "positional_slices",
                     "slices": [f"{o}:{o + per}" for o in DOC_OFFSETS]}},
         {"scheme": "n_div_5",
-         "description": f"100 rows at i*len//5 = {[i * n // 5 for i in range(5)]} "
-                        "(round-1 reconstruction; row already committed in "
-                        "phase0/corpora-reproduction)",
+         "description": f"100 rows at i*len//5 = {[i * n // 5 for i in range(5)]} — "
+                        "round-1 RECONSTRUCTION of the documented '5 offsets' sample; "
+                        "NOT the doc's method (office confirmed the cited block used "
+                        "0/5000/120000/400000/700000 — see offsets_doc; its metrics "
+                        "miss the cited block: 5309 tokens, 88 patterns, AmazonHelp 40). "
+                        "Row committed in phase0/corpora-reproduction.",
          "sample": {"method": "positional_slices",
                     "slices": [f"{i * n // 5}:{i * n // 5 + per}" for i in range(5)]}},
     ]
@@ -271,15 +287,21 @@ def main() -> None:
             "median_real_words_per_turn (17 vs cited 18; no 500-sample reaches "
             "the cited band of 17..19: they range 8..10).",
             f"offsets_doc pins 10/11 cited figures (all except the median) — "
-            f"it is the concrete sample the cited block was measured on; "
-            f"head_500 and the committed n_div_5 row pin far fewer.",
-            f"cited 18 == median TOTAL words (real+padding) of the offsets_doc "
-            f"sample ({rdoc['res']['text']['median_words']}) — the doc's "
-            f"'18 real words' most plausibly reports total median words, or "
-            f"total words of a slightly different 500-sample; 2x real-median "
-            f"is also 18 on most 500-samples.",
-            "BON-40 (PR #10) is the product-side doc fix; this scan is the "
-            "lab-side pin it cites. Do not duplicate that work.",
+            f"it is the concrete sample the cited block was measured on "
+            f"(office-confirmed, re-run by the research lead in BON-35 r3: "
+            f"7/8 hard cited cells match to the digit); head_500 and n_div_5 "
+            f"pin far fewer.",
+            f"Office-confirmed mislabel of the 8th cited cell: cited "
+            f"median_real_words_per_turn=18 is the median TOTAL words of the "
+            f"offsets_doc sample (18 at every padding threshold; the "
+            f"real-words median on that sample is "
+            f"{rdoc['res']['text']['median_real_words']}, thresh {REAL_MIN_COUNT}).",
+            "n_div_5 (i*len//5) was a round-1 reconstruction, not the doc's "
+            "method — kept for provenance of the round-1 committed row.",
+            "D14 satisfied: every cited number is now pinned to a concrete, "
+            "regenerable sample (this scan). BON-40 (PR #10) is the "
+            "product-side doc fix; this scan is the lab-side pin it cites. "
+            "Do not duplicate that work.",
         ],
     }
 
