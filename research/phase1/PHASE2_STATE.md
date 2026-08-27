@@ -1,7 +1,8 @@
 # Phase 2 — state (lead-maintained)
 
-**Thread:** GH #6 · **Ticket:** BON-39 (parent; sub-tickets M1 / M2 / outcome-validation /
-M3 / synthesis) · **Method:** `docs/research-method-m1-m3.md` (PR #12)
+**Thread:** GH #6 · **Ticket:** BON-39 (parent; sub-tickets **BON-41 M1 · BON-42 M2 ·
+BON-43 outcome-validation · BON-44 M3 · BON-45 synthesis**) · **Method:**
+`docs/research-method-m1-m3.md` (PR #12)
 
 > This file is the in-repo mirror of the DECIDED state for Phase 2. The GH #6 thread is the
 > source of truth; this file must not drift from it.
@@ -50,12 +51,62 @@ M3 / synthesis) · **Method:** `docs/research-method-m1-m3.md` (PR #12)
 | M3 | valuation AUC ≥ 0.80 + ≥ 30% wrongful-promotion trap documentation |
 | Scope | ABCD-only cut pre-registered if labeling at risk of > 4 h by round 3 |
 
-## Round 1 (M1) — opening numbers (verified on merged main @77ccc71, 2026-08-27)
+## Round 1 (M1) — state as of 2026-08-27T22:30Z (main @01a9a38)
 
-- M1 candidate pair set: **170 pairs** (A=80 same-subflow / B=50 same-flow-diff-subflow /
-  C=40 cross-flow), seed 42, **sha256 `423a5ef4ce12…`** (stable fingerprint, text excluded).
-  Extractor: `research/phase1/m1_pairset_extract.py` (re-runnable; deterministic).
-- §4 derivation dry-run (for round 3; recorded so it is not rediscovered): 10,042 convos,
-  agreement median **0.600** / mean **0.536**, exact 947, dev>0.5 = 3,946 — the signal has
-  the spread the 50-conv AUC test needs.
-- Brief: `docs/research-phase2-round1-m1.md` (H-m1, bars, labeling protocol, handoff point).
+**Status: R1 in flight. Engineer is the critical path (pair file); evaluation is standing by.**
+
+Landed this round (lead):
+- **Kickoff comment GH #6 = `5445829777`** (22:12Z) — DECIDED D17/D18/D19 update + round-1
+  kickoff + M1 assignment (the thread is the source of truth; this file mirrors it).
+- **PR #13 MERGED → `main @13692d6`** (lead review: PR #13 comment `5445670913`).
+  `research/phase2/labeling/` now on main: `PROTOCOL-m1-pairs.md` (v1.1, locked),
+  `CANDIDATE-PAIR-CONTRACT.md` (the intake contract for this round's pairs),
+  `RUNBOOK-m1.md`, `validate_pairs.py` / `split_passes.py` / `score_agreement.py` /
+  `stage_pass2.py` (all selftests re-run by the lead), `pair_capacity.{py,json,md}`
+  (lead re-computed vs the corpus — all figures exact: 10,042 convos, 10 flows / 96
+  subflows, ceilings 848,766 / 4,246,706 / 45,320,389, 2,585 empty-product convos = 25.7%).
+- Linear: BON-39 In Progress with the five sub-tickets above (BON-41 In Progress).
+
+R1 assignment (as posted on #6):
+- **Engineer (BON-41, critical path):** build `candidate_pairs.jsonl` **to the merged
+  contract** — 170 pairs (85 should-match / 34 ambiguous / 51 should-not-match; cross-flow
+  ≥ 20, cross-product ≥ 10 from the 7,457 non-empty-product convos), seed recorded, max
+  conversation reuse ≤ 2, display per contract §5, no labels/hints. Self-run
+  `validate_pairs.py` (pass `--corpus` — the baked-in default path does not exist in the
+  current env) and attach the verdict. Land as commit/PR under `research/phase2/m1/`.
+  Then, when the gold set lands: **B0 (oracle subflow) + B1 (TF-IDF, customer turns only)**
+  vs `gold_m1_pairs_agentlabeled.jsonl`. Round-1 handoff point: inter-pass disagreement %
+  + B0/B1 per-band false-friend rate & should-match recall + verdict vs the D18 bar, in a
+  commit/PR. B2 optional (falsification-only).
+- **Evaluation (BON-41 labeling slot):** two-pass per protocol v1.1 + runbook S0–S3;
+  pass 2 in a fresh context via `stage_pass2.py`; report the disagreement NUMBER + gold-set
+  commit + ready-for-B1 signal on #6. >15% → the pre-registered 20-item sample to the
+  founder, never the whole set. (Door was down at 22:19Z — container not up; wake
+  re-published; the full brief is on #6 so a wake on the labeler's side is self-sufficient.)
+- **Lead:** review the pair file against the contract, accept/redo, then verdict on the
+  round numbers; move to R2 (M2) or fix-forward within R1.
+
+Recorded lead decisions (R1):
+- The **pair artifact is built to `CANDIDATE-PAIR-CONTRACT.md`** (evaluation's intake
+  contract, merged). `research/phase1/m1_pairset_extract.py` (pre-contract, JSON,
+  A/B/C 80/50/40, seed 42, fingerprint `423a5ef4ce12…`) stays as the deterministic
+  reference — its output is NOT the labeler's input.
+- `validate_pairs.py`/`pair_capacity.py` default corpus path
+  `/opt/data/fam-r2/data/abcd/abcd_v1.1.json` does not exist in the current env → S0 must
+  pass `--corpus` explicitly (non-blocking follow-up for evaluation).
+- Cosmetic: `score_agreement.py` stamps gold rows `protocol: "…v1.0"` while the doc is v1.1
+  (non-blocking follow-up).
+
+Opening numbers (pre-contract reference + R3 prep, unchanged from the 77ccc71 kickoff):
+- Pre-contract M1 candidate set: 170 pairs (A=80 / B=50 / C=40), seed 42,
+  sha256 `423a5ef4ce12…` (`research/phase1/m1_pairset_extract.py`).
+- §4 derivation dry-run (for round 3): 10,042 convos, agreement median **0.600** / mean
+  **0.536**, exact 947, dev>0.5 = 3,946 — the signal has the spread the 50-conv AUC test
+  needs.
+- Brief: `docs/research-phase2-round1-m1.md`.
+
+Product side: **CLEAR (2026-08-27T22:25Z).** PR #11 merged → main @01a9a38 (D15 rebase
+completed per the wake contract; lead cross-checked: #13 merge 13692d6 is an ancestor of
+the new tip, `research/phase2/labeling/` + kickoff intact, 0 lost paths) and GH #7 closed
+by the engineer via the issues API (D16). All six research PRs are now on main; nothing
+on the product side gates Phase 2.
