@@ -1,188 +1,244 @@
-# Research datasets: Customer–Agent dialogues (vetted acquisition package)
+# Certified data package: customer–agent dialogue corpora
 
-**Role of this doc:** dataset scout package. A stranger should be able to obtain the data and reproduce the cited measurements without asking anyone.
+**Role of this doc:** dataset acceptance and acquisition. A stranger should be able to obtain the data and reproduce every number here without asking anyone.
 
-**Related:** [`research-brief-cross-session-experience.md`](./research-brief-cross-session-experience.md) · probe: [`../research/probe_dataset.py`](../research/probe_dataset.py)
+**Commission this data serves:** [`research-commission-shareable-experience.md`](./research-commission-shareable-experience.md)
+**Probe:** [`../research/probe_dataset.py`](../research/probe_dataset.py)
 
-> Numbers tagged **(review)** come from the PR #4 file-level probe (not the Hugging Face card). Reproduce the canned block with:
+> This document answers **"is this corpus fit to work on"** — not "what does it contain". Findings are the lab's output, not ours.
+>
+> Numbers tagged **(probe)** are reproducible. Each cited block records the command that regenerates it:
 >
 > ```bash
-> python research/probe_dataset.py --cite-review
+> python research/probe_dataset.py --cite-review   # prints cited constants (no computation)
 > ```
 >
-> Then re-run the same metrics on the downloaded file with `--kind` / `--path`.
+> Then run the `--kind` command shown next to each corpus and compare. **If they disagree, that is a bug on our side — tell us.**
 
 ---
 
-## Acceptance checklist (file, not card)
+## Verdict
 
-A dataset is eligible as **primary** for a hypothesis only if all of these pass on the *downloaded file*:
-
-- [ ] Schema matches the file header (not the dataset card)
-- [ ] Real text: usable median real tokens/turn, no random padding, language filterable
-- [ ] Genuinely multi-turn (not one SFT row per exchange)
-- [ ] Outcome is **organic** or **action-derived**, not a sampled column with a near-uniform distribution
-- [ ] Recurring **problem types** (enough to cluster) — needed for H1
-- [ ] Recurring **source entities** (same brand/agent appears more than once) — needed for H7 / `source_reputation`
-- [ ] License stated, with a commercial-use verdict
-
-Fail “real text” or “organic/action-derived outcome” → not primary, regardless of file size.
+| Corpus | Verdict | Serves |
+|--------|---------|--------|
+| **ABCD** (`asappresearch/abcd`) | **ACCEPT** — MIT, action ground truth | primary; the only commercially clean corpus |
+| **TWCS** (`TNE-AI/…-twitter-conversation`) | **ACCEPT for research** — non-commercial licence | real paraphrase, real brands, recurring sources |
+| MultiWOZ 2.2 | accept, narrow | dialogue structure only; not a support-outcome corpus |
+| Syncora / `strova-ai` | **REJECT** | padded text, sampled labels — smoke-test only |
+| Lakshan2003 · Saif7800 · CallCenterEN · DialogStudio | **REJECT / blocked** | see §5 |
 
 ---
 
-## Working set (what the lab should download first)
+## 1. Acceptance checklist (run against the file, never the card)
 
-### 1. TWCS conversations — primary for H1 / H5 / weak H4
+A corpus is eligible as **primary** only if all of these pass on the *downloaded file*:
+
+- [ ] Schema matches the file header, not the dataset card
+- [ ] Real text — recurring vocabulary, no random padding, language filterable
+- [ ] Genuinely multi-turn, with turn structure that *varies* between conversations
+- [ ] Outcome is **organic** or **action-derived** — not a sampled column with a near-uniform distribution
+- [ ] Recurring **problem types**, enough to group
+- [ ] Recurring **source entities** — the same brand/agent appears more than once
+- [ ] Enough conversations **per group** to compare subsets (statistical power, not just totals)
+- [ ] Licence stated, with an explicit commercial-use verdict
+
+Fail "real text" or "organic/action-derived outcome" → not primary, regardless of file size.
+
+**The single most robust discriminator we found is `hapax_share`** — the fraction of tokens occurring exactly once. Natural language reuses its vocabulary; random padding does not.
+
+| Corpus | `hapax_share` | Reading |
+|--------|---------------|---------|
+| Syncora / strova-ai | **0.963** | padded — reject |
+| TWCS (TNE-AI) | **0.56** | natural language |
+
+---
+
+## 2. ABCD — primary
 
 | | |
 |--|--|
-| **Preferred path** | Hugging Face [`TNE-AI/customer-support-on-twitter-conversation`](https://huggingface.co/datasets/TNE-AI/customer-support-on-twitter-conversation) |
-| **Why this path** | Threads already assembled (`Customer:` / `Support:` prefixes). No Kaggle API key. Viewer works. |
-| **Fallback** | Kaggle [`thoughtvector/customer-support-on-twitter`](https://www.kaggle.com/datasets/thoughtvector/customer-support-on-twitter) — raw tweets + `in_response_to_tweet_id`. Use if you need timestamps / tweet ids the mirror may drop. |
-| **Auth** | HF: none for public download. Kaggle fallback: Kaggle account + API token. |
-| **Expected count** | TNE-AI card/viewer: **794,335** conversations, **109** company values. |
-| **License (source TWCS)** | **CC BY-NC-SA 4.0** on Kaggle; commercial use of the full set requires contact `stuart@thoughtvector.io`. |
-| **License (TNE-AI mirror)** | **Unknown on the dataset card** (Q2). Treat as **research-only**, same as source, until legal signs off. A mirror does **not** inherit redistribution rights automatically. |
-| **Commercial?** | **No** (NC + SA on the source). Research / hackathon only. |
-| **Outcome origin** | Organic-implicit. Final customer-turn signal **(review, n=500):** 11% clearly positive / 4% clearly negative / **85% no signal**. Keyword rules will not carry H4; need an LLM judge or a proxy. |
-| **Repeat sources** | **Yes.** 93 brands with repeats in the 500-sample (e.g. AmazonHelp ×52, AppleSupport ×36). This is the H7 home, not ABCD. |
-| **Text quality (review, n=500)** | median **18** real words/turn; 5,836 distinct tokens; hapax share **0.56** (natural language); median **3** turns (max 48); **103** distinct turn patterns / 500 convos. |
-
-```bash
-# Preferred (no auth)
-pip install datasets pandas pyarrow
-python - <<'PY'
-from datasets import load_dataset
-ds = load_dataset("TNE-AI/customer-support-on-twitter-conversation", split="train")
-print(ds)
-print(ds.column_names)
-print(len(ds))
-ds.to_parquet("twcs_conversations.parquet")
-PY
-python research/probe_dataset.py --kind twcs --path twcs_conversations.parquet --sample 500
-```
-
-**Starting filter (Q6 — share of noise not measured; this is the minimum clean step):**
-keep threads with ≥1 `Support:` turn; drop conversations whose only support line is a follow/welcome template; optional language filter on the first customer turn. Exact non-English share: **unknown (Q5)** — measure with langdetect on a 2k sample before claiming “English corpus”.
-
-**Provenance of the mirror (Q2):** not independently re-counted against the Kaggle tweet graph in this PR. Spot-check a handful of threads against Kaggle if you enable the fallback. If the mirror drops turns, stop and say so.
-
----
-
-### 2. ABCD — primary for H2 / H3 / H5 (playbook-scored cards)
-
-| | |
-|--|--|
-| **Path** | GitHub **[asappresearch/abcd](https://github.com/asappresearch/abcd)** — **not** the gated HF copy |
-| **Files** | `data/abcd_v1.1.json.gz` (~37 MB) · `data/guidelines.json` · `data/ontology.json` |
+| **Path** | GitHub **[asappresearch/abcd](https://github.com/asappresearch/abcd)** — **not** the gated HF copy (`Salesforce/dialogstudio` returns 401) |
+| **Files** | `data/abcd_v1.1.json.gz` (37 MB) · `data/guidelines.json` · `data/ontology.json` |
 | **Auth** | none |
-| **Expected count** | **10,042** human–human dialogues; **10 flows / 55 subflows** (review + ontology) |
-| **License** | **MIT** |
-| **Commercial?** | **Yes** |
-| **Outcome origin** | **No `outcome` column.** Proposed derivation: compare performed `speaker: "action"` sequence to the ordered `actions` in `guidelines.json` for that subflow (Q8). Treat as action-derived, not sampled — **distribution unknown until probed**. |
-| **Repeat agent identity** | **No.** H7 / `source_reputation` has **no home** in ABCD. |
-| **Scale (Q7)** | 10,042 / 55 ≈ **183** per subflow *if uniform*. Actual per-subflow histogram: **unknown until** `probe_dataset.py --kind abcd`. If the tail is thin, group subflows by flow before success/fail path comparison. |
-
-`guidelines.json` is a first-class asset: per subflow it records the **exact action sequence and instructions** human agents were required to follow. H2/H5 become measurable — extract a card from a conversation, score it against the documented playbook — instead of unsupervised path mining.
+| **Licence** | **MIT** (verified on the repo) |
+| **Commercial use** | **Yes** |
+| **Counts (probe)** | **10,042** dialogues = train 8,034 / dev 1,004 / test 1,004 |
+| **Structure (probe)** | 10 flows, **713–1,094 dialogues per flow** |
+| **Action ground truth (probe)** | **36,482 action turns; 100% of dialogues contain ≥1 action** |
+| **Outcome origin** | derivable by comparing performed actions to the documented playbook — **proposed, unproven** |
+| **Repeat source identity** | **No** — no persistent agent identity |
 
 ```bash
 mkdir -p data/abcd && cd data/abcd
 curl -L -o abcd_v1.1.json.gz https://github.com/asappresearch/abcd/raw/master/data/abcd_v1.1.json.gz
-curl -L -o guidelines.json https://raw.githubusercontent.com/asappresearch/abcd/master/data/guidelines.json
-curl -L -o ontology.json https://raw.githubusercontent.com/asappresearch/abcd/master/data/ontology.json
+curl -L -O https://raw.githubusercontent.com/asappresearch/abcd/master/data/guidelines.json
+curl -L -O https://raw.githubusercontent.com/asappresearch/abcd/master/data/ontology.json
 gunzip -k abcd_v1.1.json.gz
-# sanity: file should be tens of MB uncompressed; 10k-ish dialogues in train+dev+test
-python ../../../research/probe_dataset.py --kind abcd --path abcd_v1.1.json
+
+# expect: n_conversations 10042, action_turns_total 36482
+python research/probe_dataset.py --kind abcd \
+    --path abcd_v1.1.json --guidelines guidelines.json
 ```
 
-(Adjust the relative path to `research/probe_dataset.py` from wherever you run it.)
+### Why this corpus matters
+
+Each conversation carries turns with `speaker: "action"` recording **what the agent actually did** — the action name plus arguments (e.g. `pull-up-account`). Alongside it, `guidelines.json` documents, per subflow, the **exact ordered action sequence and instructions the human agents were required to follow**.
+
+This is the only corpus we found where the "correct playbook" is written down next to real conversations. It is what makes evaluating extracted experience possible rather than purely unsupervised.
+
+### Two limits you must plan around
+
+**Subflow level is underpowered (probe).** The data contains **96 distinct subflows**, not the 55 declared in `ontology.json` — 50 appear in the data but not the ontology (`boots_how_1..4`, `jacket_how_1..4`, …), and 9 ontology entries never appear in the data.
+
+| per-subflow | value |
+|--|--|
+| min | **3** |
+| median | **69.5** |
+| max | **361** |
+| subflows under 100 dialogues | **54 of 96** |
+| subflows under 50 dialogues | **36 of 96** |
+
+Splitting a 70-dialogue subflow by outcome and controlling for anything else leaves cells around 15. **Flow level (10 groups, 713–1,094 each) is healthy** and is the safer default.
+
+**The playbook does not join to the data (probe).** `guidelines.json` names subflows in Title Case (`Initiate Refund`, `Boots FAQ`); the data uses snake_case (`return_color`, `boots_how_1`). Naive name normalisation matches **32 names, covering 45.6% of conversations** (4,582 / 10,042).
+
+→ **A manual 96 → 55 mapping table does not exist and has to be built.** Until it does, playbook comparison covers under half the corpus. This is unbudgeted work; scope it explicitly. **If you build it, commit it** — we want it reusable.
 
 ---
 
-### 3. MultiWOZ 2.2 — structure only, not a support-outcome corpus
+## 3. TWCS — real-world corpus, research licence only
 
 | | |
 |--|--|
-| **Do not** | `load_dataset("pfb30/multi_woz_v22")` on datasets 3.x — the repo is a **loading script only** (`.gitattributes`, README, `.py`). Script loading was removed. |
-| **Do** | parquet on the auto-convert ref |
-| **License** | Apache 2.0 |
-| **Commercial?** | **Yes** |
-| **Outcome** | Task success in the MultiWOZ sense (booking informed/requested), **not** support resolution. |
+| **Preferred path** | HF [`TNE-AI/customer-support-on-twitter-conversation`](https://huggingface.co/datasets/TNE-AI/customer-support-on-twitter-conversation) |
+| **Why this path** | threads already assembled with `Customer:` / `Support:` prefixes; parquet; viewer works; **no auth** |
+| **Fallback** | Kaggle [`thoughtvector/customer-support-on-twitter`](https://www.kaggle.com/datasets/thoughtvector/customer-support-on-twitter) — raw tweets + `in_response_to_tweet_id`, needs a Kaggle API token and thread reconstruction. Use only if you need raw tweet ids / timestamps the mirror may drop. |
+| **Counts** | **794,335** conversations, **109** company values |
+| **Licence (source)** | CC BY-NC-SA 4.0 on Kaggle; commercial use requires contacting the author |
+| **Licence (this mirror)** | **none stated on the card** — verified absent. Treat as at least as restrictive as the source. |
+| **Commercial use** | **No** — research / hackathon only, pending legal review |
+| **Text (probe, n=500)** | median **18** real words/turn; 5,836 distinct tokens; `hapax_share` **0.56** |
+| **Structure (probe, n=500)** | median **3** turns (max 48); **103 distinct turn patterns** — genuine structural variation |
+| **Repeat sources (probe)** | **Yes** — 93 brands recur in a 500 sample (AmazonHelp ×52, AppleSupport ×36) |
+| **Outcome signal (probe)** | final customer turn: **11% clearly positive · 4% clearly negative · 85% no signal** |
+
+```bash
+pip install datasets pandas pyarrow
+python - <<'PY'
+from datasets import load_dataset
+ds = load_dataset("TNE-AI/customer-support-on-twitter-conversation", split="train")
+print(ds, len(ds), ds.column_names)   # expect 794,335 rows
+ds.to_parquet("twcs_conversations.parquet")
+PY
+
+python research/probe_dataset.py --kind twcs \
+    --path twcs_conversations.parquet --sample 500
+```
+
+**Consequence of the 85% figure:** keyword polarity on the closing turn will not carry an outcome label. Plan for an LLM judge, a proxy, or a hand-labelled gold set — and note that the 15% of threads which *do* carry a signal are unlikely to be a random sample of the whole.
+
+**Starting filter (noise share not measured):** keep threads with ≥1 `Support:` turn; drop threads whose only support line is a follow/welcome template. **Non-English share is unmeasured** — run a language detector on a 2k sample before calling this an English corpus.
+
+**Mirror provenance is unverified.** We did not re-derive the thread graph from Kaggle. If you rely on this as source of truth, spot-check a handful of threads against the original; if the mirror silently drops turns, stop and tell us.
+
+---
+
+## 4. MultiWOZ 2.2 — structure only
+
+| | |
+|--|--|
+| **Do not** | `load_dataset("pfb30/multi_woz_v22")` — the repo contains only `.gitattributes`, `README.md` and `multi_woz_v22.py`. **It is a loading script with no data**, and `datasets` 3.x removed script loading. |
+| **Do** | read the auto-converted parquet on `refs/convert/parquet` (`v2.2/train/0000.parquet`) |
+| **Licence** | Apache 2.0 (verified on the card) |
+| **Commercial use** | Yes |
+| **Outcome** | task success in the booking sense — **not** support resolution |
 
 ```bash
 python - <<'PY'
 from datasets import load_dataset
-ds = load_dataset(
-    "pfb30/multi_woz_v22",
-    split="train",
-    revision="refs/convert/parquet",
-)
-print(ds)
-print(len(ds))
+ds = load_dataset("pfb30/multi_woz_v22", split="train", revision="refs/convert/parquet")
+print(ds, len(ds))
 PY
 ```
 
-If that revision fails, fetch `v2.2/train/0000.parquet` from the dataset's convert tree on the Hub.
+If the revision form fails, download `v2.2/train/0000.parquet` from the convert tree directly and read it with pandas.
 
 ---
 
-## Demoted / do-not-primary
+## 5. Rejected and blocked
 
-### Syncora / strova-ai — smoke-test only
+### Syncora / strova-ai — REJECT (smoke-test only)
 
-Renamed: `syncora/customer_support_conversations_dataset` → [`strova-ai/customer_support_conversations_dataset`](https://huggingface.co/datasets/strova-ai/customer_support_conversations_dataset). HF viewer **broken** (`CastError`); card schema ≠ file schema. **Do not trust the preview.**
+Renamed `syncora/customer_support_conversations_dataset` → [`strova-ai/customer_support_conversations_dataset`](https://huggingface.co/datasets/strova-ai/customer_support_conversations_dataset). **HF viewer broken** (`CastError`) because the card's declared schema contradicts the shipped CSV. **Do not trust the preview.**
 
-Actual header: `conv_id, turn_index, role, text, timestamp, industry, product, issue_type, language, channel, customer_name, agent_name, overall_sentiment, overall_urgency, outcome, primary_intent`.
+Actual header: `conv_id, turn_index, role, text, timestamp, industry, product, issue_type, language, channel, customer_name, agent_name, overall_sentiment, overall_urgency, outcome, primary_intent` — there is no `status`, `priority`, `category`, `sub_category`, `intent`, `conversation_id`, `turn_id` or `message`.
 
-**(review)** 3,430 complete conversations; median 14 turns (10–18); median 68 words/message of which **8 real** (~88% padding); 1,044,426 distinct tokens, **1,005,883 hapax**, **149** tokens occur >50×; `outcome` counts 704/694/689/686/657 (**sampled**); every label constant within a conversation; `primary_intent` × `issue_type` = 14×15 all 210 cells filled; names unique per conversation → no repeat entities.
+**(probe)** on the first 31 MB / 20,000 messages:
 
-Use only to verify that `probe_dataset.py` flags padding + uniform labels. **Not for H1–H7.**
+| metric | value |
+|--|--|
+| median words per message | 68 |
+| median **real** words per message | **8** |
+| median padding share | **0.884** |
+| `hapax_share` | **0.963** |
+| recurring vocabulary (tokens seen ≥50×) | **149** |
+| `outcome` per conversation | 704 / 694 / 689 / 686 / 658 → **sampled, near-uniform** |
+| labels varying within a conversation | **0** |
+| `primary_intent` × `issue_type` | 14×15, **210 of 210 cells populated** — crossed at random |
+| unique customer / agent names | 3,430 / 3,419 over 3,431 conversation ids → **no repeat sources** |
 
-### Lakshan2003
+```bash
+# reproduce the rejection
+python research/probe_dataset.py --kind syncora \
+    --path customer_support_data.csv --sample-messages 20000
+```
 
-SFT rows: `instruction / conversation_history / history_summary / client_question / agent_answer / refined_agent_answer`. No outcome. Answers are LLM-refined. Cannot ground H2/H3/H4.
+The 629 MB file size is padding, not content. Use only to confirm the probe flags garbage.
 
-### Saif7800, CallCenterEN, DialogStudio
+### Others
 
-- `Saif7800/customer_qa_dataset` — viewer `TypeError` (`tool_name` struct). Probe files or drop.
-- `AIxBlock/92k-real-world-call-center-scripts-english` — Arrow error; payload is **12 ZIP archives**. License **CC BY-NC 4.0** → research/hackathon only, **cannot inform a shipped product**. Realism corpus if someone unpacks ZIPs; not in the minimum lab slice.
-- `Salesforce/dialogstudio` — **401 gated**.
-
-### Organic-outcome dumps listed earlier (Ubuntu / StackExchange / GitHub-closed-by-commit)
-
-**Removed as placeholders (Q4).** No links, schemas, licenses, or measured outcome distributions were attached. Do not start a week of work on them from this brief. Re-open only with a verified package (link + schema + license + how outcome is derived + distribution).
+- **`Lakshan2003/customer-support-client-agent-conversations`** — not a multi-turn corpus. Schema is `conversation_id / instruction / conversation_history / history_summary / client_question / agent_answer / refined_agent_answer`: an SFT dataset, one row per exchange, **no outcome label**, and agent answers are LLM-*refined*, so a "good path" is a model's output rather than a human's.
+- **`Saif7800/customer_qa_dataset`** — viewer fails (`TypeError`, inconsistent `tool_name` struct). CSAT/resolution fields advertised on the card are unverified. Probe the files before trusting them.
+- **`AIxBlock/92k-real-world-call-center-scripts-english`** — viewer fails (Arrow error); payload is **12 ZIP archives** needing manual unpacking. Licence **CC BY-NC 4.0** → research only, cannot inform a shipped product. Realism corpus if someone invests the unpacking; not in the minimum slice.
+- **`Salesforce/dialogstudio`** — **401 gated.** The file tree is browsable but downloads require accepting terms. It bundles ABCD, SGD, MultiWOZ and Taskmaster in one format, so it is worth revisiting *if* someone obtains access — but ABCD is simpler to take from GitHub.
+- **Ubuntu Dialogue / StackExchange accepted answers / GitHub issues closed by a linked commit** — previously listed as organic-outcome sources and **removed as placeholders**: no links, schemas, licences or measured distributions were ever attached. Attractive in principle because the outcome is real rather than annotated. Re-list only with a verified package: link, schema, size, licence, how the outcome is derived, and a measured distribution.
 
 ---
 
-## Commercial filter (Q1)
+## 6. Commercial filter
 
-| Dataset | License | Shipped product? |
-|---------|---------|------------------|
-| ABCD | MIT | Yes |
+| Corpus | Licence | May inform a shipped product? |
+|--------|---------|-------------------------------|
+| ABCD | MIT | **Yes** |
 | MultiWOZ 2.2 | Apache 2.0 | Yes |
-| TWCS (Kaggle source) | CC BY-NC-SA 4.0 | **No** (contact author for commercial) |
-| TNE-AI TWCS mirror | Unknown card; treat as source NC | **No** until legal review |
+| TWCS (Kaggle source) | CC BY-NC-SA 4.0 | **No** — contact author for commercial terms |
+| TWCS (TNE-AI mirror) | none stated | **No** until legal review |
 | CallCenterEN | CC BY-NC 4.0 | **No** |
-| Syncora/strova-ai | card claimed open; irrelevant — data unusable | n/a |
+| Syncora / strova-ai | card claims open | moot — data unusable |
 
-Hackathon research may use the NC sets. Anything that ships with Federated Agent Memory should be designed so it can be *validated* on ABCD (and MultiWOZ structure), not *trained* on TWCS, unless a commercial license is obtained.
+**Working rule:** develop and explore on TWCS, **validate on ABCD**. Do not produce a deliverable that only works on non-commercial data.
 
 ---
 
-## Does any single corpus pass the full bar? (Q3)
+## 7. Does any single corpus pass the full bar?
 
-**No.** Working combination:
+**No.** The gaps are structural, and knowing which is which is more useful than a single ranking:
 
-| Hypothesis | Corpus | Notes |
-|------------|--------|-------|
-| H1 clustering despite paraphrase | TWCS | |
-| H2 successful paths | ABCD + `guidelines.json` | |
-| H3 early failure signals | ABCD (first-k actions/turns only) | |
-| H4 outcome-proxy noise | TWCS 11/4/85 signal — **weak**; ABCD action-vs-guidelines — **proposed** |
-| H5 experience cards | ABCD (score vs playbook) + TWCS (draft cards) | |
-| H6 cross-industry transfer | TWCS brands as stand-ins; **weak** |
-| H7 evidence accumulation / reputation | TWCS brands only. **No home in ABCD.** |
-| H8 partial success | TWCS 85% no-signal makes this messy |
-| H9 staleness / harm | **No viable static dataset** — needs replay + dated facts |
-| H10 cost | **No dataset** — eval harness ([issue #5](https://github.com/camorazrushimoe/federated-agent-memory/issues/5)) |
-| Transfer “does memory help the next chat” | **No static dataset** — [issue #5](https://github.com/camorazrushimoe/federated-agent-memory/issues/5) |
+| Requirement | ABCD | TWCS | Consequence |
+|-------------|------|------|-------------|
+| Natural text | yes | yes | both usable |
+| Turn structure varies | yes | yes | both usable |
+| Non-sampled outcome | derivable, unproven | organic on 15% | **the weakest link in both** |
+| Recurring problem types | yes (10 flows) | yes (brands, topics) | grouping is possible |
+| Recurring **sources** | **no** | brands only | source-reputation work is effectively blocked |
+| Power per group | flow yes / subflow no | large | prefer coarse groups |
+| Commercially clean | **yes** | no | ship-facing claims must rest on ABCD |
+
+Two consequences worth stating plainly:
+
+1. **Outcome labelling is an open research problem here, not a preprocessing step.** Neither corpus hands it over.
+2. **Anything depending on the same source recurring has no clean home.** ABCD has no agent identity; TWCS brands are a loose proxy. Treat it as blocked rather than weakly tested.
+
+---
+
+*Screened and measured in PR #4. Extend this document rather than starting a parallel list, and extend `research/probe_dataset.py` rather than working in a scratch notebook.*

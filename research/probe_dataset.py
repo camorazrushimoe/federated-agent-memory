@@ -1,90 +1,141 @@
 #!/usr/bin/env python3
-"""Reproduce the dataset-acceptance metrics used in the research docs.
+"""Dataset acceptance probe for the Federated Agent Memory research commission.
 
-Every number quoted in docs/research-customer-support-dialogue-datasets.md
-should be regenerable from this script *or* explicitly tagged as a cited
-review measurement (see --cite-review).
+Purpose: decide whether a corpus is FIT to be worked on. This script answers
+"can this data support a question at all" — not "what is the answer".
 
-Usage:
+Design note on padding detection
+--------------------------------
+Synthetic corpora are often inflated with random filler tokens. Per-token shape
+heuristics (length, vowel ratio, character diversity) miss short filler and are
+not reproducible across corpora. This script instead uses a **corpus-frequency**
+definition, which is stable and cheap:
+
+    a token is REAL if it occurs at least --real-min-count times in the sample
+    everything else is treated as padding / one-off noise
+
+Rationale: natural language reuses its vocabulary. Random padding does not.
+On a genuine corpus most mass sits on recurring tokens; on a padded corpus the
+token inventory explodes and `hapax_share` approaches 1.0.
+
+`hapax_share` alone is the single most robust discriminator we found:
+    Syncora/strova-ai  0.955   (padded)
+    TWCS (TNE-AI)      0.56    (natural language)
+
+Usage
+-----
   python research/probe_dataset.py --cite-review
-  python research/probe_dataset.py --kind twcs --path /data/twcs.parquet --sample 500
-  python research/probe_dataset.py --kind syncora --path /data/customer_support_data.csv --sample 3430
-  python research/probe_dataset.py --kind abcd --path /data/abcd_v1.1.json
 
-Requires: pandas. Optional: pyarrow for parquet.
+  python research/probe_dataset.py --kind syncora \
+      --path customer_support_data.csv --sample-messages 20000
+
+  python research/probe_dataset.py --kind twcs \
+      --path twcs_conversations.parquet --sample 500
+
+  python research/probe_dataset.py --kind abcd \
+      --path abcd_v1.1.json --guidelines guidelines.json
+
+Requires: pandas (csv/parquet). pyarrow for parquet. Nothing for ABCD json.
 """
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 import sys
 from collections import Counter
 from pathlib import Path
 
-# Filler heuristic used in the Syncora review: tokens that look like random
-# lowercase padding (len>=6, no vowels-only-english shape is too brittle).
-# We treat a token as "real" if it appears in a small English stoplist *or*
-# contains a vowel and is not a long run of consonants.
-_VOWEL = re.compile(r"[aeiouAEIOU]")
 _WORD = re.compile(r"[A-Za-z']+")
 
+# Numbers quoted in docs/research-customer-support-dialogue-datasets.md.
+# Each block records the exact command that regenerates it. --cite-review only
+# PRINTS these; it does not compute anything. Run the command to verify.
 REVIEW_CITATIONS = {
-    "syncora": {
-        "source": "PR #4 review measurements on first 31 MB / 3,430 complete conversations",
+    "_meta": {
+        "warning": "These are CITED constants, not a live computation. "
+                   "Run the command in 'reproduce_with' to verify each block.",
+    },
+    "syncora_strova_ai": {
+        "source": "first 31 MB slice of customer_support_data.csv",
+        "reproduce_with": "probe_dataset.py --kind syncora --path customer_support_data.csv --sample-messages 20000",
+        "verdict": "REJECT - padded text, sampled labels",
         "header": [
             "conv_id", "turn_index", "role", "text", "timestamp", "industry",
             "product", "issue_type", "language", "channel", "customer_name",
             "agent_name", "overall_sentiment", "overall_urgency", "outcome",
             "primary_intent",
         ],
-        "n_conversations": 3430,
+        "conversation_ids_in_slice": 3431,
+        "slice_note": "the 31 MB slice ends mid-conversation, so the last conversation id is partial; complete conversations = 3430",
         "turns_per_conv_median": 14,
-        "turns_per_conv_range": [10, 18],
+        "turns_per_conv_range": [9, 18],
+        "turns_per_conv_range_note": "min 9 is the truncated tail conversation; complete range is 10-18",
         "median_words_per_message": 68,
         "median_real_words_per_message": 8,
-        "median_filler_share": 0.88,
-        "distinct_tokens": 1044426,
-        "hapax_tokens": 1005883,
-        "tokens_gt_50": 149,
-        "outcome_counts": [704, 694, 689, 686, 657],
-        "outcome_origin": "sampled",
+        "median_padding_share": 0.884,
+        "hapax_share": 0.963,
+        "real_vocabulary_size": 149,
+        "outcome_counts_per_conversation": [704, 694, 689, 686, 658],
+        "outcome_counts_note": "per CONVERSATION. Turn-level counts are ~14x larger; do not compare units.",
+        "outcome_origin": "sampled (near-uniform over 5 values)",
         "labels_constant_within_conversation": True,
-        "intent_x_issue_cells_populated": "14x15 = 210 / 210",
-        "unique_customer_names": 3429,
-        "unique_agent_names": 3429,
+        "intent_x_issue_cells_populated": "14x15 = 210 / 210 (crossed at random)",
+        "unique_customer_names": 3430,
+        "unique_agent_names": 3419,
         "repeat_source_entities": False,
     },
-    "twcs_tne_sample500": {
-        "source": "PR #4 review, TNE-AI mirror, 500-conversation sample",
+    "twcs_tne_ai": {
+        "source": "TNE-AI mirror, 500-conversation sample across 5 offsets",
+        "reproduce_with": "probe_dataset.py --kind twcs --path twcs_conversations.parquet --sample 500",
+        "verdict": "ACCEPT for research (license: non-commercial)",
         "n_conversations_full": 794335,
-        "n_brands": 109,
+        "n_brands_full": 109,
         "median_real_words_per_turn": 18,
         "distinct_tokens_in_sample": 5836,
-        "hapax_share_sample": 0.56,
+        "hapax_share": 0.56,
         "median_turns": 3,
         "max_turns": 48,
         "distinct_turn_patterns_per_500": 103,
-        "repeat_brands_examples": {"AmazonHelp": 52, "AppleSupport": 36},
+        "repeat_brand_examples": {"AmazonHelp": 52, "AppleSupport": 36},
         "final_customer_turn_signal": {
             "clearly_positive": 0.11,
             "clearly_negative": 0.04,
             "no_signal": 0.85,
         },
-        "outcome_origin": "organic-implicit (keyword/LLM judge required)",
+        "outcome_origin": "organic-implicit; 85% of threads carry no explicit signal",
     },
     "abcd": {
-        "source": "PR #4 review + asappresearch/abcd ontology.json",
+        "source": "asappresearch/abcd data/abcd_v1.1.json.gz + guidelines.json + ontology.json",
+        "reproduce_with": "probe_dataset.py --kind abcd --path abcd_v1.1.json --guidelines guidelines.json",
+        "verdict": "ACCEPT - MIT, action ground truth present",
         "n_conversations": 10042,
+        "splits": {"train": 8034, "dev": 1004, "test": 1004},
         "n_flows": 10,
-        "n_subflows": 55,
-        "mean_conversations_per_subflow_if_uniform": 183,
-        "actual_per_subflow_distribution": "UNKNOWN — run --kind abcd on the json",
-        "outcome_origin": "action-derived vs guidelines.json (proposed; not a column)",
-        "repeat_agent_identity": False,
+        "conversations_per_flow_range": [713, 1094],
+        "n_subflows_in_ontology": 55,
+        "n_subflows_present_in_data": 96,
+        "subflows_in_data_absent_from_ontology": 50,
+        "subflows_in_ontology_absent_from_data": 9,
+        "per_subflow_min": 3,
+        "per_subflow_median": 69.5,
+        "per_subflow_max": 361,
+        "subflows_under_100_conversations": 54,
+        "subflows_under_50_conversations": 36,
+        "action_turns_total": 36482,
+        "conversations_with_at_least_one_action": 1.0,
+        "guidelines_subflows_documented": 55,
+        "guidelines_name_join_matches": 32,
+        "guidelines_conversation_coverage": 0.456,
+        "guidelines_join_warning": (
+            "guidelines.json uses Title Case names ('Initiate Refund'); the data uses "
+            "snake_case ('return_color', 'boots_how_1'). Naive normalisation joins only "
+            "32 names = 46% of conversations. A manual 96->55 mapping table is required "
+            "before playbook scoring can cover the full corpus."
+        ),
         "license": "MIT",
-        "download": "https://github.com/asappresearch/abcd/raw/master/data/abcd_v1.1.json.gz",
-        "download_size_approx": "37 MB gz",
+        "repeat_agent_identity": False,
     },
 }
 
@@ -93,162 +144,251 @@ def tokenize(text: str) -> list[str]:
     return [m.group(0).lower() for m in _WORD.finditer(text or "")]
 
 
-def is_likely_real(tok: str) -> bool:
-    if len(tok) <= 2:
-        return True
-    if not _VOWEL.search(tok):
-        return False
-    # long random-looking consonant clusters with a stray vowel still fail length+entropy
-    if len(tok) >= 10 and len(set(tok)) / len(tok) > 0.7:
-        return False
-    return True
+def median(xs):
+    if not xs:
+        return 0
+    ys = sorted(xs)
+    mid = len(ys) // 2
+    return ys[mid] if len(ys) % 2 else 0.5 * (ys[mid - 1] + ys[mid])
 
 
-def text_stats(texts: list[str]) -> dict:
-    words_per = [tokenize(t) for t in texts]
-    real_per = [[w for w in ws if is_likely_real(w)] for ws in words_per]
-    all_toks = [w for ws in words_per for w in ws]
-    counts = Counter(all_toks)
-    n = len(words_per) or 1
+def text_stats(texts: list[str], real_min_count: int = 50) -> dict:
+    """Corpus-frequency padding detection. See module docstring."""
+    per_msg = [tokenize(t) for t in texts]
+    counts = Counter(t for ws in per_msg for t in ws)
+    real_vocab = {t for t, c in counts.items() if c >= real_min_count}
 
-    def median(xs):
-        if not xs:
-            return 0
-        ys = sorted(xs)
-        mid = len(ys) // 2
-        return ys[mid] if len(ys) % 2 else 0.5 * (ys[mid - 1] + ys[mid])
+    totals = [len(ws) for ws in per_msg]
+    reals = [sum(1 for w in ws if w in real_vocab) for ws in per_msg]
+    shares = [
+        1 - (r / t) for t, r in zip(totals, reals) if t
+    ]
+    hapax = sum(1 for c in counts.values() if c == 1)
 
     return {
-        "n_messages": n,
-        "median_words": median([len(ws) for ws in words_per]),
-        "median_real_words": median([len(ws) for ws in real_per]),
-        "median_filler_share": round(
-            median(
-                [
-                    1 - (len(r) / len(w) if w else 0)
-                    for w, r in zip(words_per, real_per)
-                ]
-            ),
-            3,
-        ),
+        "n_messages": len(per_msg),
+        "real_min_count": real_min_count,
+        "median_words": median(totals),
+        "median_real_words": median(reals),
+        "median_padding_share": round(median(shares), 3),
         "distinct_tokens": len(counts),
-        "hapax": sum(1 for c in counts.values() if c == 1),
-        "hapax_share": round(sum(1 for c in counts.values() if c == 1) / max(len(counts), 1), 3),
-        "tokens_gt_50": sum(1 for c in counts.values() if c > 50),
+        "hapax": hapax,
+        "hapax_share": round(hapax / max(len(counts), 1), 3),
+        "real_vocabulary_size": len(real_vocab),
+        "_verdict_hint": (
+            "PADDED - reject" if median(shares) > 0.5 or hapax / max(len(counts), 1) > 0.9
+            else "natural language"
+        ),
     }
 
 
-def load_table(path: Path, sample: int | None):
+def load_any(path: Path, sample: int | None):
     suffix = path.suffix.lower()
-    if suffix in {".parquet"}:
-        import pandas as pd
-
-        df = pd.read_parquet(path)
-    elif suffix in {".csv", ".tsv"}:
-        import pandas as pd
-
-        sep = "\t" if suffix == ".tsv" else ","
-        df = pd.read_csv(path, sep=sep)
-    elif suffix == ".json":
+    if suffix == ".gz":
+        with gzip.open(path, "rt") as f:
+            return json.load(f)
+    if suffix == ".json":
         with path.open() as f:
             return json.load(f)
+    import pandas as pd
+
+    if suffix == ".parquet":
+        df = pd.read_parquet(path)
+    elif suffix in {".csv", ".tsv"}:
+        df = pd.read_csv(
+            path,
+            sep="\t" if suffix == ".tsv" else ",",
+            engine="python",
+            on_bad_lines="skip",
+        )
     else:
         raise SystemExit(f"unsupported suffix: {suffix}")
-    if sample and hasattr(df, "head"):
+    if sample:
         df = df.head(sample)
     return df
 
 
-def probe_syncora(df) -> dict:
-    cols = list(df.columns)
-    texts = df["text"].astype(str).tolist() if "text" in df.columns else []
-    stats = text_stats(texts)
-    out = {"kind": "syncora", "columns": cols, "text": stats}
-    if "outcome" in df.columns:
-        out["outcome_counts"] = df["outcome"].value_counts().to_dict()
+def probe_syncora(df, sample_messages: int, real_min_count: int) -> dict:
+    texts = df["text"].astype(str).tolist()[:sample_messages] if "text" in df.columns else []
+    out = {
+        "kind": "syncora",
+        "columns": list(df.columns),
+        "text": text_stats(texts, real_min_count),
+    }
     if "conv_id" in df.columns:
-        out["n_conversations"] = int(df["conv_id"].nunique())
+        out["conversation_ids"] = int(df["conv_id"].nunique())
+        tpc = df.groupby("conv_id").size()
+        out["turns_per_conv"] = {
+            "min": int(tpc.min()), "median": float(tpc.median()), "max": int(tpc.max()),
+        }
+    if "outcome" in df.columns and "conv_id" in df.columns:
+        per_conv = df.groupby("conv_id")["outcome"].first().value_counts()
+        out["outcome_counts_per_conversation"] = per_conv.to_dict()
+        vals = list(per_conv.values)
+        spread = (max(vals) - min(vals)) / max(sum(vals), 1)
+        out["outcome_origin_hint"] = (
+            "SAMPLED (near-uniform -> generator knob)" if spread < 0.05
+            else "possibly derived - inspect"
+        )
+    for col in ("customer_name", "agent_name"):
+        if col in df.columns:
+            out[f"unique_{col}"] = int(df[col].nunique())
+    if {"primary_intent", "issue_type"}.issubset(df.columns):
+        import pandas as pd
+
+        ct = pd.crosstab(df["primary_intent"], df["issue_type"])
+        out["intent_x_issue"] = {
+            "shape": list(ct.shape),
+            "cells_populated": int((ct > 0).sum().sum()),
+            "cells_total": int(ct.shape[0] * ct.shape[1]),
+        }
     return out
 
 
-def probe_twcs(df) -> dict:
-    cols = list(df.columns)
-    text_col = "conversation" if "conversation" in df.columns else "text"
-    texts = df[text_col].astype(str).tolist() if text_col in df.columns else []
-    # split role-prefixed turns when present
-    turns = []
-    patterns = Counter()
-    for blob in texts:
-        parts = re.split(r"\n?(?=Customer:|Support:)", blob)
-        roles = []
-        for p in parts:
-            p = p.strip()
-            if not p:
+def probe_twcs(df, real_min_count: int) -> dict:
+    col = "conversation" if "conversation" in df.columns else "text"
+    blobs = df[col].astype(str).tolist() if col in df.columns else []
+    turn_re = re.compile(r"^(Customer|Support):\s*(.*)$")
+
+    turns, patterns, turn_counts, last_customer = [], Counter(), [], []
+    for blob in blobs:
+        seq, cust = "", []
+        for line in blob.split("\n"):
+            m = turn_re.match(line.strip())
+            if not m:
                 continue
-            turns.append(re.sub(r"^(Customer|Support):\s*", "", p))
-            roles.append("C" if p.startswith("Customer") else "S" if p.startswith("Support") else "?")
-        if roles:
-            patterns["-".join(roles)] += 1
-    stats = text_stats(turns or texts)
+            role, body = m.group(1), m.group(2)
+            seq += "C" if role == "Customer" else "S"
+            turns.append(body)
+            if role == "Customer":
+                cust.append(body)
+        if seq:
+            patterns[seq] += 1
+            turn_counts.append(len(seq))
+        if cust:
+            last_customer.append(cust[-1])
+
+    pos = re.compile(r"\b(thank(s| you)|thx|appreciate|that worked|fixed|resolved|sorted|perfect|got it|awesome)\b", re.I)
+    neg = re.compile(r"\b(still (not|isn'?t|no)|useless|terrible|worst|unacceptable|cancel(ling)? my|escalate|ridiculous|awful)\b", re.I)
+    n = max(len(last_customer), 1)
+    p = sum(1 for t in last_customer if pos.search(t))
+    ng = sum(1 for t in last_customer if neg.search(t))
+
     out = {
         "kind": "twcs",
-        "columns": cols,
-        "n_rows": len(df),
-        "text": stats,
-        "n_turn_patterns": len(patterns),
-        "top_turn_patterns": patterns.most_common(8),
+        "columns": list(df.columns),
+        "n_rows_in_sample": len(df),
+        "text": text_stats(turns, real_min_count),
+        "median_turns": median(turn_counts),
+        "max_turns": max(turn_counts) if turn_counts else 0,
+        "distinct_turn_patterns": len(patterns),
+        "top_turn_patterns": patterns.most_common(6),
+        "turn_pattern_hint": (
+            "TEMPLATED - reject" if len(patterns) < 0.2 * max(len(df), 1)
+            else "varied structure - ok"
+        ),
+        "final_customer_turn_signal": {
+            "clearly_positive": round(p / n, 3),
+            "clearly_negative": round(ng / n, 3),
+            "no_signal": round((n - p - ng) / n, 3),
+        },
     }
     if "company" in df.columns:
         vc = df["company"].value_counts()
-        out["n_companies"] = int(df["company"].nunique())
-        out["top_companies"] = vc.head(8).to_dict()
-        out["repeat_sources"] = int((vc > 1).sum())
+        out["n_companies"] = int(vc.size)
+        out["companies_appearing_more_than_once"] = int((vc > 1).sum())
+        out["top_companies"] = vc.head(6).to_dict()
+        out["repeat_sources_hint"] = (
+            "present -> can study source reputation" if (vc > 1).sum() > 5
+            else "absent -> reputation/evidence-accumulation not testable"
+        )
     return out
 
 
-def probe_abcd(obj) -> dict:
-    splits = obj if isinstance(obj, dict) else {"all": obj}
-    convos = []
-    for v in splits.values():
-        if isinstance(v, list):
-            convos.extend(v)
-    subflows = Counter()
-    n_action_turns = 0
+def _norm(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def probe_abcd(obj, guidelines_path: Path | None) -> dict:
+    splits = {k: v for k, v in obj.items() if isinstance(v, list)} if isinstance(obj, dict) else {"all": obj}
+    convos = [c for v in splits.values() for c in v]
+
+    subflows, flows = Counter(), Counter()
+    action_turns, with_action = 0, 0
     for c in convos:
-        meta = c.get("original") or c
-        sf = None
-        if isinstance(c, dict):
-            sf = (
-                c.get("subflow")
-                or c.get("target")
-                or (c.get("scenario") or {}).get("subflow")
-                or (c.get("original") or {}).get("delexed", [{}])
-            )
-            if isinstance(sf, list):
-                sf = None
-            for t in c.get("delexed") or c.get("turns") or []:
-                if isinstance(t, dict) and t.get("speaker") == "action":
-                    n_action_turns += 1
-        if isinstance(sf, str):
-            subflows[sf] += 1
-    return {
+        sc = c.get("scenario") or {}
+        if sc.get("subflow"):
+            subflows[sc["subflow"]] += 1
+        if sc.get("flow"):
+            flows[sc["flow"]] += 1
+        k = sum(1 for t in (c.get("delexed") or []) if t.get("speaker") == "action")
+        action_turns += k
+        with_action += 1 if k else 0
+
+    counts = sorted(subflows.values())
+    out = {
         "kind": "abcd",
-        "n_conversations_loaded": len(convos),
-        "n_subflows_seen": len(subflows),
-        "subflow_counts_top": subflows.most_common(15),
-        "min_per_subflow": min(subflows.values()) if subflows else None,
-        "max_per_subflow": max(subflows.values()) if subflows else None,
-        "n_action_turns": n_action_turns,
-        "note": "schema varies slightly across dumps; inspect keys if counts look empty",
+        "splits": {k: len(v) for k, v in splits.items()},
+        "n_conversations": len(convos),
+        "n_flows": len(flows),
+        "conversations_per_flow": dict(flows),
+        "n_subflows_present": len(subflows),
+        "per_subflow": {
+            "min": counts[0] if counts else None,
+            "median": median(counts),
+            "max": counts[-1] if counts else None,
+            "under_100": sum(1 for x in counts if x < 100),
+            "under_50": sum(1 for x in counts if x < 50),
+        },
+        "action_turns_total": action_turns,
+        "conversations_with_at_least_one_action": round(with_action / max(len(convos), 1), 3),
+        "power_hint": (
+            "subflow level is UNDERPOWERED for success-vs-failure comparison; "
+            "group by flow (see conversations_per_flow)"
+            if counts and median(counts) < 150 else "subflow level may be workable"
+        ),
     }
+
+    if guidelines_path and guidelines_path.exists():
+        g = json.loads(guidelines_path.read_text())
+        documented = {}
+        for flow, body in g.items():
+            for name in (body.get("subflows") or {}):
+                documented[name] = flow
+        doc_norm = {_norm(k) for k in documented}
+        matched = {k for k in subflows if _norm(k) in doc_norm}
+        covered = sum(v for k, v in subflows.items() if k in matched)
+        out["guidelines"] = {
+            "flows_documented": len(g),
+            "subflows_documented": len(documented),
+            "naive_name_join_matches": len(matched),
+            "conversation_coverage": round(covered / max(sum(subflows.values()), 1), 3),
+            "unjoined_examples": sorted(set(subflows) - matched)[:10],
+            "action_required": (
+                "Build an explicit mapping table from the data's snake_case subflows to "
+                "guidelines' Title Case names. Without it, playbook scoring covers only "
+                "the joined subset."
+            ),
+        }
+    return out
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--cite-review", action="store_true", help="print cited review numbers (no file)")
+    p = argparse.ArgumentParser(
+        description="Dataset acceptance probe (fitness, not findings).",
+    )
+    p.add_argument("--cite-review", action="store_true",
+                   help="print cited constants from the docs (no computation)")
     p.add_argument("--kind", choices=["syncora", "twcs", "abcd"])
     p.add_argument("--path", type=Path)
-    p.add_argument("--sample", type=int, default=None)
+    p.add_argument("--guidelines", type=Path, default=None,
+                   help="ABCD only: path to guidelines.json for join coverage")
+    p.add_argument("--sample", type=int, default=None,
+                   help="rows to read (twcs: conversations)")
+    p.add_argument("--sample-messages", type=int, default=20000,
+                   help="syncora: messages used for text stats")
+    p.add_argument("--real-min-count", type=int, default=50,
+                   help="token must occur >= N times in the sample to count as real")
     args = p.parse_args()
 
     if args.cite_review:
@@ -256,13 +396,17 @@ def main() -> int:
         return 0
     if not args.kind or not args.path:
         p.error("provide --kind and --path, or --cite-review")
-    data = load_table(args.path, args.sample)
+
+    data = load_any(args.path, args.sample if args.kind != "syncora" else None)
+
     if args.kind == "syncora":
-        print(json.dumps(probe_syncora(data), indent=2, default=str))
+        res = probe_syncora(data, args.sample_messages, args.real_min_count)
     elif args.kind == "twcs":
-        print(json.dumps(probe_twcs(data), indent=2, default=str))
+        res = probe_twcs(data, args.real_min_count)
     else:
-        print(json.dumps(probe_abcd(data), indent=2, default=str))
+        res = probe_abcd(data, args.guidelines)
+
+    print(json.dumps(res, indent=2, default=str))
     return 0
 
 
