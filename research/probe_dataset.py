@@ -309,7 +309,8 @@ def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s.lower())
 
 
-def probe_abcd(obj, guidelines_path: Path | None) -> dict:
+def probe_abcd(obj, guidelines_path: Path | None,
+               mapping_path: Path | None = None) -> dict:
     splits = {k: v for k, v in obj.items() if isinstance(v, list)} if isinstance(obj, dict) else {"all": obj}
     convos = [c for v in splits.values() for c in v]
 
@@ -370,6 +371,25 @@ def probe_abcd(obj, guidelines_path: Path | None) -> dict:
                 "the joined subset."
             ),
         }
+
+    if mapping_path and mapping_path.exists():
+        m = json.loads(mapping_path.read_text())
+        rows = {r["subflow"]: r for r in m.get("mapping", [])}
+        mapped = {s for s, r in rows.items()
+                  if r.get("guidelines_subflow") and s in subflows}
+        uncovered = sorted(set(subflows) - mapped)
+        covered = sum(v for k, v in subflows.items() if k in mapped)
+        out["mapping"] = {
+            "mapping_file": str(mapping_path),
+            "mapped_subflows": len(mapped),
+            "unmapped_subflows": uncovered,
+            "conversation_coverage": round(covered / max(sum(subflows.values()), 1), 3),
+            "note": (
+                "Coverage using the explicit 96->55 mapping table "
+                "(research/abcd_subflow_mapping.json). The 'guidelines' block "
+                "above is the naive name join, kept for comparison."
+            ),
+        }
     return out
 
 
@@ -383,6 +403,9 @@ def main() -> int:
     p.add_argument("--path", type=Path)
     p.add_argument("--guidelines", type=Path, default=None,
                    help="ABCD only: path to guidelines.json for join coverage")
+    p.add_argument("--mapping", type=Path, default=None,
+                   help="ABCD only: path to the 96->55 subflow mapping JSON "
+                        "(research/abcd_subflow_mapping.json); reports mapping coverage")
     p.add_argument("--sample", type=int, default=None,
                    help="rows to read (twcs: conversations)")
     p.add_argument("--sample-messages", type=int, default=20000,
@@ -404,7 +427,7 @@ def main() -> int:
     elif args.kind == "twcs":
         res = probe_twcs(data, args.real_min_count)
     else:
-        res = probe_abcd(data, args.guidelines)
+        res = probe_abcd(data, args.guidelines, args.mapping)
 
     print(json.dumps(res, indent=2, default=str))
     return 0

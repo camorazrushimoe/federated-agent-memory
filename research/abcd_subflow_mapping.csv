@@ -1,0 +1,97 @@
+subflow,flow,count,guidelines_subflow,method,confidence,reason
+bad_price_competitor,purchase_dispute,149,Bad Price Competitor,DIRECT,high,Name matches the ontology/guidelines subflow.
+bad_price_yesterday,purchase_dispute,139,Bad Price Yesterday,DIRECT,high,Name matches the ontology/guidelines subflow.
+boots_how_1,single_item_query,27,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_how_2,single_item_query,43,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_how_3,single_item_query,32,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_how_4,single_item_query,30,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_other_1,single_item_query,42,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_other_2,single_item_query,36,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_other_3,single_item_query,34,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+boots_other_4,single_item_query,37,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
+cost,shipping_issue,243,Shipping Cost,DIRECT,high,Name matches the ontology/guidelines subflow.
+credit_card,troubleshoot_site,266,Invalid Credit Card,DIRECT,high,Name matches the ontology/guidelines subflow.
+jacket_how_1,single_item_query,29,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_how_2,single_item_query,39,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_how_3,single_item_query,28,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_how_4,single_item_query,36,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_other_1,single_item_query,29,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_other_2,single_item_query,30,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_other_3,single_item_query,27,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jacket_other_4,single_item_query,45,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
+jeans_how_1,single_item_query,31,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_how_2,single_item_query,34,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_how_3,single_item_query,28,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_how_4,single_item_query,22,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_other_1,single_item_query,33,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_other_2,single_item_query,32,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_other_3,single_item_query,40,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+jeans_other_4,single_item_query,32,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
+manage,shipping_issue,248,Manage Shipping,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_cancel,order_issue,125,Manage Cancel,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_change_address,manage_account,51,Manage Change Address,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_change_name,manage_account,51,Manage Change Name,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_change_phone,manage_account,48,Manage Change Phone,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_create,order_issue,134,Manage Create,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_dispute_bill,subscription_inquiry,190,Manage Dispute Bill,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_downgrade,order_issue,123,Manage Downgrade,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_extension,subscription_inquiry,165,Manage Extension,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_pay_bill,subscription_inquiry,162,Manage Pay Bill,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_payment_method,manage_account,36,Manage Payment Method,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage_upgrade,order_issue,117,Manage Upgrade,DIRECT,high,Name matches the ontology/guidelines subflow.
+membership_1,storewide_query,76,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
+membership_2,storewide_query,65,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
+membership_3,storewide_query,71,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
+membership_4,storewide_query,69,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
+missing,shipping_issue,261,Missing Item,DIRECT,high,Name matches the ontology/guidelines subflow.
+mistimed_billing_already_returned,purchase_dispute,137,Mistimed Billing Already Returned,DIRECT,high,Name matches the ontology/guidelines subflow.
+mistimed_billing_never_bought,purchase_dispute,139,Mistimed Billing Never Bought,DIRECT,high,Name matches the ontology/guidelines subflow.
+out_of_stock_general,purchase_dispute,140,Out-of-Stock General,DIRECT,high,Name matches the ontology/guidelines subflow.
+out_of_stock_one_item,purchase_dispute,127,Out-of-Stock One Item,DIRECT,high,Name matches the ontology/guidelines subflow.
+policy_1,storewide_query,69,Policy FAQ,VARIANT,high,Numbered variant of policy; the guidelines document one 'Policy FAQ' playbook for all policy questions.
+policy_2,storewide_query,70,Policy FAQ,VARIANT,high,Numbered variant of policy; the guidelines document one 'Policy FAQ' playbook for all policy questions.
+policy_3,storewide_query,64,Policy FAQ,VARIANT,high,Numbered variant of policy; the guidelines document one 'Policy FAQ' playbook for all policy questions.
+policy_4,storewide_query,69,Policy FAQ,VARIANT,high,Numbered variant of policy; the guidelines document one 'Policy FAQ' playbook for all policy questions.
+pricing_1,storewide_query,55,Pricing FAQ,VARIANT,high,Numbered variant of pricing; the guidelines document one 'Pricing FAQ' playbook for all pricing questions.
+pricing_2,storewide_query,76,Pricing FAQ,VARIANT,high,Numbered variant of pricing; the guidelines document one 'Pricing FAQ' playbook for all pricing questions.
+pricing_3,storewide_query,81,Pricing FAQ,VARIANT,high,Numbered variant of pricing; the guidelines document one 'Pricing FAQ' playbook for all pricing questions.
+pricing_4,storewide_query,65,Pricing FAQ,VARIANT,high,Numbered variant of pricing; the guidelines document one 'Pricing FAQ' playbook for all pricing questions.
+promo_code_invalid,purchase_dispute,133,Promo Code Invalid,DIRECT,high,Name matches the ontology/guidelines subflow.
+promo_code_out_of_date,purchase_dispute,112,Promo Code Out of Date,DIRECT,high,Name matches the ontology/guidelines subflow.
+recover_password,account_access,336,Recover Password,DIRECT,high,Name matches the ontology/guidelines subflow.
+recover_username,account_access,361,Recover Username,DIRECT,high,Name matches the ontology/guidelines subflow.
+refund_initiate,product_defect,176,Initiate Refund,DIRECT,high,Name matches the ontology/guidelines subflow.
+refund_status,product_defect,179,Refund Status,DIRECT,high,Name matches the ontology/guidelines subflow.
+refund_update,product_defect,177,Update Refund,DIRECT,high,Name matches the ontology/guidelines subflow.
+reset_2fa,account_access,351,Reset Two-Factor Auth,DIRECT,high,Name matches the ontology/guidelines subflow.
+return_color,product_defect,180,Return Due to Color,DIRECT,high,Name matches the ontology/guidelines subflow.
+return_size,product_defect,191,Return Due to Size,DIRECT,high,Name matches the ontology/guidelines subflow.
+return_stain,product_defect,167,Return Due to Stain,DIRECT,high,Name matches the ontology/guidelines subflow.
+search_results,troubleshoot_site,259,Search Not Working,DIRECT,high,Name matches the ontology/guidelines subflow.
+shirt_how_1,single_item_query,34,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_how_2,single_item_query,31,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_how_3,single_item_query,30,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_how_4,single_item_query,33,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_other_1,single_item_query,33,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_other_2,single_item_query,34,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_other_3,single_item_query,27,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shirt_other_4,single_item_query,27,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
+shopping_cart,troubleshoot_site,251,Cart Not Updating,DIRECT,high,Name matches the ontology/guidelines subflow.
+slow_speed,troubleshoot_site,250,Website Too Slow,DIRECT,high,Name matches the ontology/guidelines subflow.
+status,shipping_issue,268,Shipping Status,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_credit_missing,manage_account,114,Status Credit Missing,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_delivery_date,order_issue,3,Status Delivery Time,INFERRED,high,"Transcript: 'the delivery date of my order seems to be wrong'. Uses ask-the-oracle + update-order, distinctive to the Status Delivery Time playbook. n=3."
+status_delivery_time,order_issue,139,Status Delivery Time,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_due_amount,subscription_inquiry,185,Status Due Amount,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_due_date,subscription_inquiry,178,Status Due Date,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_mystery_fee,order_issue,130,Status Mystery Fee,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_payment_method,order_issue,134,Status Payment Method,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_quantity,order_issue,135,Status Quantity,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_questions,subscription_inquiry,30,Status Active,INFERRED,medium,Transcripts ask 'is my subscription active?'; action trace pull-up-account -> verify-identity -> subscription-status -> send-link matches the Status Active playbook. Generic name; n=30.
+status_service_added,manage_account,129,Status Service Added,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_service_removed,manage_account,153,Status Service Removed,DIRECT,high,Name matches the ontology/guidelines subflow.
+status_shipping_question,manage_account,131,Status Shipping Question,DIRECT,high,Name matches the ontology/guidelines subflow.
+timing_1,storewide_query,76,Timing FAQ,VARIANT,high,Numbered variant of timing; the guidelines document one 'Timing FAQ' playbook for all timing questions.
+timing_2,storewide_query,63,Timing FAQ,VARIANT,high,Numbered variant of timing; the guidelines document one 'Timing FAQ' playbook for all timing questions.
+timing_3,storewide_query,60,Timing FAQ,VARIANT,high,Numbered variant of timing; the guidelines document one 'Timing FAQ' playbook for all timing questions.
+timing_4,storewide_query,65,Timing FAQ,VARIANT,high,Numbered variant of timing; the guidelines document one 'Timing FAQ' playbook for all timing questions.

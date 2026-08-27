@@ -1,0 +1,1180 @@
+{
+  "guideline_action_buttons": {
+    "Boots FAQ": [
+      "Search FAQ",
+      "Boots",
+      "Select Answer",
+      "N/A"
+    ],
+    "Shirt FAQ": [
+      "Search FAQ",
+      "Shirt",
+      "Select Answer",
+      "N/A"
+    ],
+    "Jeans FAQ": [
+      "Search FAQ",
+      "Jeans",
+      "Select Answer",
+      "N/A"
+    ],
+    "Jacket FAQ": [
+      "Search FAQ",
+      "Jacket",
+      "Select Answer",
+      "N/A"
+    ],
+    "Pricing FAQ": [
+      "Search FAQ",
+      "Pricing",
+      "Select Answer",
+      "N/A"
+    ],
+    "Membership FAQ": [
+      "Search FAQ",
+      "Membership",
+      "Select Answer",
+      "N/A"
+    ],
+    "Timing FAQ": [
+      "Search FAQ",
+      "Timing",
+      "Select Answer",
+      "N/A"
+    ],
+    "Policy FAQ": [
+      "Search FAQ",
+      "Policy",
+      "Select Answer",
+      "N/A"
+    ],
+    "Status Active": [
+      "Pull up Account",
+      "Verify Identity",
+      "Subscription Status",
+      "Send Link",
+      "Enter Detail"
+    ],
+    "Status Due Date": [
+      "Pull up Account",
+      "Verify Identity",
+      "Subscription Status",
+      "Send Link",
+      "Enter Detail"
+    ],
+    "Status Delivery Time": [
+      "Pull up Account",
+      "Verify Identity",
+      "Ask the Oracle",
+      "Shipping Status",
+      "Update Order"
+    ]
+  },
+  "families": {
+    "boots": {
+      "variants": {
+        "boots_how_1": {
+          "search-faq": 27,
+          "search-boots": 28,
+          "select-faq": 20,
+          "search-jeans": 1,
+          "make-purchase": 1,
+          "search-pricing": 1,
+          "search-membership": 1,
+          "membership": 2
+        },
+        "boots_how_2": {
+          "search-faq": 43,
+          "search-boots": 43,
+          "select-faq": 28,
+          "pull-up-account": 5,
+          "search-jacket": 2
+        },
+        "boots_how_3": {
+          "search-faq": 33,
+          "search-boots": 32,
+          "select-faq": 25,
+          "pull-up-account": 2,
+          "search-policy": 1,
+          "search-pricing": 1,
+          "promo-code": 1,
+          "validate-purchase": 1
+        },
+        "boots_how_4": {
+          "search-faq": 34,
+          "search-boots": 31,
+          "select-faq": 22,
+          "pull-up-account": 2,
+          "search-jeans": 3,
+          "search-shirt": 1,
+          "verify-identity": 1,
+          "validate-purchase": 2,
+          "ask-the-oracle": 1,
+          "search-timing": 2,
+          "shipping-status": 6,
+          "instructions": 1,
+          "search-membership": 1,
+          "search-policy": 1,
+          "enter-details": 1
+        },
+        "boots_other_1": {
+          "search-faq": 42,
+          "search-boots": 42,
+          "select-faq": 31,
+          "notify-team": 3,
+          "pull-up-account": 2
+        },
+        "boots_other_2": {
+          "search-faq": 36,
+          "search-boots": 36,
+          "select-faq": 27,
+          "pull-up-account": 2,
+          "instructions": 1
+        },
+        "boots_other_3": {
+          "pull-up-account": 8,
+          "record-reason": 7,
+          "notify-team": 9,
+          "search-faq": 29,
+          "search-boots": 30,
+          "search-jacket": 1,
+          "select-faq": 22,
+          "ask-the-oracle": 2,
+          "make-purchase": 4,
+          "log-out-in": 1,
+          "try-again": 1,
+          "send-link": 1
+        },
+        "boots_other_4": {
+          "search-faq": 37,
+          "search-boots": 37,
+          "select-faq": 30,
+          "pull-up-account": 6,
+          "record-reason": 1,
+          "notify-team": 2,
+          "verify-identity": 1,
+          "make-purchase": 1
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "enter-details",
+        "instructions",
+        "log-out-in",
+        "make-purchase",
+        "membership",
+        "notify-team",
+        "promo-code",
+        "pull-up-account",
+        "record-reason",
+        "search-boots",
+        "search-faq",
+        "search-jacket",
+        "search-jeans",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-shirt",
+        "search-timing",
+        "select-faq",
+        "send-link",
+        "shipping-status",
+        "try-again",
+        "validate-purchase",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    },
+    "shirt": {
+      "variants": {
+        "shirt_how_1": {
+          "search-faq": 35,
+          "search-shirt": 34,
+          "select-faq": 38,
+          "search-pricing": 2,
+          "instructions": 1,
+          "pull-up-account": 2
+        },
+        "shirt_how_2": {
+          "search-faq": 31,
+          "search-shirt": 31,
+          "search-pricing": 1,
+          "search-policy": 1,
+          "select-faq": 29,
+          "verify-identity": 4,
+          "pull-up-account": 2,
+          "validate-purchase": 3,
+          "offer-refund": 1,
+          "ask-the-oracle": 1
+        },
+        "shirt_how_3": {
+          "search-faq": 30,
+          "search-shirt": 30,
+          "select-faq": 24,
+          "pull-up-account": 2
+        },
+        "shirt_how_4": {
+          "search-faq": 33,
+          "search-shirt": 33,
+          "instructions": 1,
+          "select-faq": 29,
+          "pull-up-account": 3,
+          "notify-team": 1
+        },
+        "shirt_other_1": {
+          "search-faq": 32,
+          "search-shirt": 32,
+          "select-faq": 30,
+          "pull-up-account": 1,
+          "search-policy": 1,
+          "make-purchase": 1
+        },
+        "shirt_other_2": {
+          "search-faq": 33,
+          "search-shirt": 35,
+          "select-faq": 23,
+          "search-policy": 1,
+          "try-again": 1,
+          "search-timing": 1,
+          "search-pricing": 1,
+          "pull-up-account": 3,
+          "search-boots": 1,
+          "notify-team": 1,
+          "record-reason": 1,
+          "make-purchase": 1
+        },
+        "shirt_other_3": {
+          "search-faq": 28,
+          "search-shirt": 28,
+          "select-faq": 20,
+          "pull-up-account": 2,
+          "ask-the-oracle": 1,
+          "search-jacket": 1
+        },
+        "shirt_other_4": {
+          "search-faq": 26,
+          "search-shirt": 25,
+          "select-faq": 20,
+          "instructions": 2,
+          "search-policy": 3,
+          "membership": 1,
+          "search-membership": 1,
+          "pull-up-account": 2
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "instructions",
+        "make-purchase",
+        "membership",
+        "notify-team",
+        "offer-refund",
+        "pull-up-account",
+        "record-reason",
+        "search-boots",
+        "search-faq",
+        "search-jacket",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-shirt",
+        "search-timing",
+        "select-faq",
+        "try-again",
+        "validate-purchase",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    },
+    "jeans": {
+      "variants": {
+        "jeans_how_1": {
+          "search-faq": 31,
+          "search-jeans": 31,
+          "select-faq": 26,
+          "pull-up-account": 1
+        },
+        "jeans_how_2": {
+          "search-faq": 34,
+          "search-jeans": 34,
+          "select-faq": 34,
+          "pull-up-account": 1,
+          "search-pricing": 1
+        },
+        "jeans_how_3": {
+          "search-faq": 28,
+          "search-jeans": 30,
+          "select-faq": 17,
+          "search-policy": 1,
+          "membership": 1
+        },
+        "jeans_how_4": {
+          "search-faq": 25,
+          "search-jeans": 24,
+          "select-faq": 18,
+          "search-pricing": 2,
+          "search-shirt": 1,
+          "search-jacket": 3
+        },
+        "jeans_other_1": {
+          "search-faq": 34,
+          "search-jeans": 33,
+          "select-faq": 25,
+          "log-out-in": 1,
+          "try-again": 1,
+          "pull-up-account": 1
+        },
+        "jeans_other_2": {
+          "search-faq": 32,
+          "search-jeans": 32,
+          "select-faq": 20,
+          "pull-up-account": 1,
+          "make-purchase": 1,
+          "search-shirt": 2,
+          "search-boots": 2,
+          "search-jacket": 1
+        },
+        "jeans_other_3": {
+          "search-faq": 43,
+          "search-jeans": 42,
+          "select-faq": 36,
+          "pull-up-account": 5,
+          "record-reason": 2,
+          "notify-team": 1,
+          "search-jacket": 3,
+          "search-shirt": 2,
+          "search-boots": 1,
+          "search-policy": 1,
+          "search-pricing": 1,
+          "membership": 3,
+          "make-purchase": 2,
+          "subscription-status": 1,
+          "log-out-in": 1,
+          "shipping-status": 1,
+          "instructions": 1,
+          "send-link": 1,
+          "try-again": 1
+        },
+        "jeans_other_4": {
+          "search-faq": 34,
+          "search-jeans": 31,
+          "select-faq": 23,
+          "search-shirt": 1,
+          "pull-up-account": 3,
+          "record-reason": 1
+        }
+      },
+      "union": [
+        "instructions",
+        "log-out-in",
+        "make-purchase",
+        "membership",
+        "notify-team",
+        "pull-up-account",
+        "record-reason",
+        "search-boots",
+        "search-faq",
+        "search-jacket",
+        "search-jeans",
+        "search-policy",
+        "search-pricing",
+        "search-shirt",
+        "select-faq",
+        "send-link",
+        "shipping-status",
+        "subscription-status",
+        "try-again"
+      ],
+      "all_variants_identical": false
+    },
+    "jacket": {
+      "variants": {
+        "jacket_how_1": {
+          "search-faq": 28,
+          "search-jacket": 28,
+          "select-faq": 22,
+          "pull-up-account": 2,
+          "verify-identity": 1,
+          "ask-the-oracle": 2,
+          "validate-purchase": 1
+        },
+        "jacket_how_2": {
+          "search-faq": 40,
+          "search-jacket": 41,
+          "select-faq": 31,
+          "pull-up-account": 4,
+          "search-pricing": 1,
+          "search-timing": 1,
+          "search-membership": 1,
+          "search-policy": 1
+        },
+        "jacket_how_3": {
+          "search-faq": 28,
+          "search-jacket": 27,
+          "select-faq": 28,
+          "pull-up-account": 2,
+          "verify-identity": 1,
+          "ask-the-oracle": 3,
+          "search-jeans": 2,
+          "instructions": 1,
+          "send-link": 1,
+          "update-account": 1,
+          "update-order": 1,
+          "enter-details": 1,
+          "make-password": 1,
+          "subscription-status": 1,
+          "promo-code": 1,
+          "membership": 1,
+          "try-again": 1,
+          "search-shirt": 2,
+          "search-timing": 1,
+          "search-pricing": 1,
+          "search-membership": 1
+        },
+        "jacket_how_4": {
+          "search-faq": 38,
+          "search-jacket": 36,
+          "select-faq": 30,
+          "instructions": 1,
+          "search-jeans": 2,
+          "pull-up-account": 2,
+          "notify-team": 3
+        },
+        "jacket_other_1": {
+          "search-faq": 30,
+          "search-jacket": 29,
+          "select-faq": 27,
+          "search-shirt": 1,
+          "pull-up-account": 5
+        },
+        "jacket_other_2": {
+          "search-faq": 29,
+          "search-jacket": 28,
+          "select-faq": 24,
+          "pull-up-account": 3,
+          "search-shirt": 2,
+          "notify-team": 1,
+          "record-reason": 1
+        },
+        "jacket_other_3": {
+          "search-faq": 29,
+          "search-jacket": 29,
+          "select-faq": 13,
+          "search-policy": 1,
+          "record-reason": 1,
+          "instructions": 2,
+          "pull-up-account": 2,
+          "verify-identity": 1,
+          "subscription-status": 1,
+          "promo-code": 1
+        },
+        "jacket_other_4": {
+          "search-faq": 44,
+          "search-jacket": 43,
+          "select-faq": 37,
+          "pull-up-account": 3,
+          "make-purchase": 1,
+          "search-jeans": 1,
+          "shipping-status": 1,
+          "ask-the-oracle": 1
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "enter-details",
+        "instructions",
+        "make-password",
+        "make-purchase",
+        "membership",
+        "notify-team",
+        "promo-code",
+        "pull-up-account",
+        "record-reason",
+        "search-faq",
+        "search-jacket",
+        "search-jeans",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-shirt",
+        "search-timing",
+        "select-faq",
+        "send-link",
+        "shipping-status",
+        "subscription-status",
+        "try-again",
+        "update-account",
+        "update-order",
+        "validate-purchase",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    },
+    "pricing": {
+      "variants": {
+        "pricing_1": {
+          "search-faq": 58,
+          "search-pricing": 55,
+          "select-faq": 38,
+          "search-timing": 1,
+          "pull-up-account": 4,
+          "notify-team": 1,
+          "search-policy": 2,
+          "search-jacket": 3,
+          "search-membership": 2
+        },
+        "pricing_2": {
+          "search-faq": 77,
+          "search-pricing": 72,
+          "select-faq": 56,
+          "search-shirt": 8,
+          "search-jeans": 13,
+          "search-timing": 1,
+          "pull-up-account": 8,
+          "ask-the-oracle": 2,
+          "promo-code": 1,
+          "enter-details": 1,
+          "search-boots": 7,
+          "search-policy": 2,
+          "search-jacket": 7,
+          "verify-identity": 2,
+          "record-reason": 1,
+          "make-purchase": 1,
+          "membership": 2,
+          "validate-purchase": 2,
+          "try-again": 1,
+          "update-order": 1,
+          "notify-team": 1
+        },
+        "pricing_3": {
+          "search-faq": 80,
+          "search-pricing": 79,
+          "select-faq": 55,
+          "pull-up-account": 13,
+          "search-timing": 5,
+          "search-jeans": 3,
+          "membership": 7,
+          "search-membership": 6,
+          "search-policy": 3,
+          "verify-identity": 4,
+          "validate-purchase": 2,
+          "shipping-status": 4,
+          "make-purchase": 3,
+          "search-jacket": 1,
+          "instructions": 1,
+          "ask-the-oracle": 3,
+          "update-order": 2,
+          "enter-details": 1
+        },
+        "pricing_4": {
+          "search-faq": 57,
+          "search-pricing": 54,
+          "select-faq": 41,
+          "search-policy": 6,
+          "pull-up-account": 12,
+          "verify-identity": 3,
+          "shipping-status": 1,
+          "membership": 8,
+          "search-membership": 4,
+          "ask-the-oracle": 9,
+          "send-link": 5,
+          "search-timing": 1,
+          "instructions": 2,
+          "promo-code": 1,
+          "search-jeans": 1
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "enter-details",
+        "instructions",
+        "make-purchase",
+        "membership",
+        "notify-team",
+        "promo-code",
+        "pull-up-account",
+        "record-reason",
+        "search-boots",
+        "search-faq",
+        "search-jacket",
+        "search-jeans",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-shirt",
+        "search-timing",
+        "select-faq",
+        "send-link",
+        "shipping-status",
+        "try-again",
+        "update-order",
+        "validate-purchase",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    },
+    "membership": {
+      "variants": {
+        "membership_1": {
+          "search-faq": 76,
+          "search-membership": 74,
+          "select-faq": 82,
+          "pull-up-account": 5,
+          "membership": 7,
+          "search-pricing": 6,
+          "search-policy": 4,
+          "search-jeans": 1,
+          "subscription-status": 1,
+          "verify-identity": 1,
+          "try-again": 1,
+          "ask-the-oracle": 1,
+          "instructions": 1
+        },
+        "membership_2": {
+          "search-faq": 64,
+          "search-membership": 63,
+          "select-faq": 56,
+          "pull-up-account": 10,
+          "membership": 9,
+          "verify-identity": 1,
+          "enter-details": 2,
+          "update-account": 1,
+          "search-pricing": 2,
+          "send-link": 1
+        },
+        "membership_3": {
+          "search-faq": 72,
+          "search-jeans": 1,
+          "search-pricing": 5,
+          "ask-the-oracle": 1,
+          "make-purchase": 1,
+          "search-membership": 69,
+          "select-faq": 63,
+          "search-policy": 1,
+          "verify-identity": 2,
+          "membership": 12,
+          "pull-up-account": 5,
+          "try-again": 2,
+          "search-timing": 1,
+          "search-boots": 1
+        },
+        "membership_4": {
+          "pull-up-account": 6,
+          "verify-identity": 2,
+          "subscription-status": 3,
+          "enter-details": 1,
+          "search-faq": 69,
+          "search-membership": 68,
+          "select-faq": 50,
+          "search-policy": 9,
+          "search-pricing": 2,
+          "search-timing": 2,
+          "send-link": 1,
+          "membership": 3
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "enter-details",
+        "instructions",
+        "make-purchase",
+        "membership",
+        "pull-up-account",
+        "search-boots",
+        "search-faq",
+        "search-jeans",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-timing",
+        "select-faq",
+        "send-link",
+        "subscription-status",
+        "try-again",
+        "update-account",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    },
+    "timing": {
+      "variants": {
+        "timing_1": {
+          "search-faq": 76,
+          "search-timing": 77,
+          "select-faq": 51,
+          "search-pricing": 7,
+          "search-membership": 4,
+          "search-policy": 5,
+          "try-again": 1,
+          "record-reason": 1,
+          "ask-the-oracle": 1,
+          "pull-up-account": 1,
+          "verify-identity": 1,
+          "shipping-status": 1,
+          "search-jacket": 1
+        },
+        "timing_2": {
+          "search-faq": 64,
+          "search-timing": 65,
+          "select-faq": 46,
+          "send-link": 1,
+          "ask-the-oracle": 1,
+          "search-membership": 1,
+          "search-policy": 5,
+          "pull-up-account": 1,
+          "enter-details": 1
+        },
+        "timing_3": {
+          "search-faq": 62,
+          "search-timing": 59,
+          "select-faq": 42,
+          "promo-code": 5,
+          "search-pricing": 6,
+          "send-link": 1,
+          "pull-up-account": 5,
+          "search-membership": 4,
+          "search-jacket": 1,
+          "search-policy": 2,
+          "membership": 1,
+          "search-jeans": 1
+        },
+        "timing_4": {
+          "search-faq": 57,
+          "search-timing": 56,
+          "select-faq": 45,
+          "pull-up-account": 18,
+          "ask-the-oracle": 11,
+          "membership": 3,
+          "promo-code": 10,
+          "enter-details": 1,
+          "send-link": 1,
+          "instructions": 1,
+          "search-policy": 11,
+          "search-membership": 3,
+          "verify-identity": 1,
+          "shipping-status": 1,
+          "search-pricing": 7,
+          "try-again": 1
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "enter-details",
+        "instructions",
+        "membership",
+        "promo-code",
+        "pull-up-account",
+        "record-reason",
+        "search-faq",
+        "search-jacket",
+        "search-jeans",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-timing",
+        "select-faq",
+        "send-link",
+        "shipping-status",
+        "try-again",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    },
+    "policy": {
+      "variants": {
+        "policy_1": {
+          "search-faq": 67,
+          "search-policy": 69,
+          "select-faq": 45,
+          "search-membership": 4,
+          "membership": 2,
+          "pull-up-account": 3,
+          "search-timing": 2,
+          "search-pricing": 2,
+          "search-shirt": 2
+        },
+        "policy_2": {
+          "search-faq": 64,
+          "search-policy": 64,
+          "pull-up-account": 12,
+          "select-faq": 52,
+          "verify-identity": 4,
+          "subscription-status": 5,
+          "membership": 3,
+          "search-membership": 2,
+          "search-timing": 4,
+          "search-pricing": 2,
+          "record-reason": 1,
+          "update-account": 1,
+          "send-link": 1
+        },
+        "policy_3": {
+          "search-faq": 58,
+          "search-membership": 24,
+          "search-policy": 54,
+          "select-faq": 49,
+          "search-pricing": 5,
+          "search-timing": 2,
+          "membership": 6,
+          "ask-the-oracle": 5,
+          "subscription-status": 5,
+          "pull-up-account": 16,
+          "verify-identity": 3,
+          "instructions": 2,
+          "send-link": 3,
+          "record-reason": 4,
+          "notify-team": 1,
+          "update-account": 3
+        },
+        "policy_4": {
+          "search-faq": 61,
+          "search-membership": 23,
+          "search-policy": 59,
+          "select-faq": 41,
+          "pull-up-account": 23,
+          "search-timing": 13,
+          "verify-identity": 10,
+          "membership": 11,
+          "update-account": 4,
+          "subscription-status": 8,
+          "search-pricing": 4,
+          "send-link": 4,
+          "enter-details": 4,
+          "shipping-status": 1,
+          "validate-purchase": 1,
+          "update-order": 1
+        }
+      },
+      "union": [
+        "ask-the-oracle",
+        "enter-details",
+        "instructions",
+        "membership",
+        "notify-team",
+        "pull-up-account",
+        "record-reason",
+        "search-faq",
+        "search-membership",
+        "search-policy",
+        "search-pricing",
+        "search-shirt",
+        "search-timing",
+        "select-faq",
+        "send-link",
+        "shipping-status",
+        "subscription-status",
+        "update-account",
+        "update-order",
+        "validate-purchase",
+        "verify-identity"
+      ],
+      "all_variants_identical": false
+    }
+  },
+  "ambiguous": {
+    "status_questions": {
+      "n": 30,
+      "actions_used": {
+        "pull-up-account": 30,
+        "verify-identity": 22,
+        "subscription-status": 31,
+        "send-link": 18,
+        "search-faq": 3,
+        "search-membership": 4,
+        "enter-details": 8,
+        "update-account": 10,
+        "offer-refund": 1,
+        "validate-purchase": 2,
+        "try-again": 1,
+        "ask-the-oracle": 2,
+        "update-order": 1,
+        "membership": 1,
+        "search-pricing": 1,
+        "select-faq": 1
+      },
+      "samples": [
+        {
+          "split": "train",
+          "scenario": {
+            "personal": {
+              "account_id": "znmhqsnr5a",
+              "customer_name": "rodriguez domingo",
+              "member_level": "guest",
+              "phone": "(056) 586-9932"
+            },
+            "order": {
+              "street_address": "7823 woodshore st",
+              "full_address": "7823 woodshore st  san lima, mi 38439",
+              "city": "san lima",
+              "order_id": "6784055291",
+              "state": "mi",
+              "zip_code": "38439"
+            },
+            "product": {
+              "names": [],
+              "amounts": []
+            },
+            "flow": "subscription_inquiry",
+            "subflow": "status_questions"
+          },
+          "transcript": [
+            "agent: hello! how may i help you?",
+            "customer: i have a question about the status of my subscription. i want to know if it's active.",
+            "agent: okay. i can help you with that.",
+            "customer: ok",
+            "customer: hello?",
+            "agent: hello",
+            "agent: i am sorry. my system lagged.",
+            "agent: may i have your first and last name or account id?",
+            "customer: rodriguez domingo",
+            "customer: account id: <account_id>",
+            "[ACTION] None None",
+            "agent: thank you!",
+            "agent: may i have your order id too?",
+            "customer: order id: <order_id>"
+          ]
+        },
+        {
+          "split": "train",
+          "scenario": {
+            "personal": {
+              "account_id": "k96wgj8ogp",
+              "customer_name": "crystal minh",
+              "member_level": "gold",
+              "phone": "(358) 390-7297"
+            },
+            "order": {
+              "street_address": "3252 woodshore st",
+              "full_address": "3252 woodshore st  raleigh, ca 97292",
+              "city": "raleigh",
+              "order_id": "1832508644",
+              "state": "ca",
+              "zip_code": "97292"
+            },
+            "product": {
+              "names": [],
+              "amounts": []
+            },
+            "flow": "subscription_inquiry",
+            "subflow": "status_questions"
+          },
+          "transcript": [
+            "agent: hi, what can i do for you?",
+            "customer: hi there",
+            "agent: how can i help you?",
+            "customer: i wanted to see if my premium subscription is active",
+            "customer: sorry, the premium subscription shopping service",
+            "customer: just wanted to make sure it's active before i make any purchases",
+            "agent: ok sure. what's your name?",
+            "customer: crystal minh",
+            "[ACTION] None None",
+            "agent: thanks. what's your account id?",
+            "customer: <account_id>",
+            "[ACTION] None None",
+            "agent: great, thank you. your subscription is indeed active.",
+            "agent: you do have an amount coming due tomorrow of $49"
+          ]
+        },
+        {
+          "split": "train",
+          "scenario": {
+            "personal": {
+              "account_id": "beluvsvorx",
+              "customer_name": "crystal minh",
+              "member_level": "guest",
+              "phone": "(151) 056-1754"
+            },
+            "order": {
+              "street_address": "0168 lexington ave",
+              "full_address": "0168 lexington ave  brighton, ca 35071",
+              "city": "brighton",
+              "order_id": "4068474878",
+              "state": "ca",
+              "zip_code": "35071"
+            },
+            "product": {
+              "names": [],
+              "amounts": []
+            },
+            "flow": "subscription_inquiry",
+            "subflow": "status_questions"
+          },
+          "transcript": [
+            "agent: hi, thanks for contacting acmebrands, how can i help you?",
+            "customer: hello, i need to check and see if my subscription is active. can you see if my payment went through?",
+            "agent: sure, i can help you with that. can i get your full name please?",
+            "customer: crystal minh",
+            "[ACTION] None None",
+            "agent: thanks, give me one second here to pull this up.",
+            "customer: sure.",
+            "agent: can i get your account id and order id as well please?",
+            "customer: account id: <account_id>",
+            "customer: order id: <order_id>",
+            "[ACTION] None None",
+            "agent: thanks.",
+            "[ACTION] None None",
+            "agent: it looks like your subscription is still active, but there is an amount due of $14 which is due tomorrow."
+          ]
+        }
+      ]
+    },
+    "status_delivery_date": {
+      "n": 3,
+      "actions_used": {
+        "pull-up-account": 2,
+        "validate-purchase": 2,
+        "ask-the-oracle": 2,
+        "verify-identity": 1,
+        "enter-details": 1,
+        "update-order": 1
+      },
+      "samples": [
+        {
+          "split": "train",
+          "scenario": {
+            "personal": {
+              "account_id": "i6hlhs8x8c",
+              "customer_name": "sanya afzal",
+              "member_level": "silver",
+              "phone": "(143) 417-5058"
+            },
+            "order": {
+              "street_address": "3369 lexington ave",
+              "full_address": "3369 lexington ave  san mateo, ca 67966",
+              "city": "san mateo",
+              "num_products": "1",
+              "order_id": "7622886514",
+              "products": "[{'brand': 'michael_kors', 'product_type': 'shirt', 'amount': 64, 'image_url': 'images/michael_kors-shirt.jpeg'}]",
+              "shipping_status": "out for delivery",
+              "state": "ca",
+              "zip_code": "67966"
+            },
+            "product": {
+              "names": [
+                "michael_kors shirt"
+              ],
+              "amounts": [
+                64
+              ]
+            },
+            "flow": "order_issue",
+            "subflow": "status_delivery_date"
+          },
+          "transcript": [
+            "agent: hello, how can i help?",
+            "customer: hello i'd like to check on my order status",
+            "customer: the delivery date of my oreder seems to be wrong",
+            "agent: i would behappy to help you with that. what is your name?",
+            "customer: sanya afzal",
+            "[ACTION] None None",
+            "agent: sanya, do you have your order id?",
+            "customer: yes, it is <order_id>",
+            "agent: thanks",
+            "agent: i also need your username and email, please",
+            "customer: username: safzal",
+            "customer: email: safzal@yahoo.com",
+            "[ACTION] None None",
+            "[ACTION] None None"
+          ]
+        },
+        {
+          "split": "train",
+          "scenario": {
+            "personal": {
+              "account_id": "jyodhtymbt",
+              "customer_name": "albert sanders",
+              "member_level": "silver",
+              "order_id": "5682712031",
+              "phone": "(354) 838-7539"
+            },
+            "order": {
+              "street_address": "1507 woodshore st",
+              "full_address": "1507 woodshore st  san lima, ny 97165",
+              "city": "san lima",
+              "num_products": "1",
+              "order_id": "5682712031",
+              "products": "[{'brand': 'tommy_hilfiger', 'product_type': 'shirt', 'amount': 49, 'image_url': 'images/tommy_hilfiger-shirt.jpeg'}]",
+              "shipping_status": "delivered",
+              "state": "ny",
+              "zip_code": "97165"
+            },
+            "product": {
+              "names": [
+                "tommy_hilfiger shirt"
+              ],
+              "amounts": [
+                49
+              ]
+            },
+            "flow": "order_issue",
+            "subflow": "status_delivery_date"
+          },
+          "transcript": [
+            "agent: hello! how may i help you today?",
+            "customer: hi there. can you check the status of an order? it's after my expected delivery date",
+            "agent: sure just give me one moment.",
+            "customer: okay",
+            "agent: can i have your full name, account id and order id please",
+            "customer: my name is albert sanders, account id <account_id> and the order id is <order_id>",
+            "agent: it looks like it's still in transit. i'm so sorry for the delay",
+            "customer: ok. do you know when it should arrive?",
+            "agent: no i do not, you will have to contact the carrier for that information.",
+            "customer: ok, will do. thanks",
+            "agent: sorry i couldn't be of more help.",
+            "agent: is there anything else i can help you with today?",
+            "customer: no, that's it. thank you!",
+            "agent: i hope you have a great day!"
+          ]
+        },
+        {
+          "split": "test",
+          "scenario": {
+            "personal": {
+              "account_id": "o5rknk6eoy",
+              "customer_name": "rodriguez domingo",
+              "member_level": "gold",
+              "phone": "(061) 427-6842"
+            },
+            "order": {
+              "street_address": "7127 woodshore st",
+              "full_address": "7127 woodshore st  monterey, ca 30688",
+              "city": "monterey",
+              "num_products": "1",
+              "order_id": "2655303633",
+              "products": "[{'brand': 'tommy_hilfiger', 'product_type': 'boots', 'amount': 74, 'image_url': 'images/tommy_hilfiger-boots.jpeg'}]",
+              "shipping_status": "in transit",
+              "state": "ca",
+              "zip_code": "30688"
+            },
+            "product": {
+              "names": [
+                "tommy_hilfiger boots"
+              ],
+              "amounts": [
+                74
+              ]
+            },
+            "flow": "order_issue",
+            "subflow": "status_delivery_date"
+          },
+          "transcript": [
+            "agent: hello",
+            "agent: how can i help you?",
+            "customer: hi, my ordered boots doesn't fit me.",
+            "customer: it hurts",
+            "agent: i am sorry to hear that. i will be glad to help you.",
+            "agent: could i have your full name or account id to pull up your account?",
+            "customer: name: rodriguez domingo",
+            "[ACTION] None None",
+            "customer: order id: <order_id>",
+            "agent: could also have your username and email address?",
+            "customer: i am sorry i haven't",
+            "agent: could you tell me the membership level and the day of purchase?",
+            "customer: gold",
+            "agent: ok"
+          ]
+        }
+      ]
+    }
+  }
+}
