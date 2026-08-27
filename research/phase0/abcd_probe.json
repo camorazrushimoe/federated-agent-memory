@@ -1,0 +1,52 @@
+{
+  "kind": "abcd",
+  "splits": {
+    "train": 8034,
+    "dev": 1004,
+    "test": 1004
+  },
+  "n_conversations": 10042,
+  "n_flows": 10,
+  "conversations_per_flow": {
+    "product_defect": 1070,
+    "storewide_query": 1094,
+    "shipping_issue": 1020,
+    "subscription_inquiry": 910,
+    "account_access": 1048,
+    "troubleshoot_site": 1026,
+    "single_item_query": 1045,
+    "order_issue": 1040,
+    "purchase_dispute": 1076,
+    "manage_account": 713
+  },
+  "n_subflows_present": 96,
+  "per_subflow": {
+    "min": 3,
+    "median": 69.5,
+    "max": 361,
+    "under_100": 54,
+    "under_50": 36
+  },
+  "action_turns_total": 36482,
+  "conversations_with_at_least_one_action": 1.0,
+  "power_hint": "subflow level is UNDERPOWERED for success-vs-failure comparison; group by flow (see conversations_per_flow)",
+  "guidelines": {
+    "flows_documented": 10,
+    "subflows_documented": 55,
+    "naive_name_join_matches": 32,
+    "conversation_coverage": 0.456,
+    "unjoined_examples": [
+      "boots_how_1",
+      "boots_how_2",
+      "boots_how_3",
+      "boots_how_4",
+      "boots_other_1",
+      "boots_other_2",
+      "boots_other_3",
+      "boots_other_4",
+      "cost",
+      "credit_card"
+    ],
+    "action_required": "Build an explicit mapping table from the data's snake_case subflows to guidelines' Title Case names. Without it, playbook scoring covers only the joined subset."
+  }
+}

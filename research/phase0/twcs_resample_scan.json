@@ -1,0 +1,71 @@
+{
+  "scheme": "N//5",
+  "res": {
+    "kind": "twcs",
+    "columns": [
+      "conversation_id",
+      "company",
+      "conversation",
+      "summary"
+    ],
+    "n_rows_in_sample": 500,
+    "text": {
+      "n_messages": 1918,
+      "real_min_count": 50,
+      "median_words": 18.0,
+      "median_real_words": 9.0,
+      "median_padding_share": 0.5,
+      "distinct_tokens": 5309,
+      "hapax": 2998,
+      "hapax_share": 0.565,
+      "real_vocabulary_size": 96,
+      "_verdict_hint": "natural language"
+    },
+    "median_turns": 3.0,
+    "max_turns": 48,
+    "distinct_turn_patterns": 88,
+    "top_turn_patterns": [
+      [
+        "CS",
+        225
+      ],
+      [
+        "CSC",
+        38
+      ],
+      [
+        "CSCS",
+        38
+      ],
+      [
+        "CCS",
+        24
+      ],
+      [
+        "C",
+        14
+      ],
+      [
+        "CSS",
+        13
+      ]
+    ],
+    "turn_pattern_hint": "TEMPLATED - reject",
+    "final_customer_turn_signal": {
+      "clearly_positive": 0.127,
+      "clearly_negative": 0.014,
+      "no_signal": 0.859
+    },
+    "n_companies": 74,
+    "companies_appearing_more_than_once": 59,
+    "top_companies": {
+      "AmazonHelp": 40,
+      "AppleSupport": 34,
+      "TMobileHelp": 25,
+      "Uber_Support": 19,
+      "": 16,
+      "Delta": 16
+    },
+    "repeat_sources_hint": "present -> can study source reputation"
+  }
+}

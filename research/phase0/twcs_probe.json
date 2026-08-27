@@ -1,0 +1,68 @@
+{
+  "kind": "twcs",
+  "columns": [
+    "conversation_id",
+    "company",
+    "conversation",
+    "summary"
+  ],
+  "n_rows_in_sample": 500,
+  "text": {
+    "n_messages": 3967,
+    "real_min_count": 50,
+    "median_words": 15,
+    "median_real_words": 8,
+    "median_padding_share": 0.4,
+    "distinct_tokens": 7067,
+    "hapax": 3867,
+    "hapax_share": 0.547,
+    "real_vocabulary_size": 165,
+    "_verdict_hint": "natural language"
+  },
+  "median_turns": 5.0,
+  "max_turns": 448,
+  "distinct_turn_patterns": 175,
+  "top_turn_patterns": [
+    [
+      "CCS",
+      50
+    ],
+    [
+      "CSC",
+      50
+    ],
+    [
+      "CSCC",
+      35
+    ],
+    [
+      "CSCS",
+      26
+    ],
+    [
+      "SCS",
+      16
+    ],
+    [
+      "S",
+      14
+    ]
+  ],
+  "turn_pattern_hint": "varied structure - ok",
+  "final_customer_turn_signal": {
+    "clearly_positive": 0.116,
+    "clearly_negative": 0.031,
+    "no_signal": 0.853
+  },
+  "n_companies": 88,
+  "companies_appearing_more_than_once": 71,
+  "top_companies": {
+    "Safaricom_Care": 27,
+    "AskPlayStation": 24,
+    "AmazonHelp": 23,
+    "Uber_Support": 19,
+    "TMobileHelp": 17,
+    "AirAsiaSupport": 16
+  },
+  "repeat_sources_hint": "present -> can study source reputation"
+}
