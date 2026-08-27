@@ -216,7 +216,15 @@ The 629 MB file size is padding, not content. Use only to confirm the probe flag
 | CallCenterEN | CC BY-NC 4.0 | **No** |
 | Syncora / strova-ai | card claims open | moot — data unusable |
 
-**Working rule:** develop and explore on TWCS, **validate on ABCD**. Do not produce a deliverable that only works on non-commercial data.
+**Working rule — explore freely.** A licence restricts redistributing the *data* and shipping artefacts trained on it; it does not restrict what you may learn from reading it. Use whichever corpus fits the question, and do not narrow your method to stay inside a licence.
+
+Three operational limits, none of which should shape the research:
+
+- no raw data committed to this repo
+- no production artefact trained on TWCS
+- if a finding holds **only** on TWCS, flag it early so we can decide between licensing the data and re-deriving the result on ABCD
+
+Legal signs off before anything ships, not before work starts.
 
 ---
 

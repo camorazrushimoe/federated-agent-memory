@@ -6,6 +6,12 @@
 **Data:** Certified and ready to download — [`research-customer-support-dialogue-datasets.md`](./research-customer-support-dialogue-datasets.md)
 **Out of scope here:** proving that injected memory helps a later conversation → [issue #5](https://github.com/camorazrushimoe/federated-agent-memory/issues/5)
 
+> **Founder decisions (answers to §8, recorded):** we have deliberately chosen the
+> *widest* options available, because we would rather learn the answers than
+> constrain the work into confirming our guesses. Concretely: **sharing scope is
+> an open empirical question, not a given (§8.1)**, and **you may explore on any
+> accepted corpus without a licence constraint on the research itself (§8.5)**.
+
 ---
 
 ## 1. What we are building
@@ -90,7 +96,13 @@ Two corpora passed acceptance. Everything else we screened failed — including 
 
 Practically: **ABCD is where the ground truth is** — it is the only corpus where "what the agent actually did" is recorded rather than guessed, and the only one we could ship against. **TWCS is where the messy reality is** — real people, real paraphrase, real unresolved cases, and the only place where the same source recurs.
 
-> **Licence constraint, please respect it:** findings may be developed on TWCS, but anything intended to inform the shipped product should be *validated* on ABCD. Do not build a deliverable that only works on non-commercial data.
+> **Licence: explore freely.** Licences restrict redistributing the *data* and
+> shipping artefacts trained on it — they do not restrict what you may learn from
+> reading it. So: use either corpus, whichever suits the question. Three practical
+> limits, none of which should shape your method: don't commit raw data to this
+> repo; don't train a production artefact on TWCS; and if a finding turns out to
+> hold *only* on TWCS, flag it early so we can decide whether to license the data
+> or re-derive it. Legal signs off before anything ships, not before you start.
 
 ---
 
@@ -142,21 +154,39 @@ A short structured summary we can drop into a decision meeting is worth more tha
 
 ---
 
-## 8. Questions we owe you — founders, please answer
+## 8. Questions we owed you — answered
 
-These change the shape of the work, so we should answer them early rather than let the lab guess.
+Where we had a choice between constraining the work and leaving it open, we chose open. If any of these openness turns out to be unhelpful — if you'd rather we just picked — say so and we will.
 
-1. **Scope of sharing.** Is shared memory meant to work *within* one vertical (all home-improvement agents), or deliberately across verticals? This decides whether cross-domain transfer is a feature or a bug.
-2. **Definition of success.** Task resolution only, or do soft outcomes count — satisfaction, fewer turns to answer, less escalation?
-3. **Negative experience.** How aggressively do we store what *failed*? Advice-to-avoid is potentially the highest-value content and the highest-risk.
-4. **Minimum evidence to publish.** Is one good conversation enough to make a fact shared, or must it recur N times?
-5. **Commercial constraint.** Confirm the §4 rule: develop on TWCS, validate on ABCD. If the product can tolerate research-only data, say so and it widens the options.
+**1. Scope of sharing — ANSWERED: treat it as an open empirical question.**
+We are not pre-deciding whether shared memory works within one vertical or across verticals. Both are on the table, and which one holds up is more valuable to us than either assumption. Report which way the data points and at what cost — if cross-vertical reuse turns out to be actively harmful, that is a first-class finding, not a failure.
+
+**2. Definition of success — ANSWERED: yours to propose, and we expect more than one.**
+Do not force everything into "resolved / not resolved". If the data supports a softer notion — fewer turns to an answer, no escalation, no repeat contact, explicit customer confirmation — propose the set you can actually measure and say which is most trustworthy. We would rather have two honest partial signals than one forced binary. Note §5: no accepted corpus hands you a reliable outcome column, so this is part of the research, not setup.
+
+**3. Negative experience — ANSWERED: in scope, and we want it.**
+Store what failed, not only what worked. Our instinct is that advice-to-avoid is the highest-value content we could hold, and also the most dangerous to get wrong. Treat "what should this agent *not* do" as a legitimate unit of shareable experience under M2, and tell us if the data can support it.
+
+**4. Minimum evidence to publish — ANSWERED: no number from us.**
+We deliberately will not set N. Recommend one from what you observe, or tell us the data cannot support a defensible threshold. If your answer is "it depends on the type of claim", that is a better answer than a constant — see the echo trap in §2/M3.
+
+**5. Commercial constraint — ANSWERED: relaxed, explore freely.**
+See the callout in §4. Use whichever accepted corpus fits the question. The three limits are operational, not methodological: no raw data committed to this repo, no production artefact trained on TWCS, and an early flag if a finding holds *only* on non-commercial data. Do not narrow your method to stay inside a licence.
+
+**Still genuinely undecided (we will answer when it matters):** whether a shared fact is scoped per tenant, per vertical, or globally. That is a product decision downstream of your findings on M1, so it would be backwards to fix it now.
 
 ## 9. Questions we would like back from you
 
 1. Does the ABCD action trace plus `guidelines.json` actually support a defensible outcome signal, once the mapping table exists?
 2. Given §5, is any of M1–M3 simply not answerable with what we have? Name it early.
 3. What would you want that we don't have — and is it buyable, or does it have to come from our own agent traffic?
+
+**Standing permissions**, so you don't have to ask:
+
+- **Propose more data.** If the two accepted corpora are not enough, name what you want and we will try to get it. The acceptance checklist in the datasets doc is the bar; anything that clears it is worth proposing.
+- **Reformulate the questions.** M1–M3 are our decomposition of the problem, not a specification. If the data suggests a better cut, take it and tell us why.
+- **Restructure the phases.** §6 is a suggestion. If a different shape gets to a real answer faster, propose it.
+- **Return a negative result.** "This is not answerable with this data, and here is what would be" is a complete deliverable, not a failure to deliver.
 
 ---
 
