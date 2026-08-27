@@ -180,10 +180,23 @@ for sf, cnt in sorted(data_sub.items()):
                                 f"for all {base} questions.")})
         continue
     if sf in ONT2GUIDE:
+        guide_name = ONT2GUIDE[sf]
+        if re.sub(r"[^a-z0-9]+", " ", sf.lower()).strip() == \
+                re.sub(r"[^a-z0-9]+", " ", guide_name.lower()).strip():
+            reason = "Name matches the ontology/guidelines subflow."
+        else:
+            # Data name != guideline name: the join goes through ontology.json
+            # (which ships the data's bare snake_case name) to the guidelines'
+            # Title Case name. E.g. cost -> 'Shipping Cost'. The naive data->
+            # guidelines name join does NOT get these (see abcd_subflow_mapping.md).
+            reason = (f"Joined via ontology.json: data subflow '{sf}' is the "
+                      f"ontology's entry for the guidelines subflow "
+                      f"'{guide_name}' (names differ, so the naive data->guidelines "
+                      f"name join does not get it).")
         rows.append({"subflow": sf, "flow": fl, "count": cnt,
-                     "guidelines_subflow": ONT2GUIDE[sf],
+                     "guidelines_subflow": guide_name,
                      "method": "DIRECT", "confidence": "high",
-                     "reason": "Name matches the ontology/guidelines subflow."})
+                     "reason": reason})
         continue
     # anything left is unmapped
     rows.append({"subflow": sf, "flow": fl, "count": cnt,

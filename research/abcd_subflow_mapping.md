@@ -34,16 +34,31 @@ python research/probe_dataset.py --kind abcd \
 
 Three methods, recorded per row in the JSON/CSV (`method` field):
 
-### 1. DIRECT (46 rows) — name match
+### 1. DIRECT (46 rows) — joined via `ontology.json` → `guidelines.json`
 
 The data value is (or tokenizes to) the same subflow as in `ontology.json`,
-whose entries join 1:1 to `guidelines.json`. Examples:
-`refund_initiate → Initiate Refund`, `credit_card → Invalid Credit Card`,
-`status → Shipping Status`, `missing → Missing Item`.
+whose entries join 1:1 to `guidelines.json`. Two shapes, recorded per row in
+the `reason` field:
 
-Note two near-misses the naive probe *does* get: `status` and `cost` join via
-normalised name collision, but only because `ontology.json` ships bare names
-for the shipping flow; they are unambiguous within their flow.
+- **Name match (32 rows):** the data name equals the guideline name up to
+  case/punctuation — `manage_cancel → Manage Cancel`,
+  `status_delivery_time → Status Delivery Time`, `refund_status → Refund
+  Status`. These 32 are *exactly* what the probe's naive data→guidelines name
+  join recovers: 32 of 96 subflows, 4,582 conversations (0.456).
+- **Ontology bridge (14 rows):** the data name differs from the guideline
+  name, so the naive name join does **not** get them — they are among the
+  probe's 64 unjoined subflows (the probe's `unjoined_examples` lists only
+  the first 10 alphabetically, which is why `cost` appears there). The join
+  goes through `ontology.json`, which carries the data's snake_case name:
+  `cost → Shipping Cost`, `status → Shipping Status`, `manage → Manage
+  Shipping`, `missing → Missing Item`, `credit_card → Invalid Credit Card`,
+  `refund_initiate → Initiate Refund`, `reset_2fa → Reset Two-Factor Auth`,
+  and the rest (see the `reason` field of each row).
+
+The 4 shipping rows (`status`, `manage`, `missing`, `cost`) are bare names
+that exist only in the ontology (under the `shipping_issue` flow); the
+guidelines document them as `Shipping Status` / `Manage Shipping` /
+`Missing Item` / `Shipping Cost`. All 46 are unambiguous within their flow.
 
 ### 2. VARIANT (48 rows) — numbered variants → the single documented FAQ
 

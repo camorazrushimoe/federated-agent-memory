@@ -9,8 +9,8 @@ boots_other_1,single_item_query,42,Boots FAQ,VARIANT,high,Numbered variant of bo
 boots_other_2,single_item_query,36,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
 boots_other_3,single_item_query,34,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
 boots_other_4,single_item_query,37,Boots FAQ,VARIANT,high,Numbered variant of boots; the guidelines document one 'Boots FAQ' playbook for all boots questions (how_N/other_N).
-cost,shipping_issue,243,Shipping Cost,DIRECT,high,Name matches the ontology/guidelines subflow.
-credit_card,troubleshoot_site,266,Invalid Credit Card,DIRECT,high,Name matches the ontology/guidelines subflow.
+cost,shipping_issue,243,Shipping Cost,DIRECT,high,"Joined via ontology.json: data subflow 'cost' is the ontology's entry for the guidelines subflow 'Shipping Cost' (names differ, so the naive data->guidelines name join does not get it)."
+credit_card,troubleshoot_site,266,Invalid Credit Card,DIRECT,high,"Joined via ontology.json: data subflow 'credit_card' is the ontology's entry for the guidelines subflow 'Invalid Credit Card' (names differ, so the naive data->guidelines name join does not get it)."
 jacket_how_1,single_item_query,29,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
 jacket_how_2,single_item_query,39,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
 jacket_how_3,single_item_query,28,Jacket FAQ,VARIANT,high,Numbered variant of jacket; the guidelines document one 'Jacket FAQ' playbook for all jacket questions (how_N/other_N).
@@ -27,7 +27,7 @@ jeans_other_1,single_item_query,33,Jeans FAQ,VARIANT,high,Numbered variant of je
 jeans_other_2,single_item_query,32,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
 jeans_other_3,single_item_query,40,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
 jeans_other_4,single_item_query,32,Jeans FAQ,VARIANT,high,Numbered variant of jeans; the guidelines document one 'Jeans FAQ' playbook for all jeans questions (how_N/other_N).
-manage,shipping_issue,248,Manage Shipping,DIRECT,high,Name matches the ontology/guidelines subflow.
+manage,shipping_issue,248,Manage Shipping,DIRECT,high,"Joined via ontology.json: data subflow 'manage' is the ontology's entry for the guidelines subflow 'Manage Shipping' (names differ, so the naive data->guidelines name join does not get it)."
 manage_cancel,order_issue,125,Manage Cancel,DIRECT,high,Name matches the ontology/guidelines subflow.
 manage_change_address,manage_account,51,Manage Change Address,DIRECT,high,Name matches the ontology/guidelines subflow.
 manage_change_name,manage_account,51,Manage Change Name,DIRECT,high,Name matches the ontology/guidelines subflow.
@@ -43,7 +43,7 @@ membership_1,storewide_query,76,Membership FAQ,VARIANT,high,Numbered variant of 
 membership_2,storewide_query,65,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
 membership_3,storewide_query,71,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
 membership_4,storewide_query,69,Membership FAQ,VARIANT,high,Numbered variant of membership; the guidelines document one 'Membership FAQ' playbook for all membership questions.
-missing,shipping_issue,261,Missing Item,DIRECT,high,Name matches the ontology/guidelines subflow.
+missing,shipping_issue,261,Missing Item,DIRECT,high,"Joined via ontology.json: data subflow 'missing' is the ontology's entry for the guidelines subflow 'Missing Item' (names differ, so the naive data->guidelines name join does not get it)."
 mistimed_billing_already_returned,purchase_dispute,137,Mistimed Billing Already Returned,DIRECT,high,Name matches the ontology/guidelines subflow.
 mistimed_billing_never_bought,purchase_dispute,139,Mistimed Billing Never Bought,DIRECT,high,Name matches the ontology/guidelines subflow.
 out_of_stock_general,purchase_dispute,140,Out-of-Stock General,DIRECT,high,Name matches the ontology/guidelines subflow.
@@ -60,14 +60,14 @@ promo_code_invalid,purchase_dispute,133,Promo Code Invalid,DIRECT,high,Name matc
 promo_code_out_of_date,purchase_dispute,112,Promo Code Out of Date,DIRECT,high,Name matches the ontology/guidelines subflow.
 recover_password,account_access,336,Recover Password,DIRECT,high,Name matches the ontology/guidelines subflow.
 recover_username,account_access,361,Recover Username,DIRECT,high,Name matches the ontology/guidelines subflow.
-refund_initiate,product_defect,176,Initiate Refund,DIRECT,high,Name matches the ontology/guidelines subflow.
+refund_initiate,product_defect,176,Initiate Refund,DIRECT,high,"Joined via ontology.json: data subflow 'refund_initiate' is the ontology's entry for the guidelines subflow 'Initiate Refund' (names differ, so the naive data->guidelines name join does not get it)."
 refund_status,product_defect,179,Refund Status,DIRECT,high,Name matches the ontology/guidelines subflow.
-refund_update,product_defect,177,Update Refund,DIRECT,high,Name matches the ontology/guidelines subflow.
-reset_2fa,account_access,351,Reset Two-Factor Auth,DIRECT,high,Name matches the ontology/guidelines subflow.
-return_color,product_defect,180,Return Due to Color,DIRECT,high,Name matches the ontology/guidelines subflow.
-return_size,product_defect,191,Return Due to Size,DIRECT,high,Name matches the ontology/guidelines subflow.
-return_stain,product_defect,167,Return Due to Stain,DIRECT,high,Name matches the ontology/guidelines subflow.
-search_results,troubleshoot_site,259,Search Not Working,DIRECT,high,Name matches the ontology/guidelines subflow.
+refund_update,product_defect,177,Update Refund,DIRECT,high,"Joined via ontology.json: data subflow 'refund_update' is the ontology's entry for the guidelines subflow 'Update Refund' (names differ, so the naive data->guidelines name join does not get it)."
+reset_2fa,account_access,351,Reset Two-Factor Auth,DIRECT,high,"Joined via ontology.json: data subflow 'reset_2fa' is the ontology's entry for the guidelines subflow 'Reset Two-Factor Auth' (names differ, so the naive data->guidelines name join does not get it)."
+return_color,product_defect,180,Return Due to Color,DIRECT,high,"Joined via ontology.json: data subflow 'return_color' is the ontology's entry for the guidelines subflow 'Return Due to Color' (names differ, so the naive data->guidelines name join does not get it)."
+return_size,product_defect,191,Return Due to Size,DIRECT,high,"Joined via ontology.json: data subflow 'return_size' is the ontology's entry for the guidelines subflow 'Return Due to Size' (names differ, so the naive data->guidelines name join does not get it)."
+return_stain,product_defect,167,Return Due to Stain,DIRECT,high,"Joined via ontology.json: data subflow 'return_stain' is the ontology's entry for the guidelines subflow 'Return Due to Stain' (names differ, so the naive data->guidelines name join does not get it)."
+search_results,troubleshoot_site,259,Search Not Working,DIRECT,high,"Joined via ontology.json: data subflow 'search_results' is the ontology's entry for the guidelines subflow 'Search Not Working' (names differ, so the naive data->guidelines name join does not get it)."
 shirt_how_1,single_item_query,34,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
 shirt_how_2,single_item_query,31,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
 shirt_how_3,single_item_query,30,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
@@ -76,9 +76,9 @@ shirt_other_1,single_item_query,33,Shirt FAQ,VARIANT,high,Numbered variant of sh
 shirt_other_2,single_item_query,34,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
 shirt_other_3,single_item_query,27,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
 shirt_other_4,single_item_query,27,Shirt FAQ,VARIANT,high,Numbered variant of shirt; the guidelines document one 'Shirt FAQ' playbook for all shirt questions (how_N/other_N).
-shopping_cart,troubleshoot_site,251,Cart Not Updating,DIRECT,high,Name matches the ontology/guidelines subflow.
-slow_speed,troubleshoot_site,250,Website Too Slow,DIRECT,high,Name matches the ontology/guidelines subflow.
-status,shipping_issue,268,Shipping Status,DIRECT,high,Name matches the ontology/guidelines subflow.
+shopping_cart,troubleshoot_site,251,Cart Not Updating,DIRECT,high,"Joined via ontology.json: data subflow 'shopping_cart' is the ontology's entry for the guidelines subflow 'Cart Not Updating' (names differ, so the naive data->guidelines name join does not get it)."
+slow_speed,troubleshoot_site,250,Website Too Slow,DIRECT,high,"Joined via ontology.json: data subflow 'slow_speed' is the ontology's entry for the guidelines subflow 'Website Too Slow' (names differ, so the naive data->guidelines name join does not get it)."
+status,shipping_issue,268,Shipping Status,DIRECT,high,"Joined via ontology.json: data subflow 'status' is the ontology's entry for the guidelines subflow 'Shipping Status' (names differ, so the naive data->guidelines name join does not get it)."
 status_credit_missing,manage_account,114,Status Credit Missing,DIRECT,high,Name matches the ontology/guidelines subflow.
 status_delivery_date,order_issue,3,Status Delivery Time,INFERRED,high,"Transcript: 'the delivery date of my order seems to be wrong'. Uses ask-the-oracle + update-order, distinctive to the Status Delivery Time playbook. n=3."
 status_delivery_time,order_issue,139,Status Delivery Time,DIRECT,high,Name matches the ontology/guidelines subflow.
