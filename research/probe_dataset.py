@@ -87,8 +87,15 @@ REVIEW_CITATIONS = {
         "repeat_source_entities": False,
     },
     "twcs_tne_ai": {
-        "source": "TNE-AI mirror, 500-conversation sample across 5 offsets",
-        "reproduce_with": "probe_dataset.py --kind twcs --path twcs_conversations.parquet --sample 500",
+        "source": "TNE-AI mirror, 500 conversations sampled as 100 rows at each of "
+                  "5 offsets (0, 5000, 120000, 400000, 700000) via the HF rows API",
+        "reproduce_with": "probe_dataset.py --kind twcs --path twcs_conversations.parquet "
+                          "--offsets 0,5000,120000,400000,700000 --per-offset 100",
+        "sampling_note": (
+            "DO NOT use --sample 500: that reads the FIRST 500 rows, which is a "
+            "different and biased sample and reproduces none of the figures below. "
+            "Reported by lab-1 during Phase 0 - the earlier reproduce_with line was wrong."
+        ),
         "verdict": "ACCEPT for research (license: non-commercial)",
         "n_conversations_full": 794335,
         "n_brands_full": 109,
@@ -206,6 +213,26 @@ def load_any(path: Path, sample: int | None):
     if sample:
         df = df.head(sample)
     return df
+
+
+def take_offsets(df, offsets: list[int], per_offset: int):
+    """Concatenate `per_offset` rows starting at each offset.
+
+    A head(n) slice of TWCS is biased: the mirror is ordered, so the first rows
+    over-represent a handful of brands. Spreading the sample is what the cited
+    figures were measured on.
+    """
+    import pandas as pd
+
+    chunks = []
+    for off in offsets:
+        if off >= len(df):
+            print(f"warning: offset {off} beyond {len(df)} rows, skipped", file=sys.stderr)
+            continue
+        chunks.append(df.iloc[off:off + per_offset])
+    if not chunks:
+        raise SystemExit("no rows selected - check --offsets against the file length")
+    return pd.concat(chunks, ignore_index=True)
 
 
 def probe_syncora(df, sample_messages: int, real_min_count: int) -> dict:
@@ -385,6 +412,12 @@ def main() -> int:
                    help="ABCD only: path to guidelines.json for join coverage")
     p.add_argument("--sample", type=int, default=None,
                    help="rows to read (twcs: conversations)")
+    p.add_argument("--offsets", type=str, default=None,
+                   help="twcs: comma-separated row offsets to sample from, e.g. "
+                        "0,5000,120000,400000,700000. Spreads the sample; a head() "
+                        "slice of TWCS is biased toward a few brands.")
+    p.add_argument("--per-offset", type=int, default=100,
+                   help="twcs: rows to take at each --offsets position (default 100)")
     p.add_argument("--sample-messages", type=int, default=20000,
                    help="syncora: messages used for text stats")
     p.add_argument("--real-min-count", type=int, default=50,
@@ -397,7 +430,17 @@ def main() -> int:
     if not args.kind or not args.path:
         p.error("provide --kind and --path, or --cite-review")
 
-    data = load_any(args.path, args.sample if args.kind != "syncora" else None)
+    if args.kind == "twcs" and args.offsets:
+        if args.sample:
+            p.error("--offsets and --sample are mutually exclusive; --sample reads "
+                    "the first N rows and does not reproduce the cited TWCS figures")
+        data = take_offsets(
+            load_any(args.path, None),
+            [int(x) for x in args.offsets.split(",") if x.strip()],
+            args.per_offset,
+        )
+    else:
+        data = load_any(args.path, args.sample if args.kind != "syncora" else None)
 
     if args.kind == "syncora":
         res = probe_syncora(data, args.sample_messages, args.real_min_count)
