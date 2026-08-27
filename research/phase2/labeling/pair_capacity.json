@@ -1952,6 +1952,7 @@
   },
   "thin_subflows_under_5": 1,
   "thin_subflows_under_2": 0,
+  "empty_product_conversations": 2585,
   "flows_with_single_subflow": [],
   "mapping_rows": 96
 }

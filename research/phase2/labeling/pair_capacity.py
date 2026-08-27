@@ -29,6 +29,17 @@ def prod_key(s):
     return str(p)
 
 
+def prod_empty(s):
+    p = s.get("product")
+    if p is None:
+        return True
+    if isinstance(p, dict):
+        return not any(p.values())
+    if isinstance(p, (list, tuple)):
+        return len(p) == 0
+    return str(p).strip() in ("", "?")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--corpus", default=CORPUS)
@@ -50,6 +61,8 @@ def main():
         by_flow[s["flow"]] += 1
         by_prod[prod_key(s)] += 1
         flow_subs.setdefault(s["flow"], set()).add(s["subflow"])
+
+    empty_prod = sum(1 for _, c in convs if prod_empty(c["scenario"]))
 
     n = len(convs)
     # ceilings (combinations, no reuse across pairs in practice — these are
@@ -93,6 +106,7 @@ def main():
         },
         "thin_subflows_under_5": sum(1 for s in subflow_stats if s["conversations"] < 5),
         "thin_subflows_under_2": sum(1 for s in subflow_stats if s["conversations"] < 2),
+        "empty_product_conversations": empty_prod,
         "flows_with_single_subflow": [f for f in flow_subs if len(flow_subs[f]) == 1],
         "mapping_rows": (len(json.load(open(a.mapping)).get("mapping", []))
                          if isinstance(json.load(open(a.mapping)), dict)
@@ -103,11 +117,18 @@ def main():
     md = ["# M1 Pair-Construction Capacity (computed from the corpus, not assumed)",
           "",
           f"- conversations: **{n}** ({out['splits']['train']}/{out['splits']['dev']}/{out['splits']['test']}) · flows **{out['n_flows']}** · subflows **{out['n_subflows']}**",
-          f"- products (distinct `{prod_key}` values): " +
+          "- products (distinct `scenario.product` values): " +
           ", ".join(f"`{k[:40]}`={v}" for k, v in by_prod.most_common(10)) +
           (f" (+{len(by_prod)-10} more)" if len(by_prod) > 10 else ""),
           f"- subflows with <5 conversations: **{out['thin_subflows_under_5']}** (of {out['n_subflows']}); <2 (cannot form any same-subflow pair): **{out['thin_subflows_under_2']}**",
           f"- flows with a single subflow (no ambiguous-band pairs inside): {out['flows_with_single_subflow']}",
+          f"- **FINDING — empty `scenario.product`: {empty_prod} conversations "
+          f"({empty_prod/n:.1%}) have `product = {{amounts: [], names: []}}`. A "
+          f"cross-*product* sub-band can only be constructed from the "
+          f"{n-empty_prod} conversations that carry a non-empty product. Pre-registered rule "
+          f"for evaluation: a pair whose either side has an empty product is judged "
+          f"on problem shape only (rule R3) and is NOT auto-assigned to the "
+          f"cross-product sub-band.",
           "",
           "## Pair ceilings (theoretical max, no conversation reuse)",
           "",

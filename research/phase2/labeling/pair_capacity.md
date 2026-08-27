@@ -1,9 +1,10 @@
 # M1 Pair-Construction Capacity (computed from the corpus, not assumed)
 
 - conversations: **10042** (8034/1004/1004) · flows **10** · subflows **96**
-- products (distinct `<function prod_key at 0x790b961554e0>` values): `{"amounts": [], "names": []}`=2585, `{"amounts": [54], "names": ["calvin_klei`=50, `{"amounts": [94], "names": ["tommy_hilfi`=49, `{"amounts": [54], "names": ["calvin_klei`=49, `{"amounts": [84], "names": ["calvin_klei`=48, `{"amounts": [59], "names": ["guess jacke`=48, `{"amounts": [94], "names": ["calvin_klei`=47, `{"amounts": [89], "names": ["guess jeans`=47, `{"amounts": [59], "names": ["michael_kor`=47, `{"amounts": [69], "names": ["guess shirt`=46 (+1304 more)
+- products (distinct `scenario.product` values): `{"amounts": [], "names": []}`=2585, `{"amounts": [54], "names": ["calvin_klei`=50, `{"amounts": [94], "names": ["tommy_hilfi`=49, `{"amounts": [54], "names": ["calvin_klei`=49, `{"amounts": [84], "names": ["calvin_klei`=48, `{"amounts": [59], "names": ["guess jacke`=48, `{"amounts": [94], "names": ["calvin_klei`=47, `{"amounts": [89], "names": ["guess jeans`=47, `{"amounts": [59], "names": ["michael_kor`=47, `{"amounts": [69], "names": ["guess shirt`=46 (+1304 more)
 - subflows with <5 conversations: **1** (of 96); <2 (cannot form any same-subflow pair): **0**
 - flows with a single subflow (no ambiguous-band pairs inside): []
+- **FINDING — empty `scenario.product`: 2585 conversations (25.7%) have `product = {amounts: [], names: []}`. A cross-*product* sub-band can only be constructed from the 7457 conversations that carry a non-empty product. Pre-registered rule for evaluation: a pair whose either side has an empty product is judged on problem shape only (rule R3) and is NOT auto-assigned to the cross-product sub-band.
 
 ## Pair ceilings (theoretical max, no conversation reuse)
 
