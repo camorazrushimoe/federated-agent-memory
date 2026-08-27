@@ -51,24 +51,56 @@ BON-43 outcome-validation · BON-44 M3 · BON-45 synthesis**) · **Method:**
 | M3 | valuation AUC ≥ 0.80 + ≥ 30% wrongful-promotion trap documentation |
 | Scope | ABCD-only cut pre-registered if labeling at risk of > 4 h by round 3 |
 
-## Round 1 (M1) — state as of 2026-08-27T22:30Z (main @01a9a38)
+## Round 1 (M1) — state as of 2026-08-27T23:05Z (main @6b3a7be)
 
-**Status: R1 in flight. Engineer is the critical path (pair file); evaluation is standing by.**
+**Status: R1 in flight. Pair artifact MERGED; evaluation (labeler) is unblocked — S0→S1 GO.**
 
 Landed this round (lead):
 - **Kickoff comment GH #6 = `5445829777`** (22:12Z) — DECIDED D17/D18/D19 update + round-1
   kickoff + M1 assignment (the thread is the source of truth; this file mirrors it).
 - **PR #13 MERGED → `main @13692d6`** (lead review: PR #13 comment `5445670913`).
   `research/phase2/labeling/` now on main: `PROTOCOL-m1-pairs.md` (v1.1, locked),
-  `CANDIDATE-PAIR-CONTRACT.md` (the intake contract for this round's pairs),
-  `RUNBOOK-m1.md`, `validate_pairs.py` / `split_passes.py` / `score_agreement.py` /
-  `stage_pass2.py` (all selftests re-run by the lead), `pair_capacity.{py,json,md}`
+  `CANDIDATE-PAIR-CONTRACT.md` (the intake contract for this round's pairs), `RUNBOOK-m1.md`,
+  `validate_pairs.py` / `split_passes.py` / `score_agreement.py` / `stage_pass2.py` (all
+  selftests re-run by the lead), `pair_capacity.{py,json,md}`
   (lead re-computed vs the corpus — all figures exact: 10,042 convos, 10 flows / 96
   subflows, ceilings 848,766 / 4,246,706 / 45,320,389, 2,585 empty-product convos = 25.7%).
+- **PR #16 MERGED → `main @6b3a7be`** (lead review posted PRE-merge: PR #16 comment
+  `5446227647`) — `research/phase2/m1/candidate_pairs.jsonl` = the **pinned 170 set**
+  (85/34/51; cross-flow 20 / cross-product 10 / other-diff-flow 21; seed 42; corpus
+  `abcd_v1.1.json` sha256:16 `005d425e890b30a1`; max conversation reuse 2; 318 unique
+  convos; file sha256:16 `42215fc5969e600e`; neutral display headers). Lead
+  independently re-ran `validate_pairs.py` (`OK_TO_LABEL`, 0/0) and a full-set audit
+  (bands, sub_band partition, metadata, display neutrality + faithfulness, length):
+  **0 problems / 0 warnings**.
 - Linear: BON-39 In Progress with the five sub-tickets above (BON-41 In Progress).
 
+**Rulings (lead, 2026-08-27, PR #16 review — settled, do not re-litigate):**
+1. **The pinned 170 set (PR #16) is the round-1 labeling set.** The 180-pair set
+   (PR #14, `0a90b95` / merge `cf04885`) is valid but superseded as the round-1
+   artifact; it stays in git history, untouched. The labeler labels exactly one set: 170.
+2. **Neutral display headers win over contract §5's `flow/subflow` header line.**
+   Locked protocol R5 (v1.1) governs: a metadata header would leak the band and
+   invalidate both passes. §5's header sentence was a drafting slip and is retracted
+   for labeling; follow-up (non-blocking, evaluation, later round): one-line erratum
+   in `CANDIDATE-PAIR-CONTRACT.md` §5. The builder's `--scenario-header` flag stays for
+   reference only — never used for a labeled pass.
+
+**Process record (DECIDED, 2026-08-27):**
+- **PR #14 was merged without a lead review posted — D17 discipline breach** (crew merges
+  *after* lead review is posted). Content was valid (independently `OK_TO_LABEL`) and is
+  now superseded, so no round is burned; the rule is re-affirmed: **no merge without a
+  posted lead review, every time.** Duplicate-wake root cause: two same-role engineer
+  instances ran off the same lossy wake (shared-worktree hazard); the pinned-set instance
+  flagged and recorded it (GH #6 comment `5446171247`), the sibling's commits are left
+  untouched.
+- **PR #15 (BON-40, TWCS §3 doc facts) — retro-accepted** by the lead (review skipped at
+  merge time; content checked against the Phase 0 findings and merged full-scan numbers,
+  consistent). One-time retro-acceptance, not a precedent.
+
 R1 assignment (as posted on #6):
-- **Engineer (BON-41, critical path):** build `candidate_pairs.jsonl` **to the merged
+- **Engineer (BON-41, critical path): DONE — PR #16 merged (see above).** Originally: build
+  `candidate_pairs.jsonl` **to the merged
   contract** — 170 pairs (85 should-match / 34 ambiguous / 51 should-not-match; cross-flow
   ≥ 20, cross-product ≥ 10 from the 7,457 non-empty-product convos), seed recorded, max
   conversation reuse ≤ 2, display per contract §5, no labels/hints. Self-run
@@ -77,8 +109,10 @@ R1 assignment (as posted on #6):
   Then, when the gold set lands: **B0 (oracle subflow) + B1 (TF-IDF, customer turns only)**
   vs `gold_m1_pairs_agentlabeled.jsonl`. Round-1 handoff point: inter-pass disagreement %
   + B0/B1 per-band false-friend rate & should-match recall + verdict vs the D18 bar, in a
-  commit/PR. B2 optional (falsification-only).
-- **Evaluation (BON-41 labeling slot):** two-pass per protocol v1.1 + runbook S0–S3;
+  commit/PR. B2 optional (falsification-only). (Pair-file half delivered; the B0/B1 half
+  runs after the gold set lands.)
+- **Evaluation (BON-41 labeling slot): UNBLOCKED as of the #16 merge (23:00Z) — GO on the
+  canonical 170 set, both rulings settled.** Originally: two-pass per protocol v1.1 + runbook S0–S3;
   pass 2 in a fresh context via `stage_pass2.py`; report the disagreement NUMBER + gold-set
   commit + ready-for-B1 signal on #6. >15% → the pre-registered 20-item sample to the
   founder, never the whole set. (Door was down at 22:19Z — container not up; wake
