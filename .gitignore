@@ -13,6 +13,7 @@ venv/
 
 # Local data (raw archives must not be committed)
 data/
+*.parquet
 *.tmp
 
 # Node
