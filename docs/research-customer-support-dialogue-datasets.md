@@ -117,7 +117,7 @@ Splitting a 70-dialogue subflow by outcome and controlling for anything else lea
 | **Licence (source)** | CC BY-NC-SA 4.0 on Kaggle; commercial use requires contacting the author |
 | **Licence (this mirror)** | **none stated on the card** — verified absent. Treat as at least as restrictive as the source. |
 | **Commercial use** | **No** — research / hackathon only, pending legal review |
-| **Text (probe, n=500)** | median **18** real words/turn; 5,836 distinct tokens; `hapax_share` **0.56** |
+| **Text (probe, n=500)** | median **18** words/turn · **9** real words/turn (median real words, ≥50-occurrence tokens); 5,836 distinct tokens; `hapax_share` **0.56** |
 | **Structure (probe, n=500)** | median **3** turns (max 48); **103 distinct turn patterns** — genuine structural variation |
 | **Repeat sources (probe)** | **Yes** — 93 brands recur in a 500 sample (AmazonHelp ×52, AppleSupport ×36) |
 | **Outcome signal (probe)** | final customer turn: **11% clearly positive · 4% clearly negative · 85% no signal** |
@@ -132,7 +132,12 @@ ds.to_parquet("twcs_conversations.parquet")
 PY
 
 python research/probe_dataset.py --kind twcs \
-    --path twcs_conversations.parquet --sample 500
+    --path twcs_conversations.parquet \
+    --offsets 0,5000,120000,400000,700000 --per-offset 100
+# NOTE (BON-40): do NOT use `--sample 500` — that reads the FIRST 500 rows,
+# a biased head sample that reproduces none of the figures above (it yields
+# median 15 words / 8 real words, 7,067 tokens, 5.0 median turns). The cited
+# block was measured on the 5-offset sample pinned in probe --cite-review.
 ```
 
 **Consequence of the 85% figure:** keyword polarity on the closing turn will not carry an outcome label. Plan for an LLM judge, a proxy, or a hand-labelled gold set — and note that the 15% of threads which *do* carry a signal are unlikely to be a random sample of the whole.
