@@ -8,9 +8,18 @@ role.
 **Provenance (non-negotiable):** this set is **agent-labeled**. Every artifact,
 file, commit message, report line, and table that cites it MUST say
 `agent-labeled`. It is NEVER "human gold" and is never cited as human gold.
-**Date:** 2026-08-27 · **Status:** LOCKED before any pair is labeled.
-Changes to the rules below require a version bump (v1.1, …) committed **with the
+**Date:** 2026-08-27 · **Status:** v1.1 (strengthened pass separation),
+LOCKED before any pair is labeled.
+Changes to the rules below require a version bump (v1.2, …) committed **with the
 reason**, and apply to no item already labeled.
+
+**v1.1 change (2026-08-27, same day, before any pair labeled):** pass inputs
+now carry **only `pair_id` + `display`** — construction metadata (band,
+sub_band, flow/subflow ids, products) is stripped by `split_passes.py` and
+re-attached only in the gold set after both passes complete. Previously the
+band was visible to the labeler as "recorded, not used"; v1.1 makes "not
+used" mechanical rather than a promise. Rule R5 now has a mechanical
+enforcement layer.
 
 > Deviation note (recorded, not hidden): the Phase 1 method doc
 > (`docs/research-method-m1-m3.md`, M1) proposed "two passes (lead + a second
@@ -67,11 +76,11 @@ is given, band stated per item):
   action trace (what was done) is corroborating evidence of structure, not the
   label: if the customer statements show different symptoms, the symptom
   difference wins over identical action sequences.
-- **R5 — No peeking at band or oracle labels as evidence.** Band metadata is
-  recorded, not used as adjudication input: a `should-match` pair whose two
-  conversations genuinely describe different problem shapes is
-  `related-but-different` or `unrelated`. The oracle (same subflow) is the B0
-  reference for the *methods*, not a label source.
+- **R5 — No peeking at band or oracle labels as evidence.** Enforced
+  mechanically (v1.1): pass inputs contain only `pair_id` + `display` — the
+  labeler never sees the band, sub_band, flow/subflow ids, or product
+  metadata during a pass. The oracle (same subflow) is the B0 reference for
+  the *methods*, not a label source.
 - **R6 — Borderline default.** When a pair is genuinely borderline between
   `same-problem` and `related-but-different`, label
   `related-but-different` (conservative against pooling — the commission weighs
@@ -81,13 +90,18 @@ is given, band stated per item):
 ## 3. Two independent passes — mechanism
 
 - **Pass 1** and **Pass 2** are separate runs. Pass 2 is performed without
-  access to pass 1's labels: the mechanical guarantees are
-  (a) pass 2's input file contains **no** pass 1 fields — enforced by
-  `split_passes.py` asserting the field set; (b) the two input files present
-  pairs in **different, seeded orders** (seeds `20260827` / `20260927`) so no
-  positional priming; (c) the pass 2 run starts from the raw pair displays
-  only — pass 1's output file is not open, not referenced, and not in context
-  when pass 2 is produced.
+  access to pass 1's labels. Mechanical guarantees (v1.1):
+  (a) pass inputs contain **only `pair_id` + display** — construction
+  metadata is stripped by `split_passes.py` (selftest asserts the field set),
+  so no band/oracle cue can prime either pass;
+  (b) the two pass inputs present pairs in **different, seeded orders**
+  (seeds `20260827` / `20260927`) so no positional priming;
+  (c) **pass 2 runs in a fresh agent context**: a new session whose prompt
+  carries the protocol, the frozen rubric, and the pass-2 input file only.
+  Pass 1's label file is not open, not referenced, and not in that context.
+  The pass-1 commit exists on the branch, but the pass-2 context is
+  constructed from `pass2_input.jsonl` + `PROTOCOL-m1-pairs.md` alone — the
+  pass-1 file is deliberately not part of that construction.
 - Each item is labeled exactly once per pass, with a one-line rationale.
 - **Honesty clause (read before quoting any number from this protocol):**
   both passes are produced by the same agent (same model, two independent

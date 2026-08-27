@@ -22,9 +22,11 @@ errors (protocol §7 limitation 3).
 import argparse
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 BANDS = ["should-match", "ambiguous", "should-not-match"]
+SUB_BANDS = ["cross-flow", "cross-product", "other-diff-flow"]
 RANGE = (150, 200)
 
 
@@ -44,6 +46,22 @@ def first_customer_turn(conv):
     return ""
 
 
+def prod_empty(p):
+    if p is None:
+        return True
+    if isinstance(p, dict):
+        return not any(p.values())
+    if isinstance(p, (list, tuple)):
+        return len(p) == 0
+    return str(p).strip() in ("", "?")
+
+
+def prod_norm(p):
+    if isinstance(p, dict):
+        return json.dumps(p, sort_keys=True, default=str)
+    return str(p)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("pairs")
@@ -55,6 +73,8 @@ def main():
     blocking, warnings = [], []
 
     band_counts = {b: 0 for b in BANDS}
+    sub_band_counts = {}
+    conv_usage = Counter()
     seen = set()
     for p in pairs:
         pid, band = p["pair_id"], p.get("band")
@@ -65,6 +85,8 @@ def main():
             blocking.append(f"{pid}: unknown band {band!r}")
             continue
         band_counts[band] += 1
+        if p.get("sub_band"):
+            sub_band_counts[p["sub_band"]] = sub_band_counts.get(p["sub_band"], 0) + 1
         ca, cb = str(p.get("conv_a")), str(p.get("conv_b"))
         if ca == cb:
             blocking.append(f"{pid}: conv_a == conv_b ({ca})")
@@ -86,6 +108,21 @@ def main():
             if band == "should-not-match" and same_flow:
                 blocking.append(f"{pid}: band=should-not-match but same flow "
                                 f"{sa.get('flow')!r}")
+            # sub_band contract (CANDIDATE-PAIR-CONTRACT §3/§4)
+            if band == "should-not-match":
+                sb_band = p.get("sub_band")
+                ea, eb = prod_empty(sa.get("product")), prod_empty(sb.get("product"))
+                pa, pb = prod_norm(sa.get("product")), prod_norm(sb.get("product"))
+                diff_prod = (not ea) and (not eb) and (pa != pb)
+                if sb_band not in ("cross-flow", "cross-product", "other-diff-flow"):
+                    blocking.append(f"{pid}: should-not-match pair missing/invalid "
+                                    f"sub_band {sb_band!r}")
+                if sb_band == "cross-product" and not diff_prod:
+                    blocking.append(f"{pid}: sub_band=cross-product but products not "
+                                    f"different-non-empty (empty_a={ea}, empty_b={eb})")
+                if diff_prod and sb_band != "cross-product":
+                    warnings.append(f"{pid}: products are different and non-empty but "
+                                    f"sub_band={sb_band!r} (informational; not blocking)")
             # display faithfulness (warning)
             display = p.get("display", "")
             for tag, cid in (("conv_a", ca), ("conv_b", cb)):
@@ -98,13 +135,19 @@ def main():
             warnings.append(f"{pid}: stated flow_a {p.get('flow_a')!r} != corpus")
         if p.get("subflow_a") and str(p.get("subflow_a")) != str(corpus.get(ca, (None, {"scenario": {}}))[1]["scenario"].get("subflow")):
             warnings.append(f"{pid}: stated subflow_a {p.get('subflow_a')!r} != corpus")
+        conv_usage[str(p.get("conv_a"))] += 1
+        conv_usage[str(p.get("conv_b"))] += 1
 
     n = len(pairs)
     ok_range = RANGE[0] <= n <= RANGE[1]
+    max_usage = max(conv_usage.values()) if conv_usage else 0
     print(json.dumps({
         "n_pairs": n,
         "in_pre_registered_range_150_200": ok_range,
         "band_counts": band_counts,
+        "sub_band_counts": sub_band_counts,
+        "max_conversation_reuse": max_usage,
+        "max_conversation_reuse_ok_<=2": max_usage <= 2,
         "blocking": blocking[:30],
         "n_blocking": len(blocking),
         "warnings": warnings[:30],

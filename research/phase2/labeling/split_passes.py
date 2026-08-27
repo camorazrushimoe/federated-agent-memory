@@ -20,10 +20,13 @@ import random
 import sys
 from pathlib import Path
 
-# Fields a pass input may carry. Anything else in candidate pairs is metadata
-# that must NOT leak into the labeling display.
-DISPLAY_FIELDS = ["pair_id", "band", "conv_a", "conv_b", "flow_a", "flow_b",
-                  "subflow_a", "subflow_b", "product_a", "product_b", "display"]
+# Fields a pass input may carry. Everything else in the candidate pairs is
+# construction metadata (band, sub_band, flows, subflows, products) that the
+# labeler must NOT see: protocol rule R5 forbids peeking at band/oracle
+# information as evidence, and the band is exactly the kind of construction
+# cue that would prime the label. The gold set (score_agreement output)
+# re-attaches the full metadata after both passes are done.
+PASS_INPUT_FIELDS = ["pair_id", "display"]
 SEED1_DEFAULT, SEED2_DEFAULT = 20260827, 20260927
 
 
@@ -37,23 +40,22 @@ def split(pairs_path: Path, outdir: Path, seed1: int, seed2: int):
     pairs = [json.loads(l) for l in pairs_path.read_text().splitlines() if l.strip()]
     outdir.mkdir(parents=True, exist_ok=True)
 
-    # Field-set audit: reject metadata the labeler must not see.
-    allowed = set(DISPLAY_FIELDS) | {"id"}  # `id` tolerated as alias of pair_id
+    # Required-field check: pair_id + display are the labeling payload;
+    # band/conv fields are needed for the gold set + validator.
+    required = ["pair_id", "band", "conv_a", "conv_b", "display"]
     for p in pairs:
-        extra = set(p.keys()) - allowed
-        if extra:
-            raise SystemExit(f"pair {p.get('pair_id')}: disallowed fields would leak into pass input: {sorted(extra)}")
+        missing = [f for f in required if f not in p]
+        if missing:
+            raise SystemExit(f"pair {p.get('pair_id')}: missing required fields {missing}")
+    ids = [p["pair_id"] for p in pairs]
+    if len(ids) != len(set(ids)):
+        raise SystemExit("duplicate pair_id in candidate pairs")
 
+    # STRIP to the labeling payload. Construction metadata (band, sub_band,
+    # flows, subflows, products) stays in candidate_pairs.jsonl and re-attaches
+    # in the gold set — it must never appear in a pass input (protocol R5).
     def render(p):
-        return {
-            "pair_id": p["pair_id"],
-            "band": p["band"],
-            "conv_a": p.get("conv_a"), "conv_b": p.get("conv_b"),
-            "flow_a": p.get("flow_a"), "flow_b": p.get("flow_b"),
-            "subflow_a": p.get("subflow_a"), "subflow_b": p.get("subflow_b"),
-            "product_a": p.get("product_a"), "product_b": p.get("product_b"),
-            "display": p["display"],
-        }
+        return {"pair_id": p["pair_id"], "display": p["display"]}
 
     r1 = random.Random(seed1)
     r2 = random.Random(seed2)
@@ -79,9 +81,13 @@ def split(pairs_path: Path, outdir: Path, seed1: int, seed2: int):
         "seeds": {"pass1": seed1, "pass2": seed2},
         "sha256": {"pass1_input": s1, "pass2_input": s2},
         "orders_differ": order1 != order2,
+        "pass_input_fields": PASS_INPUT_FIELDS,
         "band_counts": {b: sum(1 for p in pairs if p["band"] == b) for b in
                         sorted({p["band"] for p in pairs})},
-        "rule": "pass2 input contains no pass1 fields and uses a different seeded order",
+        "rule": ("pass inputs carry ONLY pair_id + display (construction "
+                 "metadata stripped — anti-leak, protocol R5); pass2 uses a "
+                 "different seeded order than pass1; pass2 is run in a fresh "
+                 "context with no access to pass1 output"),
     }
     (outdir / "passes_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest, indent=2))
@@ -103,7 +109,12 @@ def selftest():
     src.write_text("\n".join(json.dumps(p) for p in pairs) + "\n")
     m = split(src, tmp / "out", 20260827, 20260927)
     assert m["n_pairs"] == 6 and m["orders_differ"]
-    print("SELFTEST OK: 6 synthetic pairs split, orders differ, manifest written.")
+    # anti-leak: pass inputs must contain ONLY pair_id + display
+    p1rows = [json.loads(l) for l in (tmp / "out" / "pass1_input.jsonl").read_text().splitlines()]
+    p2rows = [json.loads(l) for l in (tmp / "out" / "pass2_input.jsonl").read_text().splitlines()]
+    for row in p1rows + p2rows:
+        assert set(row.keys()) == set(PASS_INPUT_FIELDS), f"leak: {sorted(row.keys())}"
+    print("SELFTEST OK: 6 synthetic pairs split, orders differ, pass inputs carry ONLY pair_id+display (anti-leak verified).")
 
 
 if __name__ == "__main__":
