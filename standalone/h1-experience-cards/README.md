@@ -5,6 +5,7 @@ repository: not `openspec/`, not Google Memory Bank, not the DSPy compiler,
 not the M1–M3 lab code under `research/`.
 
 Issue: [#28](https://github.com/camorazrushimoe/federated-agent-memory/issues/28)
+PR: [#29](https://github.com/camorazrushimoe/federated-agent-memory/pull/29)
 
 ## What you implement
 
@@ -14,15 +15,16 @@ same — hand the next agent a **recommendation packet**, never a rule.
 
 ```
 chat closed
-    → extract_card          (prompt in PROMPTS.md, status = private)
-    → every 100 new chats   cluster.py   (same-scope cards collapse into one)
-    →                       promote      (canonical card with votes ≥ K → shared)
-    → live chat             match+serve  (top-3 shared canonical cards)
-    →                       feedback     (wrong/stale expires the canonical card)
+    → tick.py               ingest + extract + (cluster if 100 new chats)
+    → extract               private canonical, votes = 1
+    → cluster               same-scope cards collapse; inherit better fields
+    →                       votes ≥ K and independent agents → shared
+    → live chat             match+serve top-3 shared canonical cards
+    → feedback              wrong/stale expires the canonical card
 ```
 
-Clustering is a **volume trigger**, not a timer. After 100 new ingested chats
-since the last run, `cluster.py` fires. `--force` exists for fixtures.
+Clustering is a **volume trigger**, not a timer. `tick.py` is the only entry
+point an operator needs. `--force` exists for fixtures.
 
 ## Files
 

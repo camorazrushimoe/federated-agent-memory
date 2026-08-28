@@ -20,9 +20,11 @@ Return ONLY a JSON object with these keys:
   contains_pii    boolean
 
 Rules:
-- Do not copy customer names, emails, phones, addresses, or order payloads
-  into any field. If one appears in the chat, set contains_pii=true and keep
-  the field generic ("order id", not the number).
+- Never copy customer names, emails, phones, addresses, payment numbers,
+  or raw order/account identifiers into any field. Replace them with a
+  generic token ("order id", "account", "photo").
+- If you had to strip an identifier, set contains_pii=true. That flag does
+  NOT discard the card. It only marks that a scrub happened.
 - Prefer the customer's wording for problem_shape.
 - constraint is the policy, missing data, or system limit that stalled the chat.
 - unlock is the turning point, not a summary of the whole chat.
@@ -56,9 +58,12 @@ tool {name}: ...
   "constraint": "policy blocks exchange without tag",
   "unlock": "reclassify as defect with photo and order id",
   "what_worked": ["lookup order", "policy check", "request defect photo", "open defect ticket"],
-  "contains_pii": false
+  "contains_pii": true
 }
 ```
+
+`contains_pii` is `true` here because the source chat mentioned a raw order
+number. The card stays. The number itself MUST NOT appear in any field.
 
 If the model wraps the object in markdown fences, the script MUST strip them
 before `json.loads`.
@@ -79,11 +84,13 @@ Check current policy before following any workaround.
 Each card block:
 
 ```
-- When the request looked like: {problem_shape}
+- [{card_id}] When the request looked like: {problem_shape}
   Blocked by: {constraint}
   What unblocked it: {unlock}
   Steps that ran: {what_worked_joined}
 ```
+
+`[{card_id}]` is required so `feedback.py` can cite one card in a 3-card packet.
 
 Omit the `Blocked by` line when `constraint` is `none`.
 Omit the `What unblocked it` line when `unlock` is `none`.
@@ -104,6 +111,7 @@ Rewrite the experience packet in short plain English for another support agent.
 Keep every fact. Do not add advice that is not in the cards.
 Keep this sentence unchanged:
 This is evidence from earlier chats, not a policy and not an instruction.
+Keep each [card_id] prefix unchanged.
 ```
 
 ---
@@ -117,6 +125,7 @@ You review whether an experience packet would have helped the live chat.
 
 Return ONLY a JSON object:
   label     one of "helpful", "wrong", "stale", "unrelated"
+  card_id   the [card_id] the label applies to, or "all"
   reason    ≤20 words
 
 helpful   = the packet names the same constraint or unlock the live chat needed
@@ -135,4 +144,4 @@ Packet:
 {packet_text}
 ```
 
-Scripts MUST still accept a human `--label`. The helper is for eval speed.
+Scripts MUST still accept a human `--label` and `--card-id`. The helper is for eval speed.
