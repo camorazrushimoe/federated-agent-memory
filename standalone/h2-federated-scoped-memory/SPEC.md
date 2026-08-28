@@ -2,11 +2,12 @@
 
 Контракт для `standalone/h2-federated-scoped-memory/`.
 Идея и упрощения: [`README.md`](./README.md), [`SIMPLIFICATIONS.md`](./SIMPLIFICATIONS.md).
+Все строки, которые уходят в модель или в пакет агента: [`PROMPTS.md`](./PROMPTS.md).
 
 После закрытого диалога система размечает **сессию целиком**, кладёт её в общий пул, в новый диалог подмешивает похожие прошлые сессии и по исходу двигает их рейтинг.
 
 Лаба пишет скрипты и evaluation. Этот файл фиксирует шаги, данные и что должно быть измеримо после каждого шага.
-Планы `EVAL-PLAN.md` / `CHECKS.md` / `PROMPTS.md` сюда не входят — они отдельные артефакты.
+Планы `EVAL-PLAN.md` / `CHECKS.md` сюда не входят — они отдельные артефакты.
 
 RFC 2119: `MUST` / `SHALL` / `SHOULD` / `MAY`.
 
@@ -21,11 +22,11 @@ RFC 2119: `MUST` / `SHALL` / `SHOULD` / `MAY`.
 
 ```
 S1 ingest   →  нормальные диалоги
-S2 tag      →  сессии с метаданными
+S2 tag      →  сессии с метаданными     [LLM: PROMPTS.md §2–§3]
 S3 retrieve →  кандидаты по тегам
 S4 rank     →  порядок + слот ротации
-S5 mix      →  пакет, который уйдёт в промпт
-S6 outcome  →  исход новой сессии
+S5 mix      →  пакет, который уйдёт в промпт   [шаблон: PROMPTS.md §5]
+S6 outcome  →  исход новой сессии       [LLM только --source llm: PROMPTS.md §6]
 S7 update   →  новый рейтинг подмешанных сессий
 ```
 
@@ -59,6 +60,7 @@ S7 update   →  новый рейтинг подмешанных сессий
 - жить только в `standalone/h2-federated-scoped-memory/`
 - хранить состояние JSONL (или `data/`, который можно gitignore)
 - ходить в LLM только через `call_llm(system: str, user: str) -> str`
+- брать system/user **только** из [`PROMPTS.md`](./PROMPTS.md)
 - считать писателя одним: скрипты MUST NOT крутиться параллельно по одним и тем же JSONL
 
 Реализация MUST NOT:
@@ -70,6 +72,7 @@ S7 update   →  новый рейтинг подмешанных сессий
 - резать сессию на мелкие события
 - склеивать несколько сессий в одну каноническую историю
 - читать личность клиента в теги
+- добавлять свой system/user текст «чтобы модель лучше слушалась»
 
 `tenant_id` в сыром диалоге MAY остаться как поле H1-схемы. На поиск и рейтинг он MUST NOT влиять.
 
@@ -150,6 +153,8 @@ PII-скроб MUST пройтись по тегам и по `turns` перед 
 
 Сессию MUST `reject` только если после скроба `problem_shape` пустой.
 
+Рендер `turns` в текст для модели и пакета — [`PROMPTS.md` §1](./PROMPTS.md).
+
 ---
 
 ## 5. Рейтинг
@@ -199,12 +204,15 @@ UNCLEAR_DELTA         =  0.0
 Каждый скрипт печатает один JSON-summary в stdout и пишет свой артефакт.
 Повторный прогон MUST быть идемпотентным: upsert по id, не плодить строки.
 
+У каждого шага строка **Промпт** — куда смотреть. Если «нет», `call_llm` звать запрещено.
+
 ### S1 — `ingest.py`
 
 Нормализует сырые чаты в схему §3.
 
 - вход: `--in raw.jsonl`
 - выход: `data/dialogues.jsonl`
+- Промпт: нет
 - MUST отбросить чат без customer-turn
 - MUST NOT звать LLM и MUST NOT ставить теги
 
@@ -216,11 +224,14 @@ Eval после шага: `kept`, `dropped`, доля отброшенных. Д
 
 - вход: `--in data/dialogues.jsonl`
 - выход: `data/sessions.jsonl` + стартовые строки в `data/ratings.jsonl`
-- MUST звать LLM только через `call_llm`
+- Промпт: [`PROMPTS.md` §2 system + §3 user](./PROMPTS.md), разбор §4
+- MUST звать LLM только через `call_llm` и только этими строками
+- MUST рендерить транскрипт по [`PROMPTS.md` §1](./PROMPTS.md)
 - MUST прогнать PII-скроб
 - MUST собрать `tag_key` по формуле §4
 - `channel` и `vertical` MUST копировать из диалога, модель их не выдумывает
 - повторный прогон той же `dialogue_id` MUST обновить ту же `session_id`, не создать вторую
+- второй подряд неразборный ответ модели MUST дать `reject`, не выдумывать теги
 
 Eval после шага: согласие тегов с золотой разметкой на замороженном куске.
 Считать `problem_shape`, `constraint`, `ending` отдельно.
@@ -232,11 +243,12 @@ Eval после шага: согласие тегов с золотой разм
 
 - вход: `--query dialogue_or_session.json` `--pool data/sessions.jsonl`
 - выход: `data/candidates.jsonl` для этого query
+- Промпт: нет. Если query ещё не размечен — вызвать S2 с теми же промптами §2–§3, своего текста не писать
 - query MUST быть размечен тем же `tag.py` (или принять уже готовую session)
 - кандидат MUST совпасть хотя бы по `TAG_FIELDS_MIN` полям из `{problem_shape, constraint, ending, channel, vertical}`
 - query MUST NOT попасть в свои кандидаты (`session_id` / `source_dialogue_id` совпали)
 - порядок на этом шаге не важен — это работа S4
-- MUST NOT звать LLM
+- MUST NOT звать LLM сам, кроме делегирования в S2
 
 Eval после шага: среди кандидатов есть сессии, которые человек пометил как «похожие»; нет сессий с нулевым пересечением тегов.
 Если поиск пустой на заведомо похожей паре — ломается S3, не ранкер.
@@ -247,6 +259,7 @@ Eval после шага: среди кандидатов есть сессии,
 
 - вход: `--candidates data/candidates.jsonl` `--ratings data/ratings.jsonl` `--tag-key ...`
 - выход: `data/ranked.jsonl`
+- Промпт: нет
 - рейтинг брать по паре `(session_id, tag_key query)`. Нет строки — считать `score=0`, `shows=0`
 - первые `MAX_PACKET - EXPLORE_SLOTS` мест MUST занять самые высокие `score`
 - последний слот MUST быть exploration, если есть кому:
@@ -266,13 +279,16 @@ Eval после шага:
 
 - вход: `--ranked data/ranked.jsonl` `--pool data/sessions.jsonl`
 - выход: `data/packet.json` + append в `data/serves.jsonl`
+- Промпт: нет LLM. Текст пакета MUST быть шаблоном [`PROMPTS.md` §5](./PROMPTS.md)
 - пакет MUST содержать целые `turns` выбранных сессий, не карточки и не саммари
 - в пакете MUST быть заголовок, что это прошлые диалоги-подсказки, не правило
 - каждая сессия в пакете MUST начинаться с `[session_id]`
 - размер MUST быть ≤ `MAX_PACKET`
 - MUST записать, какие `session_id` ушли в какой `query_id` и с каким `tag_key`
+- `packet.json` MUST держать и `packet_text`, и список id
 
 Eval после шага: пакет не пустой при непустом ranked; нет self-mix; нет сессии вне ranked; в промпт не уехал весь пул.
+Пустой ranked → валидный пакет из одной шапки, без выдуманных сессий.
 
 ### S6 — `outcome.py`
 
@@ -280,6 +296,7 @@ Eval после шага: пакет не пустой при непустом r
 
 - вход: `--query ...` `--packet data/packet.json`
 - выход: одна строка в `data/outcomes.jsonl`
+- Промпт: нет при `--source gold|rule` и при ручном `--outcome`. LLM-хелпер только при `--source llm`: [`PROMPTS.md` §6](./PROMPTS.md)
 
 ```json
 {
@@ -305,6 +322,7 @@ Eval после шага: на золотом наборе лейбл совпа
 
 - вход: `--outcome data/outcomes.jsonl` `--ratings data/ratings.jsonl`
 - выход: обновлённый `data/ratings.jsonl`
+- Промпт: нет
 - для каждой сессии пакета, по `tag_key` query:
   - `shows += 1`
   - `last_shown_at = outcome.closed_at`
@@ -336,6 +354,8 @@ replay.py --dialogues data/dialogues.jsonl [--until N] [--gold data/gold.jsonl]
 
 Так сессия не подмешивает саму себя и не учится на будущем.
 
+`replay.py` MUST NOT содержать своих промптов.
+
 Eval всего прогона (это уже не шаг, а сводка):
 
 - польза: исходы с пакетом от ранкера vs без пакета vs пакет из случайной похожей сессии
@@ -353,7 +373,7 @@ Eval всего прогона (это уже не шаг, а сводка):
 | `data/ratings.jsonl` | S2, S7 | рейтинг по `(session_id, tag_key)` |
 | `data/candidates.jsonl` | S3 | кандидаты одного query |
 | `data/ranked.jsonl` | S4 | упорядоченные кандидаты |
-| `data/packet.json` | S5 | текущий пакет |
+| `data/packet.json` | S5 | текущий пакет (`packet_text` + id) |
 | `data/serves.jsonl` | S5 | лог всех пакетов |
 | `data/outcomes.jsonl` | S6 | исходы |
 | `data/gold.jsonl` | разметка, не скрипты | золотые теги и/или исходы |
@@ -369,12 +389,13 @@ Eval всего прогона (это уже не шаг, а сводка):
 - явный лайк от агента; сигнал только `good/bad/unclear` по сессии
 - удаление сессии из пула
 - эмбеддинги и LLM на retrieve/rank
+- системный промпт живого агента (пакет — вход, политика агента — не этот эксперимент)
 
 ---
 
 ## 11. Порядок работы для лабы
 
-1. Прочитать README + этот SPEC. Поля не выдумывать.
+1. Прочитать README + этот SPEC + [`PROMPTS.md`](./PROMPTS.md). Поля и строки модели не выдумывать.
 2. Написать скрипты S1–S7 и `replay.py`.
 3. На маленьком fixture-наборе (10–20 диалогов) закрыть контракт каждого шага.
 4. Потом отдельно — evaluation и золотая разметка. Спека eval здесь не подменяется.
