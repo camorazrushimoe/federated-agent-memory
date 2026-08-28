@@ -1,0 +1,23 @@
+{
+  "source": "research/phase2/m1/candidate_pairs.jsonl",
+  "n_pairs": 170,
+  "seeds": {
+    "pass1": 20260827,
+    "pass2": 20260927
+  },
+  "sha256": {
+    "pass1_input": "6a153404a610eb9d2dd1aa0148597ed303e489f51cec29bfc8522ca6bb32f341",
+    "pass2_input": "d68872312a33e9814a07c2874b75ba41d1d447b9b42367116434160ea1294983"
+  },
+  "orders_differ": true,
+  "pass_input_fields": [
+    "pair_id",
+    "display"
+  ],
+  "band_counts": {
+    "ambiguous": 34,
+    "should-match": 85,
+    "should-not-match": 51
+  },
+  "rule": "pass inputs carry ONLY pair_id + display (construction metadata stripped \u2014 anti-leak, protocol R5); pass2 uses a different seeded order than pass1; pass2 is run in a fresh context with no access to pass1 output"
+}

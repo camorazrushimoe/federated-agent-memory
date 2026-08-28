@@ -1,0 +1,170 @@
+{"pair_id": "m1-0116", "pass": 2, "label": "related-but-different", "rationale": "Return of too-small boots vs. extending an existing refund with a new item; refund domain, different resolving constraint."}
+{"pair_id": "m1-0074", "pass": 2, "label": "same-problem", "rationale": "Both ask whether a medium shirt is in stock; same size-stock intent and same availability-check constraint."}
+{"pair_id": "m1-0072", "pass": 2, "label": "related-but-different", "rationale": "C1 asks wash frequency; C2 mainly asks sizes and inseam with a care question added; different resolving constraints."}
+{"pair_id": "m1-0071", "pass": 2, "label": "same-problem", "rationale": "Both check stock availability of specific-size boots after the site says unavailable; same intent, same stock constraint."}
+{"pair_id": "m1-0152", "pass": 2, "label": "unrelated", "rationale": "Forgotten username to check an order vs. cart not updating site glitch; account recovery vs. technical bug."}
+{"pair_id": "m1-0012", "pass": 2, "label": "related-but-different", "rationale": "Both wrong-size returns, but C2's is blocked by a return-window exception denial; different resolving constraints."}
+{"pair_id": "m1-0023", "pass": 2, "label": "related-but-different", "rationale": "Both check missing premium subscription status, but one never signed up while the other pays to restore it."}
+{"pair_id": "m1-0087", "pass": 2, "label": "related-but-different", "rationale": "Both check order status but different drivers: past-due delivery vs. unexpected extra fee added to the order."}
+{"pair_id": "m1-0149", "pass": 2, "label": "unrelated", "rationale": "Adding an item to an existing refund vs. confirming tomorrow's shipping date; refund domain vs. delivery timing."}
+{"pair_id": "m1-0158", "pass": 2, "label": "unrelated", "rationale": "Locked out after losing the 2FA phone vs. paying the annual premium subscription fee; access vs. billing."}
+{"pair_id": "m1-0056", "pass": 2, "label": "same-problem", "rationale": "Both ask store opening or closing hours to plan a shopping trip; same hours inquiry, same hours constraint."}
+{"pair_id": "m1-0083", "pass": 2, "label": "related-but-different", "rationale": "Both pre-purchase boot questions but different attributes: leather and shipping time vs. break-in duration; same area, different constraint."}
+{"pair_id": "m1-0088", "pass": 2, "label": "unrelated", "rationale": "Invalid promo code vs. out-of-stock jacket restock check; different problem shapes in different domains."}
+{"pair_id": "m1-0157", "pass": 2, "label": "unrelated", "rationale": "Membership level info inquiry vs. subscription payment extension request; different intents and different constraints within membership domain."}
+{"pair_id": "m1-0118", "pass": 2, "label": "unrelated", "rationale": "Custom stitching pricing question vs. promo code usage and expiry question; different intents, different resolving constraints."}
+{"pair_id": "m1-0121", "pass": 2, "label": "unrelated", "rationale": "Confirming a refund applied and returning an extra item vs. site search returning zero results; refund vs. technical bug."}
+{"pair_id": "m1-0085", "pass": 2, "label": "same-problem", "rationale": "Both ask sleeve or arm length measurements for a shirt; same product-measurement intent and same constraint."}
+{"pair_id": "m1-0162", "pass": 2, "label": "unrelated", "rationale": "Forgot password and cannot log in vs. missing promotional credits worth forty dollars; access vs. credits discrepancy."}
+{"pair_id": "m1-0106", "pass": 2, "label": "related-but-different", "rationale": "Both returns but different drivers: changed mind vs. ordered wrong size; same intent, different resolving constraint."}
+{"pair_id": "m1-0054", "pass": 2, "label": "same-problem", "rationale": "Both ask when their promo code is usable or expires; same intent and same validity-window constraint."}
+{"pair_id": "m1-0032", "pass": 2, "label": "related-but-different", "rationale": "Both seek to correct payment method on a placed order, but one blocked by delivery, one changed to card on file."}
+{"pair_id": "m1-0131", "pass": 2, "label": "unrelated", "rationale": "Site running slowly technical issue vs. double charge on subscription bill; performance glitch vs. billing error."}
+{"pair_id": "m1-0022", "pass": 2, "label": "same-problem", "rationale": "Both want to pay their subscription fee to keep it active; same intent, same payment constraint."}
+{"pair_id": "m1-0150", "pass": 2, "label": "unrelated", "rationale": "Subscription fee due-date extension request vs. out-of-stock boots backorder; payment scheduling vs. product availability."}
+{"pair_id": "m1-0086", "pass": 2, "label": "related-but-different", "rationale": "Subscription extension request vs. checking active status and reprocessing a failed payment; different resolving constraints in membership domain."}
+{"pair_id": "m1-0016", "pass": 2, "label": "same-problem", "rationale": "Both check refund status and confirm the refund payment method; same intent and same refund-destination constraint."}
+{"pair_id": "m1-0034", "pass": 2, "label": "same-problem", "rationale": "Both ask whether their membership covers international shipping; same benefit-inquiry intent and same coverage constraint."}
+{"pair_id": "m1-0115", "pass": 2, "label": "related-but-different", "rationale": "Forgot username vs. forgot password; both account-access recovery but different credentials and different resolution paths."}
+{"pair_id": "m1-0078", "pass": 2, "label": "same-problem", "rationale": "Both ask how to remove gum from a boot sole before purchase; same care question, same constraint."}
+{"pair_id": "m1-0145", "pass": 2, "label": "unrelated", "rationale": "Pre-purchase color question about jeans vs. return of wrong-color purchase; product inquiry vs. return flow."}
+{"pair_id": "m1-0132", "pass": 2, "label": "unrelated", "rationale": "Site running slowly vs. unexpected extra fee on order; technical performance issue vs. billing question."}
+{"pair_id": "m1-0169", "pass": 2, "label": "unrelated", "rationale": "Forgot username to log in vs. checking in-store stock of a shirt size; account recovery vs. stock inquiry."}
+{"pair_id": "m1-0027", "pass": 2, "label": "same-problem", "rationale": "Both report a charge for an order they never placed; same unauthorized-charge intent and same dispute constraint."}
+{"pair_id": "m1-0001", "pass": 2, "label": "same-problem", "rationale": "Both cannot access account because they forgot their username; same recovery intent, same username constraint."}
+{"pair_id": "m1-0044", "pass": 2, "label": "same-problem", "rationale": "Both ask what membership levels exist and what they offer; same membership-info intent and same levels constraint."}
+{"pair_id": "m1-0038", "pass": 2, "label": "unrelated", "rationale": "Late fee question on an unpayable order bill vs. removing an item from a placed order; fees vs. order editing."}
+{"pair_id": "m1-0096", "pass": 2, "label": "unrelated", "rationale": "Subscription mysteriously removed and reactivated vs. changing the phone number on the account; status vs. profile update."}
+{"pair_id": "m1-0124", "pass": 2, "label": "unrelated", "rationale": "Checking refund status and payment method vs. moving delivery date to avoid a shipping fee; refund vs. delivery cost."}
+{"pair_id": "m1-0046", "pass": 2, "label": "same-problem", "rationale": "Both ask when the upcoming seasonal collection drops; same release-timing intent and same schedule constraint."}
+{"pair_id": "m1-0052", "pass": 2, "label": "same-problem", "rationale": "Both ask how to obtain a membership, including requirements; same join-inquiry intent and same eligibility constraint."}
+{"pair_id": "m1-0057", "pass": 2, "label": "same-problem", "rationale": "Both ask when the annual sale happens this year; same sale-timing intent and same schedule constraint."}
+{"pair_id": "m1-0092", "pass": 2, "label": "related-but-different", "rationale": "Both returns, but one is change-of-mind while the other is a coat arriving marked; different drivers."}
+{"pair_id": "m1-0063", "pass": 2, "label": "same-problem", "rationale": "Both ask whether boots are regular or wide width; same width question, same sizing constraint."}
+{"pair_id": "m1-0103", "pass": 2, "label": "related-but-different", "rationale": "Both returns, but wrong-color item vs. changed-mind refund; same intent, different resolving constraints."}
+{"pair_id": "m1-0160", "pass": 2, "label": "unrelated", "rationale": "Phone-number change to fix broken 2FA vs. canceling an order of a wrong shirt; different flows."}
+{"pair_id": "m1-0101", "pass": 2, "label": "related-but-different", "rationale": "Membership-area questions but different: how long premium lasts vs. perks of higher levels; different constraints."}
+{"pair_id": "m1-0128", "pass": 2, "label": "unrelated", "rationale": "Subscription removed and reactivation request vs. disputed charge for nothing bought or received; different shapes."}
+{"pair_id": "m1-0146", "pass": 2, "label": "unrelated", "rationale": "Checking refund status for returned boots vs. site running slowly server issue; refund vs. outage."}
+{"pair_id": "m1-0140", "pass": 2, "label": "unrelated", "rationale": "Shirt arm-length measurement question vs. why a subscription was removed; product info vs. account status."}
+{"pair_id": "m1-0098", "pass": 2, "label": "related-but-different", "rationale": "Both pre-purchase product questions but different: jeans color shade vs. boot size stock availability; different constraints."}
+{"pair_id": "m1-0136", "pass": 2, "label": "unrelated", "rationale": "Invalid promo code vs. order status check and cancel due to high shipping cost; different domains."}
+{"pair_id": "m1-0159", "pass": 2, "label": "unrelated", "rationale": "How membership levels work for a guest vs. changing shipping on a wrongly ordered item; different flows."}
+{"pair_id": "m1-0099", "pass": 2, "label": "same-problem", "rationale": "Both ordered the wrong variant (size or color) and want to return it; same mistake-return shape."}
+{"pair_id": "m1-0147", "pass": 2, "label": "unrelated", "rationale": "Adding a forgotten item to a placed order vs. whether premium service includes international shipping; different intents."}
+{"pair_id": "m1-0070", "pass": 2, "label": "same-problem", "rationale": "Both change the payment method on a placed order to a different card; same intent, same constraint."}
+{"pair_id": "m1-0039", "pass": 2, "label": "same-problem", "rationale": "Both accidentally chose pricey two-day shipping and ask to shift delivery next week to avoid the fee."}
+{"pair_id": "m1-0061", "pass": 2, "label": "unrelated", "rationale": "Updating a mistyped phone number on the account vs. placing a purchase order for jeans; different flows."}
+{"pair_id": "m1-0108", "pass": 2, "label": "related-but-different", "rationale": "Subscription payment domain but different intents: check status and pay vs. request a payment extension."}
+{"pair_id": "m1-0117", "pass": 2, "label": "unrelated", "rationale": "Changing primary payment method vs. correcting a wrong phone number on the account; different update targets."}
+{"pair_id": "m1-0141", "pass": 2, "label": "unrelated", "rationale": "Invalid promo code vs. changing a wrong delivery time on an order; promo vs. delivery scheduling."}
+{"pair_id": "m1-0065", "pass": 2, "label": "same-problem", "rationale": "Both ask what sizes or larger sizes are available for jeans; same size-availability intent and constraint."}
+{"pair_id": "m1-0148", "pass": 2, "label": "related-but-different", "rationale": "Both about getting wanted jeans but different: search help for a ripped style vs. out-of-stock product."}
+{"pair_id": "m1-0133", "pass": 2, "label": "unrelated", "rationale": "Card keeps getting declined during checkout vs. confirming shipping cost is included in displayed price; payment vs. pricing."}
+{"pair_id": "m1-0013", "pass": 2, "label": "same-problem", "rationale": "Both charged twice for a purchase and want the duplicate refunded; same double-charge intent and constraint."}
+{"pair_id": "m1-0089", "pass": 2, "label": "related-but-different", "rationale": "Subscription area but different: checking subscription still active vs. double charge on the subscription; status vs. billing error."}
+{"pair_id": "m1-0143", "pass": 2, "label": "unrelated", "rationale": "Requesting a discount after finding item cheaper elsewhere vs. checking refund processing and payment method; pricing vs. refund."}
+{"pair_id": "m1-0030", "pass": 2, "label": "same-problem", "rationale": "Both ordered one item but confirmation or email shows two and they want the order verified; same discrepancy."}
+{"pair_id": "m1-0094", "pass": 2, "label": "related-but-different", "rationale": "Subscription area but different: needing a payment extension for the subscription vs. checking subscription status; payment timing vs. status."}
+{"pair_id": "m1-0049", "pass": 2, "label": "same-problem", "rationale": "Both ask how long a premium membership lasts; same duration question, same constraint."}
+{"pair_id": "m1-0041", "pass": 2, "label": "same-problem", "rationale": "Both report roughly forty dollars of missing credits on the account; same missing-credits intent and constraint."}
+{"pair_id": "m1-0102", "pass": 2, "label": "related-but-different", "rationale": "Refund area but different: checking existing refund status vs. initiating a return for wrong-color jeans; tracking vs. new return."}
+{"pair_id": "m1-0129", "pass": 2, "label": "unrelated", "rationale": "Fixing name spelling on the account vs. getting a refund for a double charge; profile update vs. billing dispute."}
+{"pair_id": "m1-0055", "pass": 2, "label": "same-problem", "rationale": "Both ask what is required to cancel a subscription; same cancellation-policy intent and same policy constraint."}
+{"pair_id": "m1-0107", "pass": 2, "label": "related-but-different", "rationale": "Both shipping-fee disputes on an order, but different symptoms: fee too high vs. fee not as advertised."}
+{"pair_id": "m1-0154", "pass": 2, "label": "related-but-different", "rationale": "Membership area but different: how long premium lasts vs. whether the account includes international shipping; duration vs. coverage."}
+{"pair_id": "m1-0064", "pass": 2, "label": "related-but-different", "rationale": "Both pre-purchase boot questions but different attributes: waterproofing vs. material, origin, and size; same area, different constraint."}
+{"pair_id": "m1-0105", "pass": 2, "label": "related-but-different", "rationale": "Both pre-purchase product questions but different attributes: shirt material vs. jacket washing care; same area, different constraint."}
+{"pair_id": "m1-0059", "pass": 2, "label": "same-problem", "rationale": "Both correct a wrong street address on the account; same address-update intent and same constraint."}
+{"pair_id": "m1-0119", "pass": 2, "label": "related-but-different", "rationale": "Subscription area but different: paying the renewal fee vs. double charge on signup; paying vs. refund dispute."}
+{"pair_id": "m1-0042", "pass": 2, "label": "same-problem", "rationale": "Both have a promo code showing invalid issued nine days ago; same invalid-code intent and validity-window constraint."}
+{"pair_id": "m1-0050", "pass": 2, "label": "same-problem", "rationale": "Both ask the return policy, including guest-member eligibility and return deadline; same policy question, same constraint."}
+{"pair_id": "m1-0111", "pass": 2, "label": "related-but-different", "rationale": "Both blocked at checkout by site issues, but different symptoms: card declined vs. cart won't add item."}
+{"pair_id": "m1-0043", "pass": 2, "label": "same-problem", "rationale": "Both ask the cost of overnight shipping before buying; same pricing question, same constraint."}
+{"pair_id": "m1-0100", "pass": 2, "label": "related-but-different", "rationale": "Both check order status but different drivers: past-due delivery vs. which payment method was charged."}
+{"pair_id": "m1-0112", "pass": 2, "label": "related-but-different", "rationale": "Both site glitches during shopping but different symptoms: cart not updating vs. search returning zero results."}
+{"pair_id": "m1-0165", "pass": 2, "label": "unrelated", "rationale": "Checking premium subscription expiry date vs. size-9 boots unavailable; subscription status vs. stock availability."}
+{"pair_id": "m1-0156", "pass": 2, "label": "unrelated", "rationale": "Forgot password to view purchase history vs. item price went up and requesting the older lower price."}
+{"pair_id": "m1-0045", "pass": 2, "label": "same-problem", "rationale": "Both ask the cost of having a name stitched on an item; same pricing question, same constraint."}
+{"pair_id": "m1-0024", "pass": 2, "label": "same-problem", "rationale": "Both found the same item cheaper elsewhere and ask for price matching; same intent, same constraint."}
+{"pair_id": "m1-0123", "pass": 2, "label": "unrelated", "rationale": "Adding a new purchase against a pending refund balance vs. fixing a double charge on a bill."}
+{"pair_id": "m1-0091", "pass": 2, "label": "related-but-different", "rationale": "Both shirt returns but different drivers: refund before shipment vs. item arrived stained; different constraints."}
+{"pair_id": "m1-0153", "pass": 2, "label": "unrelated", "rationale": "Asking about return policy before purchase vs. forgotten password and username account recovery; different flows."}
+{"pair_id": "m1-0095", "pass": 2, "label": "related-but-different", "rationale": "Both mismatch returns but different symptoms: unexpected color vs. poor fit and style plus a stain."}
+{"pair_id": "m1-0142", "pass": 2, "label": "unrelated", "rationale": "Repeatedly out-of-stock jeans vs. verifying a subscription-removal email to avoid a scam; stock vs. account security."}
+{"pair_id": "m1-0170", "pass": 2, "label": "unrelated", "rationale": "Lost the 2FA phone and cannot log in vs. delivery time on an order is wrong."}
+{"pair_id": "m1-0139", "pass": 2, "label": "unrelated", "rationale": "Package never received after nine days vs. pre-purchase question about shirt arm length; delivery vs. product info."}
+{"pair_id": "m1-0026", "pass": 2, "label": "same-problem", "rationale": "Both want to buy an item whose price rose after being cheaper yesterday; same price-drop request."}
+{"pair_id": "m1-0155", "pass": 2, "label": "unrelated", "rationale": "Cannot get into account vs. changing the street address on the account; access vs. profile update."}
+{"pair_id": "m1-0003", "pass": 2, "label": "same-problem", "rationale": "Both forgot their password and cannot log in, resolved by password reset; same intent, same constraint."}
+{"pair_id": "m1-0151", "pass": 2, "label": "unrelated", "rationale": "Spring collection release timing vs. paying the subscription fee; product release schedule vs. subscription billing."}
+{"pair_id": "m1-0069", "pass": 2, "label": "same-problem", "rationale": "Both pre-purchase jacket design questions centered on the detachable hood plus attribute details; same intent, same design-info constraint."}
+{"pair_id": "m1-0144", "pass": 2, "label": "unrelated", "rationale": "Slow site with slow-loading images vs. charged for a shirt never ordered; technical issue vs. unauthorized charge."}
+{"pair_id": "m1-0060", "pass": 2, "label": "same-problem", "rationale": "Both correct a misspelled name on the account; same name-correction intent and same spelling constraint."}
+{"pair_id": "m1-0025", "pass": 2, "label": "same-problem", "rationale": "Both want to buy items that keep showing out of stock and seek help; same stock-availability constraint."}
+{"pair_id": "m1-0135", "pass": 2, "label": "unrelated", "rationale": "Seeking a better price after finding a shirt cheaper elsewhere vs. adding a forgotten item to a delivered order."}
+{"pair_id": "m1-0040", "pass": 2, "label": "same-problem", "rationale": "Both want to upgrade delivery to overnight on an order; same expedite intent, same shipping-upgrade constraint."}
+{"pair_id": "m1-0084", "pass": 2, "label": "same-problem", "rationale": "Both check whether a specific jacket size is in stock because the website shows no sizing; same stock constraint."}
+{"pair_id": "m1-0122", "pass": 2, "label": "unrelated", "rationale": "Confirming a refund applied and adding another item to it vs. promo code showing invalid; refund vs. promo."}
+{"pair_id": "m1-0097", "pass": 2, "label": "unrelated", "rationale": "How to sign up for premium membership vs. how much overnight shipping costs; membership enrollment vs. shipping pricing."}
+{"pair_id": "m1-0168", "pass": 2, "label": "unrelated", "rationale": "Checking premium subscription status to keep it active vs. checking shipping status for an unreceived package."}
+{"pair_id": "m1-0114", "pass": 2, "label": "unrelated", "rationale": "Promo code coming back invalid vs. removing a returned item's charge still on the bill; promo vs. billing."}
+{"pair_id": "m1-0011", "pass": 2, "label": "same-problem", "rationale": "Both find their shipping charges too high and seek relief, with packages already in transit; same constraint."}
+{"pair_id": "m1-0058", "pass": 2, "label": "same-problem", "rationale": "Both ask about gift wrapping options and price for items; same gift-wrap intent and same service/price constraint."}
+{"pair_id": "m1-0113", "pass": 2, "label": "unrelated", "rationale": "What sizes the boots come in vs. returning an item bought in the wrong color; product info vs. return."}
+{"pair_id": "m1-0077", "pass": 2, "label": "same-problem", "rationale": "Both ask whether a shirt will shrink before buying it; same care question, same constraint."}
+{"pair_id": "m1-0007", "pass": 2, "label": "same-problem", "rationale": "Both report the site stuck on a spinning wheel and nothing working; same outage symptom, same fix."}
+{"pair_id": "m1-0009", "pass": 2, "label": "same-problem", "rationale": "Both hit an extremely slow or down website blocking checkout and get workaround guidance; same outage constraint."}
+{"pair_id": "m1-0068", "pass": 2, "label": "same-problem", "rationale": "Both ask whether the boot lace is black or dark brown; same attribute question, same constraint."}
+{"pair_id": "m1-0079", "pass": 2, "label": "same-problem", "rationale": "Both ask whether jeans are black or dark blue; same color-shade question, same constraint."}
+{"pair_id": "m1-0021", "pass": 2, "label": "same-problem", "rationale": "Both need a premium subscription payment extension because they lack funds now; same intent, same constraint."}
+{"pair_id": "m1-0006", "pass": 2, "label": "same-problem", "rationale": "Both have packages that never arrived after days and check the status of the delayed order; same constraint."}
+{"pair_id": "m1-0005", "pass": 2, "label": "same-problem", "rationale": "Both credit cards keep getting declined at checkout, resolved by retry and re-login; same symptom, same fix."}
+{"pair_id": "m1-0161", "pass": 2, "label": "unrelated", "rationale": "Local store hours question vs. checking order status after a payment error message; different problem shapes."}
+{"pair_id": "m1-0014", "pass": 2, "label": "same-problem", "rationale": "Both check subscription status to keep it active and pay what is owed on it; same intent, constraint."}
+{"pair_id": "m1-0126", "pass": 2, "label": "unrelated", "rationale": "Returning a stained shirt vs. pre-purchase question about shirt arm length; return flow vs. product info."}
+{"pair_id": "m1-0017", "pass": 2, "label": "related-but-different", "rationale": "Both check if subscription is still active, but C1 pays a due balance while C2 only verifies status."}
+{"pair_id": "m1-0076", "pass": 2, "label": "related-but-different", "rationale": "Both pre-purchase shirt questions, but C1 wants broad specs while C2 specifically asks if the collar will be tight."}
+{"pair_id": "m1-0036", "pass": 2, "label": "related-but-different", "rationale": "Both report an unwanted premium subscription added to the account, but one turned out uncharged while the other was refunded."}
+{"pair_id": "m1-0164", "pass": 2, "label": "unrelated", "rationale": "Confirming subscription signup went through vs. canceling an order because shipping cost was too high; different intents."}
+{"pair_id": "m1-0047", "pass": 2, "label": "same-problem", "rationale": "Both evaluate membership levels, costs, and benefits before buying; same evaluation intent, same level-comparison constraint."}
+{"pair_id": "m1-0008", "pass": 2, "label": "related-but-different", "rationale": "Both report items won't add to cart, but C1's cause was out-of-stock while C2's was a site glitch."}
+{"pair_id": "m1-0082", "pass": 2, "label": "same-problem", "rationale": "Both ask for washing and cleaning instructions for a shirt before purchase; same care question, same constraint."}
+{"pair_id": "m1-0067", "pass": 2, "label": "same-problem", "rationale": "Both ask whether the boots include a warranty before buying; same warranty question, same constraint."}
+{"pair_id": "m1-0033", "pass": 2, "label": "same-problem", "rationale": "Both promo codes come back invalid after recent issuance; same invalid-code intent and same validity constraint."}
+{"pair_id": "m1-0137", "pass": 2, "label": "related-but-different", "rationale": "Both order checks involving charges, but C1 asks what an extra fee was while C2 wants to cancel over high shipping."}
+{"pair_id": "m1-0163", "pass": 2, "label": "unrelated", "rationale": "Lost the 2FA phone and cannot log in vs. requesting a five-day subscription payment extension; different flows."}
+{"pair_id": "m1-0010", "pass": 2, "label": "unrelated", "rationale": "Changing shipping address for a move vs. canceling an order because the wrong item was ordered."}
+{"pair_id": "m1-0015", "pass": 2, "label": "same-problem", "rationale": "Both return an item because it arrived in the wrong color; same intent, same color constraint."}
+{"pair_id": "m1-0167", "pass": 2, "label": "unrelated", "rationale": "Checking subscription status after signing up vs. asking the price and availability of overnight shipping; different domains."}
+{"pair_id": "m1-0109", "pass": 2, "label": "same-problem", "rationale": "Both correct information entered incorrectly on their account, phone number versus address; same correction intent and constraint."}
+{"pair_id": "m1-0029", "pass": 2, "label": "same-problem", "rationale": "Both made a return but the refund still has not arrived and they want to know why; same constraint."}
+{"pair_id": "m1-0110", "pass": 2, "label": "related-but-different", "rationale": "Both return or refund requests, but different drivers: wrong color vs. changed mind before shipment."}
+{"pair_id": "m1-0053", "pass": 2, "label": "same-problem", "rationale": "Both ask whether their cart qualifies for free shipping and what is needed; same intent, same constraint."}
+{"pair_id": "m1-0073", "pass": 2, "label": "same-problem", "rationale": "Both ask how to remove stains from a shirt, one pre-purchase worry, one actual stain; same care constraint."}
+{"pair_id": "m1-0018", "pass": 2, "label": "same-problem", "rationale": "Both have an existing refund and want to add another item to it; same intent, same constraint."}
+{"pair_id": "m1-0134", "pass": 2, "label": "related-but-different", "rationale": "Both dispute charges on a bill, but different symptoms: charge for nothing bought vs. double charge."}
+{"pair_id": "m1-0037", "pass": 2, "label": "same-problem", "rationale": "Both ask when out-of-stock boots will be restocked so they can get them; same restock constraint."}
+{"pair_id": "m1-0130", "pass": 2, "label": "unrelated", "rationale": "Site search returning zero results vs. shirt cheaper elsewhere and seeking a better price; different shapes."}
+{"pair_id": "m1-0004", "pass": 2, "label": "related-but-different", "rationale": "Both confirm order details that conflict with an email, but different details: total cost vs. shipping date."}
+{"pair_id": "m1-0051", "pass": 2, "label": "same-problem", "rationale": "Both ask what happens if they are late paying the subscription fee; same policy question, same constraint."}
+{"pair_id": "m1-0138", "pass": 2, "label": "unrelated", "rationale": "Adding a forgotten item to a delivered order vs. asking the button color of a shirt before buying."}
+{"pair_id": "m1-0090", "pass": 2, "label": "unrelated", "rationale": "Unwanted premium subscription charged on the account vs. correcting a wrong street number in the address."}
+{"pair_id": "m1-0035", "pass": 2, "label": "same-problem", "rationale": "Both flag an unexpected extra fee on their order and want it explained or removed; same fee constraint."}
+{"pair_id": "m1-0002", "pass": 2, "label": "same-problem", "rationale": "Both lost their phone and cannot access the account, needing recovery; same lockout intent, same constraint."}
+{"pair_id": "m1-0066", "pass": 2, "label": "same-problem", "rationale": "Both ask whether the jacket needs dry cleaning or can go in the washer; same care question, same constraint."}
+{"pair_id": "m1-0075", "pass": 2, "label": "same-problem", "rationale": "Both ask how much the jeans shrink after washing; same shrinkage question, same constraint."}
+{"pair_id": "m1-0120", "pass": 2, "label": "unrelated", "rationale": "Returning a stained shirt vs. subscription removed from the account and wanting it back; different flows."}
+{"pair_id": "m1-0048", "pass": 2, "label": "same-problem", "rationale": "Both ask about the return or refund policy before committing to a purchase; same policy question, same constraint."}
+{"pair_id": "m1-0166", "pass": 2, "label": "unrelated", "rationale": "Spring collection release timing vs. whether the account includes free international shipping; different domains."}
+{"pair_id": "m1-0080", "pass": 2, "label": "same-problem", "rationale": "Both look for jeans with a ripped or hole design; same style-search intent, same design constraint."}
+{"pair_id": "m1-0028", "pass": 2, "label": "same-problem", "rationale": "Both check order status because the delivery time is wrong and need it changed; same constraint."}
+{"pair_id": "m1-0093", "pass": 2, "label": "related-but-different", "rationale": "Subscription payment area but different: requesting a payment extension vs. paying the full amount now."}
+{"pair_id": "m1-0104", "pass": 2, "label": "related-but-different", "rationale": "Both cannot log in, but different credentials lost: forgotten username vs. lost 2FA phone; different recovery paths."}
+{"pair_id": "m1-0127", "pass": 2, "label": "unrelated", "rationale": "Correcting name spelling on the account vs. credit card keeps getting declined at checkout; different shapes."}
+{"pair_id": "m1-0020", "pass": 2, "label": "same-problem", "rationale": "Both return an item that arrived with a stain on it; same defect-return intent, same stain constraint."}
+{"pair_id": "m1-0019", "pass": 2, "label": "same-problem", "rationale": "Both want a refund because they changed their mind about a just-made purchase; same intent, same constraint."}
+{"pair_id": "m1-0031", "pass": 2, "label": "same-problem", "rationale": "Both forgot to include an item in a placed order and want it added; same add-item constraint."}
+{"pair_id": "m1-0081", "pass": 2, "label": "related-but-different", "rationale": "Both ask about grass stain removal, but C1's main question is product origin facts; different primary intent."}
+{"pair_id": "m1-0125", "pass": 2, "label": "unrelated", "rationale": "Checking refund status and payment method vs. checking shipping for a package never received; different domains."}
+{"pair_id": "m1-0062", "pass": 2, "label": "same-problem", "rationale": "Both pre-purchase jacket questions centered on the material, with C1 adding a hood question; same material constraint."}

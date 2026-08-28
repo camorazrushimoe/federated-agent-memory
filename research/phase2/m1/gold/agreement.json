@@ -1,0 +1,48 @@
+{
+  "set": "M1 pair set",
+  "provenance": "agent-labeled",
+  "n_pairs": 170,
+  "disagreements": 21,
+  "inter_pass_disagreement_rate": 0.1235,
+  "escalation_threshold": 0.15,
+  "escalation_fired": false,
+  "direction": {
+    "adjacent": 14,
+    "cross-unrelated": 7
+  },
+  "per_band": [
+    {
+      "band": "ambiguous",
+      "total": 34,
+      "disagreements": 8,
+      "rate": 0.2353,
+      "adjacent": 3,
+      "cross-unrelated": 5
+    },
+    {
+      "band": "should-match",
+      "total": 85,
+      "disagreements": 12,
+      "rate": 0.1412,
+      "adjacent": 11,
+      "cross-unrelated": 1
+    },
+    {
+      "band": "should-not-match",
+      "total": 51,
+      "disagreements": 1,
+      "rate": 0.0196,
+      "adjacent": 0,
+      "cross-unrelated": 1
+    }
+  ],
+  "canonical_counts": {
+    "same-problem": 69,
+    "related-but-different": 38,
+    "unrelated": 63
+  },
+  "flags": {
+    "disagreed-downgraded": 14,
+    "disagreed-upgraded": 7
+  }
+}
