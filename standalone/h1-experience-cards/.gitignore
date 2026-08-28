@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Run dirs: committed selectively per RUN-PROTOCOL §6 (manifest, metrics,
+# checks, audit, cost, report, per_dialogue). raw/ and cards.jsonl stay local
+# for exploratory runs (sha recorded in the manifest); the single reference
+# run (DELIVERABLE-PACKAGE.md §4) commits them in full via git add -f.
+runs/*/raw/
+runs/*/packets/
+runs/*/data/
+runs/*/cards.jsonl
+runs/*/checks_work/

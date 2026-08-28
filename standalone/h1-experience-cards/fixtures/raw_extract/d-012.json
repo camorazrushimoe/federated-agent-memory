@@ -1,0 +1,18 @@
+{
+ "dialogue_id": "d-012",
+ "model": "deepseek-v4-flash",
+ "request": {
+  "system": "",
+  "user": ""
+ },
+ "response_text": "{\"problem_shape\": \"charged twice for subscription\", \"constraint\": \"billing system shows duplicate charge\", \"unlock\": \"issue refund for duplicate charge\", \"what_worked\": [\"look up charges\", \"issue refund\"], \"contains_pii\": false}",
+ "parsed": true,
+ "usage": {
+  "prompt_tokens": 320,
+  "completion_tokens": 64,
+  "total_tokens": 384
+ },
+ "ms": 0,
+ "finish_reason": "stop",
+ "error": null
+}

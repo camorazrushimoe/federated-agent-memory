@@ -1,0 +1,18 @@
+{
+ "dialogue_id": "d-10y",
+ "model": "deepseek-v4-flash",
+ "request": {
+  "system": "",
+  "user": ""
+ },
+ "response_text": "{\"problem_shape\": \"order not delivered marked delivered\", \"constraint\": \"carrier marked package delivered\", \"unlock\": \"request delivery photo and open claim\", \"what_worked\": [\"check carrier status\", \"request delivery photo\", \"open missing package claim\"], \"contains_pii\": false}",
+ "parsed": true,
+ "usage": {
+  "prompt_tokens": 320,
+  "completion_tokens": 64,
+  "total_tokens": 384
+ },
+ "ms": 0,
+ "finish_reason": "stop",
+ "error": null
+}

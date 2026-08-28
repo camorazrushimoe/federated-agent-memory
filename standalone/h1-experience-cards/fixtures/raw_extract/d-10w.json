@@ -1,0 +1,18 @@
+{
+ "dialogue_id": "d-10w",
+ "model": "deepseek-v4-flash",
+ "request": {
+  "system": "",
+  "user": ""
+ },
+ "response_text": "{\"problem_shape\": \"subscription active but access locked\", \"constraint\": \"payment hold on account\", \"unlock\": \"pay invoice to unlock access\", \"what_worked\": [\"check account status\", \"take payment\"], \"contains_pii\": false}",
+ "parsed": true,
+ "usage": {
+  "prompt_tokens": 320,
+  "completion_tokens": 64,
+  "total_tokens": 384
+ },
+ "ms": 0,
+ "finish_reason": "stop",
+ "error": null
+}

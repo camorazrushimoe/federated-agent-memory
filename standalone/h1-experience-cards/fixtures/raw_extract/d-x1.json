@@ -1,0 +1,18 @@
+{
+ "dialogue_id": "d-x1",
+ "model": "deepseek-v4-flash",
+ "request": {
+  "system": "",
+  "user": ""
+ },
+ "response_text": "{\"problem_shape\": \"password reset blocked by policy\", \"constraint\": \"cannot reset password without verification\", \"unlock\": \"none\", \"what_worked\": [\"check identity\", \"offer security questions\"], \"contains_pii\": false}",
+ "parsed": true,
+ "usage": {
+  "prompt_tokens": 320,
+  "completion_tokens": 64,
+  "total_tokens": 384
+ },
+ "ms": 0,
+ "finish_reason": "stop",
+ "error": null
+}

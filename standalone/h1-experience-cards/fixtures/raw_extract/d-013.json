@@ -1,0 +1,18 @@
+{
+ "dialogue_id": "d-013",
+ "model": "deepseek-v4-flash",
+ "request": {
+  "system": "",
+  "user": ""
+ },
+ "response_text": "{\"problem_shape\": \"exchange wrong size tag removed\", \"constraint\": \"policy blocks exchange without tag\", \"unlock\": \"reclassify as defect with photo and order id\", \"what_worked\": [\"lookup order\", \"policy check\", \"request defect photo\", \"open defect ticket\"], \"contains_pii\": true}",
+ "parsed": true,
+ "usage": {
+  "prompt_tokens": 320,
+  "completion_tokens": 64,
+  "total_tokens": 384
+ },
+ "ms": 0,
+ "finish_reason": "stop",
+ "error": null
+}
