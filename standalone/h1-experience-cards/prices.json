@@ -1,0 +1,19 @@
+{
+  "source_url": "https://api-docs.deepseek.com/quick_start/pricing/",
+  "retrieved": "2026-08-28",
+  "note": "Cache-miss rates (the pipeline sends no cache-control). Peak hours: Mon-Fri 01:00-04:00 and 06:00-10:00 UTC. USD per 1M tokens.",
+  "usd_per_1m_tokens": {
+    "deepseek-v4-flash": {
+      "input_peak": 0.44,
+      "input_offpeak": 0.22,
+      "output_peak": 1.32,
+      "output_offpeak": 0.66
+    },
+    "deepseek-v4-pro": {
+      "input_peak": 1.32,
+      "input_offpeak": 0.66,
+      "output_peak": 3.96,
+      "output_offpeak": 1.98
+    }
+  }
+}

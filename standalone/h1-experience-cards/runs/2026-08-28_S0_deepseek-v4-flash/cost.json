@@ -1,0 +1,23 @@
+{
+  "deterministic_half_wall_clock_s": 0.195,
+  "extract": {
+    "calls": 43,
+    "completion_tokens": 3083,
+    "ms_p50": 1445,
+    "ms_p95": 1726,
+    "prompt_tokens": 17761,
+    "usd_per_1000_dialogues": 5.9422,
+    "usd_total": 0.005942
+  },
+  "notes": [
+    "thinking mode disabled on extract calls ({\"thinking\": {\"type\": \"disabled\"}}, lead decision 2026-08-28)",
+    "pricing: cache-miss rates (no cache-control sent)",
+    "peak window used: False (provider peak hours Mon-Fri 01:00-04:00 & 06:00-10:00 UTC)",
+    "extract.calls counts pool + fixture-track raw records (fixture track active: stage=S0)"
+  ],
+  "price_source": "https://api-docs.deepseek.com/quick_start/pricing/ (retrieved 2026-08-28)",
+  "serve": {
+    "ms_p50": 0,
+    "ms_p95": 0
+  }
+}
