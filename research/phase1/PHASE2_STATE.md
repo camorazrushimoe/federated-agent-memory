@@ -144,3 +144,43 @@ completed per the wake contract; lead cross-checked: #13 merge 13692d6 is an anc
 the new tip, `research/phase2/labeling/` + kickoff intact, 0 lost paths) and GH #7 closed
 by the engineer via the issues API (D16). All six research PRs are now on main; nothing
 on the product side gates Phase 2.
+
+## Round 1 (M1) — state as of 2026-08-28 (main @68bf585)
+
+**Status: R1 still in flight. The number does not exist yet. No R5, no R2.**
+
+New since 2026-08-27T23:05Z:
+
+1. **Founder addendum absorbed (GH #6 comment `5448509651`, 2026-08-28 04:39Z, oversight):**
+   the closeout (R5) must contain implementable **decision logic**, not only findings —
+   six stages (INGEST · KEY · STORE · PROMOTE · SERVE · REJECT/EXPIRE), every parameter
+   tagged MEASURED / ASSUMED / BLOCKED, plus one worked end-to-end example on 2–3 real
+   ABCD conversations by id including a rejected false-friend pair. Required **even if
+   every M fails** (same stages, marked BLOCKED, with the named missing inputs). Adds
+   **no round** — R5 is already synthesis (BON-45). Explicitly does **not** license
+   writing the report early: R1 is still open, the false-friend rate does not exist.
+   Not asked for: production code, pipelines, framework schemas, vendor choices.
+2. **Labeler progress (evaluation, branch `evaluation/m1-labeling` @8a369ee, 2026-08-28
+   04:38Z):** S0 `validate_pairs.py` → `OK_TO_LABEL` (170 pairs; 85/34/51; sub-bands 20/10/21;
+   max reuse 2; zero label/oracle fields); S1 `split_passes.py` seeded 20260827/20260927,
+   orders differ, pass inputs pair_id+display only, manifest recorded; **pass 1 complete:
+   170/170 labeled** (agent-labeled, one-line rationale each). Pass 2 NOT yet run (fresh
+   context per protocol §3(c)); gold set + disagreement number pending.
+3. **Lead pre-registration (this branch, `research/phase2/m1/DECISION-LOGIC-CONTRACT.md`):**
+   the full six-stage procedure with every parameter named and tagged (ledger P-01…P-27),
+   the five day-one instruments for product traffic collected from the BLOCKED rows, and
+   the worked-example selection **frozen** (W1 `m1-0001` convos 9610+2076 should-match;
+   W2 `m1-0120` convos 9671+5622 cross-flow same-product false friend; W3 `m1-0140` convos
+   7144+3896 cross-product control). Frozen **before** the M1 number exists so R5 fills
+   values, it cannot choose them. This is the addendum's "companion doc" option, landed
+   now so R5's job is mechanical. No M-number is quoted anywhere in it.
+
+Unchanged and in force: round counter **1/6**; R1 closure line unchanged (ruling
+`5448472885` §4 — the false-friend/recall line, computed from the gold set × B1-scores
+join); **no R2/M2 on an unfinished R1**; D21 (parent closes last, no Done without a
+result line); 202 = DELIVERED, never retry; anti-loop (no-new-info = no ping).
+
+Remaining R1 dependencies, in order: (a) evaluation: pass 2 (fresh context) →
+`gold_m1_pairs_agentlabeled.jsonl` + disagreement number on #6; (b) engineer: B1 precompute
+over all 170 pairs (already assigned, `5448472885` §6) — B0/B1/B2 then join; (c) lead:
+review the gold set on landing, post the closure line, close BON-41.
