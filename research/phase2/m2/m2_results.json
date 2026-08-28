@@ -1,0 +1,3057 @@
+{
+ "artifact": "research/phase2/m2/m2_results.json",
+ "round": "R2 (M2 extraction) \u2014 join per GH #6 5449115746 s4 item 4 (frozen contract)",
+ "created": "2026-08-28",
+ "dry_run": false,
+ "frozen_inputs": {
+  "candidates": {
+   "path": "research/phase2/m2/candidates.jsonl",
+   "sha256_16": "a54f52a557ce38b5",
+   "main": "R2 fix-forward (5450060638) \u2014 FILLED, supersedes PR #22 @601c310"
+  },
+  "b2_draft": {
+   "path": "research/phase2/m2/b2_draft.jsonl",
+   "sha256_16": "5063a85c4ab79465",
+   "main": "d8a8f33 (PR #23)"
+  },
+  "sample": {
+   "path": "research/phase2/m2/sample.jsonl",
+   "sha256_16": "f2195e7a6abe2221",
+   "main": "4d68187 (PR #21, D22)"
+  }
+ },
+ "judge_inputs": {
+  "pass1": {
+   "path": "/opt/data/fam-r2-eval/canon-lead-rerun-20260828/stage_pass1/pass1_answers.jsonl",
+   "sha256_16": "62ad3fe9b8b7c09c",
+   "items": 240
+  },
+  "pass2": {
+   "path": "/opt/data/fam-r2-eval/canon-lead-rerun-20260828/stage_pass2/pass2_answers.jsonl",
+   "sha256_16": "4ddcffb8a86b805f",
+   "items": 240
+  },
+  "reference": {
+   "path": "/opt/data/fam-r2-eval/canon-lead-rerun-20260828/stage_reference/reference_answers.jsonl",
+   "sha256_16": "bc23e6af7412daeb",
+   "items": 80
+  },
+  "scoring": {
+   "path": "/opt/data/fam-r2-eval/canon-lead-rerun-20260828/stage_scoring/scoring_answers.jsonl",
+   "sha256_16": "61acca99c66c8427",
+   "items": 80
+  },
+  "protocols": [
+   "research/phase2/m2/judge/binding/PROTOCOL-m2-blind.md",
+   "research/phase2/m2/judge/scoring/PROTOCOL-m2-scoring.md"
+  ],
+  "structure": "frozen 2-call scoring (5450060638 s2): reference (Call 1, transcript only) and scoring (Call 2, transcript + candidates + committed reference) are separate committed answer files",
+  "note": "judge files are evaluation's output; pinned here by sha so the join is a pure function of them (re-runnable, auditable)"
+ },
+ "frozen_bar": {
+  "source": "GH #6 5449115746 s3 (frozen pre-registration; D18 \u2014 never tuned)",
+  "per_convo": "value(B2) >= 0.8 * value(B0) AND tokens(B2) <= tokens(B0)/10",
+  "value_factor": 0.8,
+  "token_ratio_max": 0.1,
+  "round_pass": "share of convos meeting the per-convo bar >= 0.70 AND aggregate token ratio sum(tokens(B2))/sum(tokens(B0)) <= 0.1",
+  "value_counter": "value(candidate) = (s1+s2+s3)/3, rubric per PROTOCOL-m2-scoring.md (frozen)",
+  "token_counter": "whitespace-split tokens of the rendered candidate; B2 = canonical JSON of the unit, schema key order, default separators (', ', ': ')",
+  "falsification": "B1 (action trace) scored identically; if B1 alone reconstructs >= 80% of B0's value, the unit collapses to trace + label (pre-registered collapse)"
+ },
+ "structural_token_half": {
+  "empty_unit_floor_tokens": 23,
+  "per_convo_floor_blocked_count": 61,
+  "per_convo_floor_blocked": "61/80 convos structurally impossible: floor 23 > tokens(B0)/10 (median B0 187 -> allowance 18.7; no content-bearing unit fits)",
+  "per_convo_floor_reachable_in_principle": "19/80 convos have an allowance >= 23 (max B0 417 -> 41.7), but only a unit AT or BELOW the empty floor (judgment fields hollowed) could pass; the measured draft passes 0/80",
+  "aggregate_ratio_floor": 0.119948,
+  "aggregate_ratio_floor_note": "23*80/15340",
+  "verdict": "the token half of the frozen bar is UNREACHABLE as a pass of the round: the aggregate-ratio floor (empty unit on every row) exceeds 0.1, so the round criterion 2 fails no matter how the units are drafted; per-convo, 61/80 convos are structurally impossible. This is a property of the frozen schema + frozen counter + frozen sample, independent of drafting effort \u2014 a structural finding, reported per D18, never negotiated. The value half is the judge's measurement.",
+  "doc_correction": "arithmetic slips corrected at join (measured from the pinned rows; both leave the structural finding unchanged): (1) the quoted 'B0 sum 13,396' in B2-DRAFT-NOTES.md s2 and lead 5449935167 s3 is off \u2014 the measured B0 sum over the 80 pinned rows is 15340 (candidates/sample meta total: 15340); the aggregate floor is 23*80/15340 = 0.1199, not 0.137 (which derives from the slipped total); (2) 'exceeds tokens(B0)/10 for all 80 convos' is the AGGREGATE floor's property \u2014 per-convo the floor exceeds the allowance on 61/80 (median B0 187 -> 18.7; max B0 417 -> 41.7, so 19 convos' allowances reach the floor). Both floors exceed 0.1; a pass requires BOTH halves."
+ },
+ "aggregates": {
+  "tokens": {
+   "b0": 15340,
+   "b1": 286,
+   "b2": 3667,
+   "ratio_b1_b0": 0.018644,
+   "ratio_b2_b0": 0.239048
+  },
+  "value_mean": {
+   "b0": 1.0,
+   "b1": 0.177083,
+   "b2": 0.621875
+  }
+ },
+ "per_convo": [
+  {
+   "convo_id": 116,
+   "flow": "subscription_inquiry",
+   "subflow": "status_questions",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 417,
+    "b1": 3,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 274,
+   "flow": "order_issue",
+   "subflow": "status_delivery_date",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 253,
+    "b1": 3,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 345,
+   "flow": "single_item_query",
+   "subflow": "boots_other_3",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 207,
+    "b1": 3,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 374,
+   "flow": "manage_account",
+   "subflow": "manage_change_name",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 285,
+    "b1": 5,
+    "b2": 57
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 429,
+   "flow": "shipping_issue",
+   "subflow": "cost",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 206,
+    "b1": 4,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 455,
+   "flow": "order_issue",
+   "subflow": "status_delivery_time",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 242,
+    "b1": 4,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 581,
+   "flow": "manage_account",
+   "subflow": "manage_payment_method",
+   "n_action_turns": 8,
+   "tokens": {
+    "b0": 267,
+    "b1": 8,
+    "b2": 57
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 605,
+   "flow": "shipping_issue",
+   "subflow": "status",
+   "n_action_turns": 6,
+   "tokens": {
+    "b0": 269,
+    "b1": 6,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 678,
+   "flow": "purchase_dispute",
+   "subflow": "mistimed_billing_never_bought",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 197,
+    "b1": 4,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 755,
+   "flow": "storewide_query",
+   "subflow": "policy_3",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 94,
+    "b1": 2,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 778,
+   "flow": "product_defect",
+   "subflow": "refund_initiate",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 232,
+    "b1": 5,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 921,
+   "flow": "manage_account",
+   "subflow": "manage_change_phone",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 194,
+    "b1": 3,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 1224,
+   "flow": "single_item_query",
+   "subflow": "boots_how_1",
+   "n_action_turns": 6,
+   "tokens": {
+    "b0": 350,
+    "b1": 6,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 1328,
+   "flow": "troubleshoot_site",
+   "subflow": "credit_card",
+   "n_action_turns": 6,
+   "tokens": {
+    "b0": 259,
+    "b1": 6,
+    "b2": 53
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.25,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0.5,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2154,
+   "flow": "purchase_dispute",
+   "subflow": "promo_code_invalid",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 177,
+    "b1": 3,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2212,
+   "flow": "subscription_inquiry",
+   "subflow": "manage_dispute_bill",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 157,
+    "b1": 4,
+    "b2": 42
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2410,
+   "flow": "manage_account",
+   "subflow": "status_credit_missing",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 187,
+    "b1": 4,
+    "b2": 52
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2639,
+   "flow": "subscription_inquiry",
+   "subflow": "manage_dispute_bill",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 188,
+    "b1": 3,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2695,
+   "flow": "subscription_inquiry",
+   "subflow": "status_due_date",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 186,
+    "b1": 4,
+    "b2": 48
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.333333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2782,
+   "flow": "shipping_issue",
+   "subflow": "manage",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 179,
+    "b1": 4,
+    "b2": 46
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2856,
+   "flow": "product_defect",
+   "subflow": "refund_initiate",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 186,
+    "b1": 4,
+    "b2": 50
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 2969,
+   "flow": "troubleshoot_site",
+   "subflow": "slow_speed",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 230,
+    "b1": 4,
+    "b2": 41
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3092,
+   "flow": "storewide_query",
+   "subflow": "policy_1",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 216,
+    "b1": 3,
+    "b2": 49
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3161,
+   "flow": "manage_account",
+   "subflow": "manage_change_address",
+   "n_action_turns": 7,
+   "tokens": {
+    "b0": 398,
+    "b1": 7,
+    "b2": 51
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3167,
+   "flow": "troubleshoot_site",
+   "subflow": "slow_speed",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 173,
+    "b1": 2,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3411,
+   "flow": "purchase_dispute",
+   "subflow": "mistimed_billing_already_returned",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 245,
+    "b1": 3,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.333333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3539,
+   "flow": "product_defect",
+   "subflow": "return_color",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 268,
+    "b1": 5,
+    "b2": 56
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.333333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3650,
+   "flow": "storewide_query",
+   "subflow": "membership_1",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 181,
+    "b1": 2,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 3658,
+   "flow": "troubleshoot_site",
+   "subflow": "shopping_cart",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 111,
+    "b1": 2,
+    "b2": 51
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 4158,
+   "flow": "manage_account",
+   "subflow": "status_service_added",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 160,
+    "b1": 3,
+    "b2": 42
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 4265,
+   "flow": "shipping_issue",
+   "subflow": "missing",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 235,
+    "b1": 5,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 4332,
+   "flow": "product_defect",
+   "subflow": "return_size",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 262,
+    "b1": 3,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 4416,
+   "flow": "storewide_query",
+   "subflow": "policy_2",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 139,
+    "b1": 2,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 4697,
+   "flow": "subscription_inquiry",
+   "subflow": "manage_extension",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 157,
+    "b1": 4,
+    "b2": 49
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 4894,
+   "flow": "troubleshoot_site",
+   "subflow": "search_results",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 219,
+    "b1": 3,
+    "b2": 51
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5059,
+   "flow": "troubleshoot_site",
+   "subflow": "search_results",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 205,
+    "b1": 4,
+    "b2": 51
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5111,
+   "flow": "storewide_query",
+   "subflow": "membership_2",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 139,
+    "b1": 5,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 1.0,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5157,
+   "flow": "product_defect",
+   "subflow": "refund_status",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 120,
+    "b1": 2,
+    "b2": 39
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5365,
+   "flow": "troubleshoot_site",
+   "subflow": "shopping_cart",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 221,
+    "b1": 2,
+    "b2": 51
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5386,
+   "flow": "account_access",
+   "subflow": "recover_password",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 169,
+    "b1": 4,
+    "b2": 53
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5424,
+   "flow": "single_item_query",
+   "subflow": "boots_how_2",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 189,
+    "b1": 2,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5544,
+   "flow": "account_access",
+   "subflow": "recover_username",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 119,
+    "b1": 2,
+    "b2": 38
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.25,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0.5,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5640,
+   "flow": "single_item_query",
+   "subflow": "boots_other_4",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 166,
+    "b1": 3,
+    "b2": 42
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.333333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5687,
+   "flow": "purchase_dispute",
+   "subflow": "bad_price_yesterday",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 199,
+    "b1": 3,
+    "b2": 42
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.75,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5716,
+   "flow": "account_access",
+   "subflow": "recover_username",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 109,
+    "b1": 2,
+    "b2": 37
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.333333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 5989,
+   "flow": "order_issue",
+   "subflow": "manage_downgrade",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 153,
+    "b1": 2,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.75,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 6026,
+   "flow": "order_issue",
+   "subflow": "status_payment_method",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 211,
+    "b1": 4,
+    "b2": 41
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 6028,
+   "flow": "account_access",
+   "subflow": "recover_password",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 165,
+    "b1": 3,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 6121,
+   "flow": "storewide_query",
+   "subflow": "membership_4",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 116,
+    "b1": 3,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 6517,
+   "flow": "shipping_issue",
+   "subflow": "missing",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 222,
+    "b1": 5,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 6629,
+   "flow": "account_access",
+   "subflow": "reset_2fa",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 220,
+    "b1": 3,
+    "b2": 48
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 6902,
+   "flow": "shipping_issue",
+   "subflow": "manage",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 249,
+    "b1": 4,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 1
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7053,
+   "flow": "purchase_dispute",
+   "subflow": "promo_code_out_of_date",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 221,
+    "b1": 5,
+    "b2": 52
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7061,
+   "flow": "subscription_inquiry",
+   "subflow": "status_due_amount",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 207,
+    "b1": 5,
+    "b2": 56
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7079,
+   "flow": "single_item_query",
+   "subflow": "boots_other_2",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 105,
+    "b1": 3,
+    "b2": 41
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7523,
+   "flow": "order_issue",
+   "subflow": "manage_upgrade",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 134,
+    "b1": 4,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7534,
+   "flow": "product_defect",
+   "subflow": "refund_update",
+   "n_action_turns": 1,
+   "tokens": {
+    "b0": 65,
+    "b1": 1,
+    "b2": 40
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7608,
+   "flow": "single_item_query",
+   "subflow": "boots_how_4",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 177,
+    "b1": 3,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.25,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7666,
+   "flow": "manage_account",
+   "subflow": "status_shipping_question",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 139,
+    "b1": 3,
+    "b2": 46
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7861,
+   "flow": "account_access",
+   "subflow": "recover_password",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 176,
+    "b1": 3,
+    "b2": 49
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7933,
+   "flow": "storewide_query",
+   "subflow": "membership_3",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 149,
+    "b1": 2,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.416667,
+   "value_b2": 0.583333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 1,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 7961,
+   "flow": "order_issue",
+   "subflow": "manage_create",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 201,
+    "b1": 3,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8300,
+   "flow": "manage_account",
+   "subflow": "status_service_removed",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 149,
+    "b1": 3,
+    "b2": 44
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.333333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8363,
+   "flow": "account_access",
+   "subflow": "reset_2fa",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 165,
+    "b1": 3,
+    "b2": 52
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8538,
+   "flow": "product_defect",
+   "subflow": "return_stain",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 206,
+    "b1": 5,
+    "b2": 47
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8725,
+   "flow": "storewide_query",
+   "subflow": "policy_4",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 144,
+    "b1": 3,
+    "b2": 41
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8806,
+   "flow": "product_defect",
+   "subflow": "refund_status",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 97,
+    "b1": 2,
+    "b2": 38
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 1,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8890,
+   "flow": "purchase_dispute",
+   "subflow": "out_of_stock_general",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 247,
+    "b1": 3,
+    "b2": 46
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 8974,
+   "flow": "purchase_dispute",
+   "subflow": "out_of_stock_one_item",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 140,
+    "b1": 3,
+    "b2": 41
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9142,
+   "flow": "subscription_inquiry",
+   "subflow": "manage_pay_bill",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 134,
+    "b1": 5,
+    "b2": 55
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9321,
+   "flow": "single_item_query",
+   "subflow": "boots_how_3",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 174,
+    "b1": 3,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9451,
+   "flow": "purchase_dispute",
+   "subflow": "bad_price_competitor",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 164,
+    "b1": 3,
+    "b2": 41
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9468,
+   "flow": "account_access",
+   "subflow": "recover_username",
+   "n_action_turns": 2,
+   "tokens": {
+    "b0": 86,
+    "b1": 2,
+    "b2": 37
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.416667,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9472,
+   "flow": "order_issue",
+   "subflow": "manage_cancel",
+   "n_action_turns": 6,
+   "tokens": {
+    "b0": 187,
+    "b1": 6,
+    "b2": 48
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.416667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.25
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9707,
+   "flow": "single_item_query",
+   "subflow": "boots_other_1",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 102,
+    "b1": 3,
+    "b2": 39
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9816,
+   "flow": "order_issue",
+   "subflow": "status_mystery_fee",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 196,
+    "b1": 5,
+    "b2": 49
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.333333,
+   "value_b2": 0.5,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9847,
+   "flow": "troubleshoot_site",
+   "subflow": "credit_card",
+   "n_action_turns": 3,
+   "tokens": {
+    "b0": 190,
+    "b1": 3,
+    "b2": 49
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.083333,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.25
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9953,
+   "flow": "shipping_issue",
+   "subflow": "cost",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 254,
+    "b1": 4,
+    "b2": 46
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 0.5,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 9968,
+   "flow": "shipping_issue",
+   "subflow": "status",
+   "n_action_turns": 4,
+   "tokens": {
+    "b0": 156,
+    "b1": 4,
+    "b2": 45
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.166667,
+   "value_b2": 0.666667,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0,
+     "s2": 0,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 0.5,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": false,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  },
+  {
+   "convo_id": 10059,
+   "flow": "subscription_inquiry",
+   "subflow": "manage_extension",
+   "n_action_turns": 5,
+   "tokens": {
+    "b0": 277,
+    "b1": 5,
+    "b2": 43
+   },
+   "value_b0": 1.0,
+   "value_b1": 0.5,
+   "value_b2": 0.833333,
+   "per_item_scores": {
+    "b0": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 1
+    },
+    "b1": {
+     "s1": 0.5,
+     "s2": 0.5,
+     "s3": 0.5
+    },
+    "b2": {
+     "s1": 1,
+     "s2": 1,
+     "s3": 0.5
+    }
+   },
+   "value_bar": true,
+   "token_bar": false,
+   "per_convo_bar": false,
+   "b1_value_bar": false,
+   "b1_token_bar": true
+  }
+ ],
+ "round_verdict": {
+  "per_convo_pass": "0/80 = 0",
+  "per_convo_share": 0.0,
+  "aggregate_token_ratio": 0.239048,
+  "value_half_pass_convo_count": "21/80",
+  "token_half_pass_convo_count": "0/80",
+  "criterion_1_share_ge_0_70": false,
+  "criterion_2_aggregate_le_0_1": false,
+  "round_pass": false,
+  "verdict_line": "ROUND FAILS the frozen bar: per-convo bar 0/80 = 0.0% (criterion: >= 70%); aggregate token ratio 0.239 (criterion: <= 0.1). Value half met by 21/80; token half met by 0/80 (structural finding, see structural_token_half).",
+  "honesty_clause": "All M2 numbers are AGENT-JUDGED (blind answering passes 1+2 + the scoring pass in the frozen two-call structure \u2014 reference call, then scoring call against the committed reference; frozen protocols). The two-pass agreement is a judge self-consistency floor under frozen rules, NOT human inter-rater agreement, and is never cited as 'human agreement'. The B2 units are AGENT-DRAFTED (lead); the falsification is the independent blind judge."
+ },
+ "falsification_b1_vs_b2": {
+  "rule": "B1 (action trace) scored identically; if B1 alone reconstructs >= 80% of B0's value, the unit collapses to trace + label (pre-registered collapse)",
+  "b1_value_half_share": "0/80 = 0",
+  "b1_token_half_share": "80/80 = 1",
+  "mean_value_b0": 1.0,
+  "mean_value_b1": 0.177083,
+  "mean_value_b2": 0.621875,
+  "b1_collapses_unit": false,
+  "collapse_rule_operational": "collapse iff B1 meets value(B1) >= 0.8 x value(B0) on >= 70% of the 80 convos (the round's own >=70% convention applied to B1's identical scoring)",
+  "outcome": "NO COLLAPSE \u2014 B1 (action trace) meets the 0.8 value bar on only 0/80 convos (< 70%); NEITHER candidate carries >= 80% of B0's value on the mean \u2014 the unit's value claim is not met (a finding, D18) (adjudicated per lead 5449935167 s4 on the measured numbers)"
+ },
+ "per_field_loss_ledger": {
+  "definition": "loss(field) = mean over the 80 convos of score(field, B0) - score(field, candidate); 'what is lost per field when the transcript drops' (frozen contract)",
+  "b2_vs_b0": {
+   "s1": {
+    "n_pos": 51,
+    "total_loss": 25.5,
+    "mean_loss": 0.31875,
+    "mean_loss_display": "25.5/80 = 0.31875"
+   },
+   "s2": {
+    "n_pos": 37,
+    "total_loss": 20.5,
+    "mean_loss": 0.25625,
+    "mean_loss_display": "20.5/80 = 0.25625"
+   },
+   "s3": {
+    "n_pos": 78,
+    "total_loss": 44.75,
+    "mean_loss": 0.559375,
+    "mean_loss_display": "44.75/80 = 0.559375"
+   },
+   "value": {
+    "n_pos": 79,
+    "total_loss": 30.25,
+    "mean_loss": 0.378125
+   }
+  },
+  "b1_vs_b0": {
+   "s1": {
+    "n_pos": 80,
+    "total_loss": 76.0,
+    "mean_loss": 0.95,
+    "mean_loss_display": "76.0/80 = 0.95"
+   },
+   "s2": {
+    "n_pos": 78,
+    "total_loss": 71.0,
+    "mean_loss": 0.8875,
+    "mean_loss_display": "71.0/80 = 0.8875"
+   },
+   "s3": {
+    "n_pos": 80,
+    "total_loss": 50.5,
+    "mean_loss": 0.63125,
+    "mean_loss_display": "50.5/80 = 0.63125"
+   },
+   "value": {
+    "n_pos": 80,
+    "total_loss": 65.833338,
+    "mean_loss": 0.822917
+   }
+  }
+ },
+ "two_pass_agreement": {
+  "definition": "exact string match after lowercasing + whitespace collapse, per (item, question), between blind pass 1 and pass 2 (both passes blind, fresh staged context, different order \u2014 PROTOCOL-m2-blind.md)",
+  "item_questions_total": 720,
+  "item_questions_agree": 472,
+  "agreement_rate": 0.655556,
+  "agreement_display": "472/720 = 0.655556",
+  "per_convo_all_agree": "0/80",
+  "items_all_questions_agree": "82/240",
+  "disagreement_gt_15pct": true,
+  "flag": "DISAGREEMENT > 15%: per the frozen protocol, a 20-item sample goes to the founder (never the whole set)",
+  "honesty_clause": "self-consistency floor, NOT human inter-rater agreement"
+ },
+ "honesty_clause": "All M2 numbers are AGENT-JUDGED (blind answering passes 1+2 + the scoring pass in the frozen two-call structure \u2014 reference call, then scoring call against the committed reference; frozen protocols). The two-pass agreement is a judge self-consistency floor under frozen rules, NOT human inter-rater agreement, and is never cited as 'human agreement'. The B2 units are AGENT-DRAFTED (lead); the falsification is the independent blind judge.",
+ "re_run_contract": "README.md (this directory): pinned inputs verified by sha on every run; n_tokens_b2 recomputed on the draft unit with the frozen counter; deterministic output (byte-identical on re-run for the same inputs)."
+}
