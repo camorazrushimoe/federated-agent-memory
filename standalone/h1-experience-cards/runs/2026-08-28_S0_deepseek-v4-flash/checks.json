@@ -1,0 +1,596 @@
+[
+ {
+  "check_id": "C-L1",
+  "step": "leak",
+  "hard": true,
+  "passed": true,
+  "observed": "pool sha 28b77a32e58932bbf1502d73975972285ec071d03f30c6ac2b5d23cd90a5abbb, holdout sha e8f453e17c6c3aa115fb2bd1498a833da383cecdcc650667ac349f903343fe3c",
+  "expected": "shas match data/README.md; input folder unmodified",
+  "note": "recorded in manifest.inputs"
+ },
+ {
+  "check_id": "C-L2",
+  "step": "leak",
+  "hard": true,
+  "passed": true,
+  "observed": "dialogue keys []; raw request keys []",
+  "expected": "no unlock/unlock_guideline/split keys anywhere in the pipeline inputs",
+  "note": ""
+ },
+ {
+  "check_id": "C-L3",
+  "step": "leak",
+  "hard": true,
+  "passed": true,
+  "observed": "scanned bin/*.py imports",
+  "expected": "no imports from research/, openspec/, or other packages",
+  "note": ""
+ },
+ {
+  "check_id": "C-L4",
+  "step": "leak",
+  "hard": true,
+  "passed": true,
+  "observed": "scanned bin/ for embed/qdrant/neo4j/psycopg/chromadb and non-call_llm network",
+  "expected": "no embeddings/vector stores/DB drivers; urllib only inside llm.py",
+  "note": ""
+ },
+ {
+  "check_id": "C-L5",
+  "step": "leak",
+  "hard": true,
+  "passed": true,
+  "observed": "holdout touches in pipeline access log: False",
+  "expected": "holdout never opened before S2",
+  "note": "the D3 audit reads the holdout at S1 (EVAL-PLAN §7 A1) — that is out of scope of the pipeline log and disclosed in report.md"
+ },
+ {
+  "check_id": "C-IN1",
+  "step": "ingest",
+  "hard": true,
+  "passed": true,
+  "observed": "kept 16 + dropped 0 vs input rows 16",
+  "expected": "kept + dropped == rows in the input file",
+  "note": ""
+ },
+ {
+  "check_id": "C-IN2",
+  "step": "ingest",
+  "hard": true,
+  "passed": true,
+  "observed": "customer-turn counts: min 4",
+  "expected": "every kept dialogue has >=1 customer turn",
+  "note": ""
+ },
+ {
+  "check_id": "C-IN3",
+  "step": "ingest",
+  "hard": true,
+  "passed": true,
+  "observed": "records failing schema: []",
+  "expected": "all required keys + turns[].role in {customer, agent, tool}",
+  "note": ""
+ },
+ {
+  "check_id": "C-IN4",
+  "step": "ingest",
+  "hard": true,
+  "passed": true,
+  "observed": "16 dialogues, 16 unique ids",
+  "expected": "dialogue_id values are unique",
+  "note": ""
+ },
+ {
+  "check_id": "C-IN5",
+  "step": "ingest",
+  "hard": true,
+  "passed": true,
+  "observed": "20 random dialogues compared turn-by-turn to the pack",
+  "expected": "turn text byte-identical (agent/customer verbatim; action->tool text verbatim)",
+  "note": ""
+ },
+ {
+  "check_id": "C-IN6",
+  "step": "ingest",
+  "hard": true,
+  "passed": true,
+  "observed": "rerun identical: True",
+  "expected": "re-running ingest on the same input is byte-identical",
+  "note": ""
+ },
+ {
+  "check_id": "C-IN7",
+  "step": "ingest",
+  "hard": false,
+  "passed": false,
+  "observed": "agent distribution {'agent-b': 4, 'agent-a': 4, 'agent-c': 5, 'agent-d': 3} (uniform would be ~4)",
+  "expected": "each agent within +-20% of uniform",
+  "note": "SOFT; small sample"
+ },
+ {
+  "check_id": "C-EX1",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "schema violations []; fresh-card invariant violations []",
+  "expected": "every card validates vs §4; unclustered cards start private/canonical/votes=1",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX2",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "bad card ids: []",
+  "expected": "card_id == c- + sha256(dialogue_id)[:12]",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX3",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "limit violations: []",
+  "expected": "field limits hold on every card",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX4",
+  "step": "extract",
+  "hard": true,
+  "passed": false,
+  "observed": "grounding violations 3 over 37 fields",
+  "expected": "every non-none field shares a >=5-char content word with its source transcript(s)",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX5",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "PII hits: []",
+  "expected": "no card field matches the §4 regexes (whole store)",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX6",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "d-001 card status=private, '4412' present: False",
+  "expected": "§10.1 card survives, 4412 absent, not rejected for contains_pii",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX7",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "gift-card card contains_pii=False",
+  "expected": "bare word 'card' does not set contains_pii",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX8",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "rejected cards violating the rule: []",
+  "expected": "rejection only per the post-scrub rule",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX9",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "re-extract skipped 10 clustered rows",
+  "expected": "re-extract upserts by card_id and skips clustered rows",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX10",
+  "step": "extract",
+  "hard": true,
+  "passed": true,
+  "observed": "raw files 16 vs extract calls 16",
+  "expected": "one raw/extract file per extract call",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX11",
+  "step": "extract",
+  "hard": false,
+  "passed": true,
+  "observed": "unparseable JSON rate: 0",
+  "expected": "reported; raw responses kept for inspection",
+  "note": "SOFT"
+ },
+ {
+  "check_id": "C-EX12",
+  "step": "extract",
+  "hard": false,
+  "passed": true,
+  "observed": "possible name leaks: []",
+  "expected": "no customer name from the transcript in card fields",
+  "note": "SOFT heuristic"
+ },
+ {
+  "check_id": "C-CL1",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "no-op result: 81 remaining",
+  "expected": "{ran:false, remaining:N} below CLUSTER_EVERY_N_CHATS",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL2",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "cross-scope clusters: []",
+  "expected": "no cluster spans two receipt.scope values",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL3",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "violations: []",
+  "expected": "exactly one canonical per cluster; oldest wins; members merged + listed",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL4",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "votes recompute mismatches: []",
+  "expected": "votes recomputed from scratch == stored (served_to + independence)",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL5",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "shared-status mismatches: []",
+  "expected": "status==shared iff votes >= K and not stale",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL6",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "freshness violations: []",
+  "expected": "last_closed_at == max(closed_at); aged cluster with yesterday member not stale",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL7",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "merged cards in packets: []",
+  "expected": "merged cards never a seed on later runs, never served",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL8",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "inheritance violations: []",
+  "expected": "§5.2 inheritance: non-none canonical unlock never overwritten; holes filled",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL9",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "rerun: {'ran': False, 'remaining': 0, 'clusters_formed': 0, 'merged': 0, 'promoted': 0, 'already_shared': 0, 'stale': 0, 'scopes': 0, 'independence': 'agent+dialogue', 'unlock_conflict': 0, 'reason': 'store unchanged'} | cards byte-identical: True",
+  "expected": "re-running cluster on unchanged store is a no-op (byte-identical, merged=0)",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL10",
+  "step": "cluster",
+  "hard": true,
+  "passed": true,
+  "observed": "2-agent: canon=1, merged=9, votes=6; 1-agent: votes=1",
+  "expected": "§10.2 -> 1 canonical/9 merged/shared; §10.3 -> votes=1/private",
+  "note": ""
+ },
+ {
+  "check_id": "C-CL11",
+  "step": "cluster",
+  "hard": false,
+  "passed": true,
+  "observed": "unlock_conflict = 1",
+  "expected": "reported",
+  "note": "SOFT"
+ },
+ {
+  "check_id": "C-PR1",
+  "step": "promote",
+  "hard": true,
+  "passed": true,
+  "observed": "promote changed fields: []",
+  "expected": "promote changes only status (and staleness)",
+  "note": ""
+ },
+ {
+  "check_id": "C-PR2",
+  "step": "promote",
+  "hard": true,
+  "passed": true,
+  "observed": "shared cards below K: []",
+  "expected": "no card reaches shared with votes < K on any path",
+  "note": ""
+ },
+ {
+  "check_id": "C-PR3",
+  "step": "promote",
+  "hard": true,
+  "passed": true,
+  "observed": "votes before 6 / after 6; served_to entries 1",
+  "expected": "anti-echo: served dialogue never votes; serving 10x leaves votes unchanged",
+  "note": ""
+ },
+ {
+  "check_id": "C-PR4",
+  "step": "promote",
+  "hard": true,
+  "passed": true,
+  "observed": "0 stale canonicals; members stay merged",
+  "expected": "stale canonical never returns to shared; members stay merged",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV1",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "scope_leak = 0",
+  "expected": "no packet ever contains a card from another scope",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV2",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "duplicate_in_packet = 0",
+  "expected": "never two cards of one cluster in a packet",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV3",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "candidate scan: all packet cards are shared+canonical",
+  "expected": "only shared canonical cards are ever scored on the serve path",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV4",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "violations: []",
+  "expected": "packet size <= MAX_PACKET; scores >= MATCH_THRESHOLD; sorted desc",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV5",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "orig [{'card_id': 'c-216689894762', 'score': 0.198517, 'votes': 6}] vs perturbed [{'card_id': 'c-216689894762', 'score': 0.198517, 'votes': 6}]",
+  "expected": "agent-only text change must not alter the score",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV6",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "0 packets; all contain disclaimer + [card_id]",
+  "expected": "packet text carries the evidence disclaimer and [card_id] prefixes",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV7",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "d-012 packet: []; dupes1 d-011: []",
+  "expected": "empty candidate set -> [] and empty packet, never an error",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV8",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "d-013 served_to entries: 1",
+  "expected": "each served card appended to served_to exactly once per dialogue",
+  "note": ""
+ },
+ {
+  "check_id": "C-SV9",
+  "step": "serve",
+  "hard": true,
+  "passed": true,
+  "observed": "match deterministic: True",
+  "expected": "match.py identical ids+scores across runs",
+  "note": ""
+ },
+ {
+  "check_id": "C-FB1",
+  "step": "feedback",
+  "hard": true,
+  "passed": true,
+  "observed": "canonical status: stale; members: ['merged']",
+  "expected": "wrong/stale flips exactly the cited canonical; members stay merged",
+  "note": ""
+ },
+ {
+  "check_id": "C-FB2",
+  "step": "feedback",
+  "hard": true,
+  "passed": true,
+  "observed": "helpful: canonical status stale (unchanged), helpful rows 1",
+  "expected": "helpful changes no status and appends exactly one row",
+  "note": ""
+ },
+ {
+  "check_id": "C-FB3",
+  "step": "feedback",
+  "hard": true,
+  "passed": true,
+  "observed": "packet after stale: []",
+  "expected": "a stale card is never served again in the same run",
+  "note": ""
+ },
+ {
+  "check_id": "C-FB4",
+  "step": "feedback",
+  "hard": true,
+  "passed": true,
+  "observed": "ambiguous-attribution guard: exit 2",
+  "expected": "--card-id required when the packet held more than one card",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV1",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "sum = 1.0",
+  "expected": "unlock_hit_label + wrong + abstain == 1.0 exactly",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV2",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "recomputed from per_dialogue.jsonl",
+  "expected": "aggregates recomputed from per_dialogue reproduce metrics.json",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV3",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "B0: {'unlock_hit_label': 0.0, 'wrong': 0.0, 'abstain': 1.0}",
+  "expected": "B0 scores 0 hit / 1.0 abstain (metric cannot fire on nothing)",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV4",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "B2 oracle: {'unlock_hit_label': 1.0, 'wrong': 0.0, 'abstain': 0.0}",
+  "expected": "B2 >= 0.98 else the scoring code is broken",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV5",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "eval.py source scan: one score_holdout, arms routed via --arm",
+  "expected": "T/B0/B1/B2 share one scoring implementation",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV6",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "replay metrics identical: True (sha cb2562ccbd38a3e51d9e3568f6c3fb77a9f3f27650c7c995365c37b2b76a6646)",
+  "expected": "--replay reproduces metrics.json byte-identically with zero LLM calls",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV7",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "manifest inputs ['pool', 'holdout', 'eval_labels', 'prompts']; outputs ['cards.jsonl', 'metrics.json', 'per_dialogue.jsonl']",
+  "expected": "manifest carries a sha256 for every input and published output",
+  "note": ""
+ },
+ {
+  "check_id": "C-EV8",
+  "step": "eval",
+  "hard": true,
+  "passed": true,
+  "observed": "stage S0: no S2 published yet; audit not required here",
+  "expected": "audit required before S2",
+  "note": "HARD gate at S2"
+ },
+ {
+  "check_id": "C-EV9",
+  "step": "eval",
+  "hard": false,
+  "passed": true,
+  "observed": "price_source: 'provider rate unknown at run time; tokens reported, usd_total null (C-EV9)'; usd_total: None",
+  "expected": "cost.json states its price source; usd_total null if unknown",
+  "note": "SOFT"
+ },
+ {
+  "check_id": "C-EV10",
+  "step": "eval",
+  "hard": false,
+  "passed": true,
+  "observed": "report.md mentions timeline + independence",
+  "expected": "report states timeline and independence next to every metric",
+  "note": "SOFT"
+ },
+ {
+  "check_id": "C-NC1",
+  "step": "control",
+  "hard": true,
+  "passed": true,
+  "observed": "AGENT_POOL_SIZE=1: shared=0, serve_rate=0.0",
+  "expected": "A=1 over the pool -> nothing shared; serve_rate == 0",
+  "note": ""
+ },
+ {
+  "check_id": "C-NC2",
+  "step": "control",
+  "hard": true,
+  "passed": true,
+  "observed": "fake-scope shuffle: serve_rate=0.0, scope_leak=0",
+  "expected": "shuffled scopes -> serve_rate 0, scope_leak 0",
+  "note": ""
+ },
+ {
+  "check_id": "C-NC3",
+  "step": "control",
+  "hard": true,
+  "passed": true,
+  "observed": "shuffled labels hit=0.0 vs T hit=0.0 prior=1.0",
+  "expected": "label shuffle drops unlock_hit_label toward the label prior",
+  "note": "metric sensitivity control; shuffle applied to card labels (see note)"
+ },
+ {
+  "check_id": "C-NC4",
+  "step": "control",
+  "hard": false,
+  "passed": true,
+  "observed": "threshold 0.99 -> serve_rate 0.0; 0.0 -> serve_rate 1.0",
+  "expected": "MATCH_THRESHOLD knob behaves (0.99 ~ 0, 0.0 ~ 1.0)",
+  "note": "SOFT"
+ }
+]

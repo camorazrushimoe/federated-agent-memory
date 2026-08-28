@@ -1,0 +1,46 @@
+# H1 run dirs — commit the small decisive artifacts, keep the heavy local.
+# RUN-PROTOCOL §6: commit manifest/metrics/checks/audit/cost/report/per_dialogue;
+# keep raw/, cards.jsonl, chunks and packet stores local unless a reviewer asks
+# (their sha256 is in the manifest either way).
+#
+# DELIVERABLE-PACKAGE §4 overrides for the REFERENCE run only: it is committed
+# in full INCLUDING raw/ (the replay fuel). When the reference run lands,
+# add an exception for runs/<reference_run_id>/raw/ in this file.
+#
+# Patterns are relative to this file's directory (runs/).
+#
+# NOTE (strip 2026-08-28): the artifact lines below carry the required '!'
+# un-ignore prefix. The version that landed on h1/eval-specialist/d1 omitted
+# them, which made checks.json/controls.json/manifest.json etc. un-committable
+# (silently dropped by git add) — contradicting RUN-PROTOCOL §6 and the
+# strip plan §5 (additive checks.json/controls.json must survive).
+
+*/*
+!*/
+!*/manifest.json
+!*/metrics.json
+!*/metrics_b0.json
+!*/metrics_b1.json
+!*/metrics_b2.json
+!*/metrics_B0.json
+!*/metrics_B1.json
+!*/metrics_B2.json
+!*/checks.json
+!*/audit.json
+!*/cost.json
+!*/report.md
+!*/per_dialogue.jsonl
+!*/controls.json
+!*/replay_result.json
+*/raw/
+*/data/
+*/packets/
+*/fixtures_work/
+*/replay_verify/
+*/control_nc1/
+*/control_nc2/
+*/control_nc3_ts/
+*/eval_B0/
+*/eval_B1/
+*/eval_B2/
+*/eval_T/
