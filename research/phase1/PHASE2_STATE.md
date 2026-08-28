@@ -251,6 +251,36 @@ judge-harness plumbing; evaluation → blind two-pass answering + scoring pass (
 committed, agreement number); lead → drafts the 80 B2 units (proposal author drafts;
 blind judge falsifies) + bar adjudication + R3 pre-registration after R2.
 
+**R2 extraction — MERGED 2026-08-28 (PR #22 → main @601c310):** `extract.py`
+(generator, stdlib-only, byte-identical re-runs) + `candidates.jsonl`
+(sha256:16 **`dd1869a2d72c6b2b`**; 80 × {B0 render, B1 trace, B2 skeleton,
+frozen token counts, unmapped guard — 0 unmapped}) + `validate_candidates.py`
+(independent re-derivation gate, PASS) + judge-harness plumbing (blind two-pass
+staging, 240 items/pass, orders differ, anti-leak field set
+{item_id, codename, question, render}; scoring pass, combined references+scores
+call, 80 calls; total 560 ≤ frozen 640). Lead verification by re-execution
+(clean worktree): extract ×2 byte-identical to committed; validator PASS;
+selftests green; anti-leak spot-checked; the three flagged interpretations
+CONFIRMED (default JSON separators; presentation-scope hint rule; combined
+scoring call). **Token-side structural fact (recorded, not negotiated, D18):
+the frozen schema floor (23 tokens, empty unit) exceeds the per-convo bound
+`tokens(B2) ≤ tokens(B0)/10` for every one of the 80 convos (median B0 187 →
+allowance 18.7 < 23); aggregate-ratio floor 23×80/13,396 = 0.137 > 0.1. The
+token half of the frozen bar is structurally unreachable by any
+content-bearing unit in the frozen schema — the round reports it as a
+structural finding; the value half is measured by the blind judge.**
+
+**R2 B2 draft — LANDED (this PR):** `research/phase2/m2/b2_draft.jsonl`
+(sha256:16 **`5063a85c4ab79465`**) — the 80 hand-drafted structured
+experience units (lead; proposal author drafts the proposal per
+5449115746 §4), frozen schema key order, `what_failed` absent (OUT — pending
+§4/R3), `what_worked` = the ordered `targets[2]` trace (D11), drafting
+conventions + confidence split (high 72 / medium 5 / low 3) + token facts
+(frozen counter: min 37 / median 45 / max 57; aggregate ratio 0.2390) in
+`B2-DRAFT-NOTES.md`. Slots into `candidates.jsonl` `b2_unit` at join time
+(80/80 id match, key order, token recomputation — verified); `n_tokens_b2`
+is recomputed on this unit by the join (frozen counter).
+
 **R2 sample — FROZEN 2026-08-28 (PR #21 MERGED → main @4d68187):**
 `research/phase2/m2/sample.jsonl` sha256:16 **`f2195e7a6abe2221`** (80 convos:
 8/flow × 10; seed 42; R1-318 exclusion overlap 0/80; empty-product 22/80; B1 coverage
@@ -269,9 +299,17 @@ review 5449427387 (D17 pre-merge). Next: engineer `extract.py`; lead drafting th
 B2 units now.
 
 **Linear (lead-moved 2026-08-28):** BON-42 → **In Progress** (R2 kickoff). BON-41 Done
-(result line 05:48Z, D21). BON-43/44 Todo. **BON-45 ANOMALY — flagged for founder
-(5449115746 §5):** state "Done" since 2026-08-28T05:10:51Z by the owner account, no
-result line, conflicts with D21 + DECIDED record (R5 = round 5, report does not exist,
-counter 2/6); no crew action set it; NOT reverted by the lead (founder-side change) —
-awaiting founder confirmation or correction.
+(result line 05:48Z, D21). BON-43/44 Todo. **BON-45 ANOMALY — resolved
+2026-08-28 (D21-BREACH forensics, verified by timing + content, never by
+actor name — all crew + oversight share the owner's single API key, so every
+Linear action reads the owner's name):** the 05:10:51Z Todo→In
+Progress→Done movement (10 s) coincided with the lead's own PR #19 merge at
+05:10:46Z; no crew script in this workspace mutates BON-45 (only BON-41 at
+05:48Z) — mechanism not fully identified, flagged to the founder; the
+founder's ruling stands: **contracts, protocols, runbooks, scripts,
+skeletons and pre-registrations are INPUTS — a round ticket moves to Done
+only when the artifact it names exists WITH NUMBERS IN IT.** The oversight
+revert to Todo (07:21:49Z) is correct and left in place; **BON-45 stays
+Todo until R2, R3 and R4 have posted their numbers; no touch on BON-45
+before then.** Counter 2/6.
 
