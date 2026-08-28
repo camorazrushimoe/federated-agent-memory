@@ -519,10 +519,31 @@ def build_checks(ctx: Ctx) -> list[dict]:
     _expect(rows, "C-EX3", "extract", True, not lim_viol,
             f"limit violations: {lim_viol[:3]}",
             "field limits hold on every card")
-    g_viol, g_total = _grounding_violations(ctx)
-    _expect(rows, "C-EX4", "extract", True, g_viol == 0,
-            f"grounding violations {g_viol} over {g_total} fields",
-            "every non-none field shares a >=5-char content word with its source transcript(s)")
+    # C-EX4a (HARD): no invented specifics — every number, order/account
+    # identifier, tool name and proper noun in a card field MUST appear in
+    # the source transcript. Zero tolerance: the hallucination gate.
+    inv_viol = _invented_specific_violations(ctx)
+    _expect(rows, "C-EX4a", "extract", True, not inv_viol,
+            f"invented specifics: {inv_viol[:5]} (n={len(inv_viol)})",
+            "every number/identifier/tool name/proper noun in a card field "
+            "appears in its source transcript; zero tolerance")
+
+    # C-EX4b (SOFT): lexical grounding rate per field — reported, never
+    # aborting. Cards flagged here MUST go into the L3 judge sample
+    # (EVAL-PLAN §5): a faithful paraphrase with zero lexical overlap is a
+    # limitation of a string test, not evidence of invention.
+    lgr = _lexical_grounding_rates(ctx)
+    _expect(rows, "C-EX4b", "extract", False,
+            lgr["ungrounded"] == 0,
+            (f"ungrounded {lgr['ungrounded']}/{lgr['total']} fields "
+             f"({lgr['rate']:.3f}); per field {lgr['per_field']}; "
+             f"flagged cards {len(lgr['flagged_cards'])} written to "
+             f"l3_flagged_cards.jsonl"),
+            "per-field lexical overlap rate (>=5-char content word); "
+            "SOFT — never aborts; flagged cards go to the L3 judge sample")
+    if lgr["flagged_cards"] and ctx.run_dir is not None:
+        _write_jsonl(ctx.run_dir / "data" / "l3_flagged_cards.jsonl",
+                     lgr["flagged_cards"])
     pii_hits = _pii_scan(cards)
     _expect(rows, "C-EX5", "extract", True, not pii_hits,
             f"PII hits: {pii_hits[:3]}",
@@ -896,31 +917,150 @@ def _pii_scan(cards: list[dict]) -> list[str]:
     return hits
 
 
-def _grounding_violations(ctx: Ctx) -> tuple[int, int]:
+def _transcript_blob(dialogues: dict[str, dict], dids: list[str]) -> str:
+    """Lowercased concatenation of all turn texts for the given dialogues."""
+    parts = []
+    for did in dids:
+        d = dialogues.get(did)
+        if d:
+            parts.append(" ".join(t.get("text", "") for t in d.get("turns", [])))
+    return " ".join(parts).lower()
+
+
+_ONES = ["", "one", "two", "three", "four", "five", "six", "seven", "eight",
+         "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+         "sixteen", "seventeen", "eighteen", "nineteen"]
+_TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
+         "eighty", "ninety"]
+
+
+def _number_to_words(n: int) -> str:
+    """English words for 0..9999 (the size of numbers that appear in card
+    fields: prices, days, counts). Deterministic, no deps."""
+    if n == 0:
+        return "zero"
+    if n < 20:
+        return _ONES[n]
+    if n < 100:
+        return _TENS[n // 10] + (("-" + _ONES[n % 10]) if n % 10 else "")
+    if n < 1000:
+        h = _ONES[n // 100] + " hundred"
+        return h + ((" " + _number_to_words(n % 100)) if n % 100 else "")
+    t = _number_to_words(n // 1000) + " thousand"
+    return t + ((" " + _number_to_words(n % 1000)) if n % 1000 else "")
+
+
+def _number_spellings(token: str) -> list[str]:
+    """Spelled-out forms of a digit token, e.g. '90' -> ['ninety'],
+    '14' -> ['fourteen']. Covers ints 0..9999."""
+    digits = "".join(ch for ch in token if ch.isdigit())
+    if not digits or len(digits) > 4:
+        return []
+    try:
+        return [_number_to_words(int(digits))]
+    except Exception:
+        return []
+
+
+def _invented_specific_violations(ctx: Ctx) -> list[str]:
+    """C-EX4a (HARD, zero tolerance): a card must not introduce an entity
+    that is not in the chat.
+
+    Scope = *specifics only*: numbers/order-account identifiers (digit-
+    bearing tokens) and proper nouns / tool names (tokens the model wrote
+    capitalized). Plain lowercase content words are OUT of scope — they are
+    paraphrase material and belong to C-EX4b (SOFT) + the L3 judge, exactly
+    as the CHECKS.md amendment intended (material/materials must not fail
+    this gate).
+
+    Number equivalence: a card number passes if the transcript contains the
+    literal digit token OR its spelled-out form ('90' vs 'ninety' — same
+    entity, not an invention).
+    """
     cards = _store(ctx)
     dialogues = {r["dialogue_id"]: r for r in _store(ctx, "dialogues.jsonl")}
     cards_by_id = {c["card_id"]: c for c in cards}
-    viol = 0
-    total = 0
+    viol = []
     for c in cards:
         member_dids = [c["receipt"]["source_dialogue_id"]] + [
             cards_by_id[m]["receipt"]["source_dialogue_id"]
             for m in c.get("members", []) if m in cards_by_id]
-        blob_words: set[str] = set()
-        for did in member_dids:
-            d = dialogues.get(did)
-            if d:
-                blob_words.update(re.findall(
-                    r"[a-z0-9']+", " ".join(t["text"] for t in d["turns"]).lower()))
+        blob = _transcript_blob(dialogues, member_dids)
+        blob_words = set(re.findall(r"[a-z0-9']+", blob))
+        for f in ("problem_shape", "constraint", "unlock"):
+            v = c.get(f)
+            if not v or v == "none":
+                continue
+            for m in re.finditer(r"[A-Za-z0-9]+", v):
+                tok = m.group(0)
+                tl = tok.lower()
+                if any(ch.isdigit() for ch in tl):
+                    # number / order-account identifier
+                    if tl in blob_words:
+                        continue
+                    spellings = _number_spellings(tl)
+                    if spellings and any(s in blob_words for s in spellings):
+                        continue
+                    viol.append(f"{c['card_id']}.{f}:{tok}")
+                elif tok[0].isupper():
+                    # proper noun / tool name as written by the model
+                    if tl not in blob_words:
+                        viol.append(f"{c['card_id']}.{f}:{tok}")
+    return viol
+
+
+def _lexical_grounding_rates(ctx: Ctx) -> dict:
+    """C-EX4b (SOFT): per-field lexical overlap rate.
+
+    For every non-'none' problem_shape/constraint/unlock, record whether at
+    least one content word (>=5 chars, lowercased) also appears in the
+    transcript. Report per-field ungrounded count and rate; NEVER aborts.
+    Cards flagged here are written to l3_flagged_cards.jsonl for the L3
+    judge sample (EVAL-PLAN §5).
+    """
+    cards = _store(ctx)
+    dialogues = {r["dialogue_id"]: r for r in _store(ctx, "dialogues.jsonl")}
+    cards_by_id = {c["card_id"]: c for c in cards}
+    total = ungrounded = 0
+    per_field: dict[str, dict] = {}
+    flagged: list[dict] = []
+    for c in cards:
+        member_dids = [c["receipt"]["source_dialogue_id"]] + [
+            cards_by_id[m]["receipt"]["source_dialogue_id"]
+            for m in c.get("members", []) if m in cards_by_id]
+        blob_words = set(re.findall(
+            r"[a-z0-9']+", _transcript_blob(dialogues, member_dids)))
+        card_flag = []
         for f in ("problem_shape", "constraint", "unlock"):
             v = c.get(f)
             if not v or v == "none":
                 continue
             total += 1
-            fw = {w for w in re.findall(r"[a-z0-9']+", v.lower()) if len(w) >= 5}
-            if fw and not (fw & blob_words):
-                viol += 1
-    return viol, total
+            fw = {w for w in re.findall(r"[a-z0-9']+", v.lower())
+                  if len(w) >= 5}
+            grounded = bool(fw & blob_words)
+            if not grounded:
+                ungrounded += 1
+                card_flag.append(f)
+            pf = per_field.setdefault(f, {"total": 0, "ungrounded": 0})
+            pf["total"] += 1
+            pf["ungrounded"] += int(not grounded)
+        if card_flag:
+            flagged.append({"card_id": c["card_id"], "fields": card_flag})
+    for pf in per_field.values():
+        pf["rate"] = round(pf["ungrounded"] / pf["total"], 4) if pf["total"] else 0.0
+    return {
+        "total": total,
+        "ungrounded": ungrounded,
+        "rate": (ungrounded / total) if total else 0.0,
+        "per_field": per_field,
+        "flagged_cards": flagged,
+    }
+
+
+def _write_jsonl(path, rows) -> None:
+    from store import write_jsonl
+    write_jsonl(path, rows)
 
 
 def _name_leaks(ctx: Ctx) -> list[str]:
