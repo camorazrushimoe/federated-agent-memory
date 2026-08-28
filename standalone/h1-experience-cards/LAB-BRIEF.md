@@ -38,6 +38,22 @@ comparing shas. Engineer reviews the lead's verdict against `per_dialogue.jsonl`
 | **D5** | S2 measured run per model, one run dir each | `metrics.json`, `cost.json`, `per_dialogue.jsonl`, `report.md` per run |
 | **D6** | Judge pass (L3) + calibration on the 30 founder-labelled cards | agreement reported; `uncalibrated` stated if the founder sample is not in yet |
 | **D7** | `MODEL-MATRIX.md` built by `compare.py` from the run dirs — no hand-typed numbers | one fitness verdict per model in exactly one of the three `EVAL-PLAN.md` §6.4 forms |
+| **D8** | **The packaged experiment** per `DELIVERABLE-PACKAGE.md`: committed reference run (raw responses included), `RESULTS.md`, `MODEL-MATRIX.md`, and a quickstart verified in a **fresh clone** | `--replay` reproduces `metrics.json` byte-identically in that fresh clone with zero LLM calls, and a different model id runs stage S0 with no code edit |
+
+**D8 is the actual product of this commission.** D1–D7 are how it gets built.
+The consumer is someone who did not build it: they clone the repo, export a key,
+run one command, and either reproduce our numbers or run the whole thing on a
+model we never tried. Build the package layout in D1 and fill it as stages land
+— do not leave packaging until the end.
+
+Two consequences to internalise now, because they change how you write the code:
+
+- **No model name, endpoint or key may appear anywhere in `bin/`** — not even as
+  a working default. They come from `--model`, `H1_BASE_URL`/`--base-url`, and
+  `H1_API_KEY`. Swapping models must be a flag, never an edit.
+- **The raw extract responses are committed** with the reference run. They are
+  the replay fuel; without them `--replay` works only on the machine that has
+  the local cache, which is nobody after a `git clone`.
 
 **D3 is a hard gate, not paperwork.** We already burned a full round on a
 pre-registered criterion whose arithmetic floor made it unreachable (`≤ 0.1`
