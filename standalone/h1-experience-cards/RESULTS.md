@@ -1,10 +1,13 @@
 # H1 Experience Cards — Results
 
-> Status: **D3 gate fired — verdict published, no S2 run** (the §7.1 sweep and
-> the §7.2 F5 fallback both returned NOT FIT under the pre-registered rule; per
-> the rule no S2 treatment arm was run and no gate was lowered). Numbers below
-> come from run dirs (`metrics.json` / `cost.json`), `audit.json` or
-> `compare.py` — never hand-typed.
+> Status: **D3 gate fired — verdict published, no S2 treatment run** (the §7.1
+> sweep and the §7.2 F5 fallback both returned NOT FIT under the pre-registered
+> rule; per the rule no S2 treatment arm was run and no gate was lowered).
+> Numbers below come from run dirs (`metrics.json` / `cost.json`), `audit.json`
+> or `compare.py` — never hand-typed. Baselines B1 and B2 were measured on the
+> real 200-dialogue hold-out in the final round
+> (`runs/2026-08-28_S2_baseline_B1`, `runs/2026-08-28_S2_baseline_B2`;
+> LLM-free — no cards, no extract — hold-out opened once for scoring).
 
 ## 1. Hypothesis
 
@@ -34,10 +37,19 @@ serves.**
 
 | arm | unlock_hit_label | wrong | abstain | serve_rate | USD/1k |
 |--|--|--|--|--|--|
-| B0 no memory | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
-| B1 raw retrieval, no cards | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
-| **T card pipeline** | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| B2 oracle | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
+| B0 no memory | not run (D3 gate) | — | — | — | 0 |
+| B1 raw retrieval, no cards | **0.735** | 0.260 | 0.005 | 0.995 | 0 |
+| **T card pipeline** | not run (D3 gate) | — | — | — | — |
+| B2 oracle | **1.000** | 0.000 | 0.000 | 1.000 | 0 |
+
+**`T ≤ B1` — resolved by measurement, not inference:** B1 scores **0.735**
+(147 hit / 52 wrong / 1 abstain on n=200) on the real hold-out, LLM-free. The
+card pipeline itself was not run (D3 gate), but its serve ceiling was
+measured in the committed §7.1/§7.2 sweeps: at most **0.15** (card-text key)
+/ **0.175** (customer-turns key) of hold-out-shaped queries can receive any
+packet, and an unserved query cannot hit — so `T ≤ max serve ceiling =
+0.175 < 0.735 = B1`. The card pipeline **cannot** beat plain raw retrieval on
+this data; the verdict stands and the number is B1's.
 
 ## 4. What the audit found (A1–A5)
 

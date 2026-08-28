@@ -1,0 +1,20 @@
+{
+  "deterministic_half_wall_clock_s": 0.167,
+  "extract": {
+    "calls": 0,
+    "completion_tokens": 0,
+    "ms_p50": null,
+    "ms_p95": null,
+    "prompt_tokens": 0,
+    "usd_per_1000_dialogues": 0.0,
+    "usd_total": 0.0
+  },
+  "notes": [
+    "baseline arm: no extract, no serve, zero LLM calls by construction; usd_total = 0"
+  ],
+  "price_source": "https://api-docs.deepseek.com/quick_start/pricing/ (retrieved 2026-08-28)",
+  "serve": {
+    "ms_p50": null,
+    "ms_p95": null
+  }
+}

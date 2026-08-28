@@ -1,0 +1,55 @@
+{
+  "agent_pool_size": 4,
+  "base_url": null,
+  "cluster_passes_fired": 0,
+  "config": {
+    "AGENT_POOL_SIZE": 4,
+    "CLUSTER_EVERY_N_CHATS": 100,
+    "CLUSTER_THRESHOLD": 0.35,
+    "K_INDEPENDENT": 2,
+    "MATCH_THRESHOLD": 0.18,
+    "MAX_PACKET": 3,
+    "MAX_WORDS_FIELD": 12,
+    "MAX_WORKED": 8,
+    "STALE_AFTER_DAYS": 30,
+    "T0": "2026-08-28T00:00:00Z"
+  },
+  "created_at": "2026-08-28T22:00:00Z",
+  "extract_model": null,
+  "git_commit": {
+    "dirty": false,
+    "sha": "c5e8d20e35ef3b431a427c4501ab449ff43c9915"
+  },
+  "inputs": {
+    "holdout": {
+      "path": "/opt/data/fam-r2-baseline/standalone/h1-experience-cards/data/abcd_200_holdout.jsonl",
+      "rows": 200,
+      "sha256": "e8f453e17c6c3aa115fb2bd1498a833da383cecdcc650667ac349f903343fe3c"
+    },
+    "pool": {
+      "path": "/opt/data/fam-r2-baseline/standalone/h1-experience-cards/data/abcd_1000_pool.jsonl",
+      "rows": 1000,
+      "sha256": "28b77a32e58932bbf1502d73975972285ec071d03f30c6ac2b5d23cd90a5abbb"
+    },
+    "prompts": {
+      "path": "/opt/data/fam-r2-baseline/standalone/h1-experience-cards/PROMPTS.md",
+      "rows": null,
+      "sha256": "2dc34680abb39f4252b3c18c470fddb53f9cbb635c8777edbd216ae187948052"
+    }
+  },
+  "judge_model": null,
+  "notes": [
+    "baseline arm: no card store read, no extract, no serve, no LLM (cost.calls=0)",
+    "runner S2-baseline path not used: run_experiment.py calls extract.py with --model None for baseline arms (needs_llm=False) and crashes in posix_spawn; eval.py --baseline invoked directly, the same scoring code the runner calls (checks.py _run_eval_arm uses the identical invocation)",
+    "age-stale disabled by construction: timeline=compressed"
+  ],
+  "outputs": {
+    "metrics.json": "56f9bcb832df567a15fa66430c712eac56b59a530296b354131064fb02fc07ef",
+    "per_dialogue.jsonl": "ab8e466715fceb222e92e78287ee703b44d5e8c93f26af6e90ca54229ea74de7"
+  },
+  "replay_of": null,
+  "run_id": "2026-08-28_S2_baseline_B1",
+  "stage": "S2",
+  "temperature": 0,
+  "timeline": "compressed"
+}
