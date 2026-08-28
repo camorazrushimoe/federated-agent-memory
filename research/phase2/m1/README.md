@@ -176,3 +176,84 @@ the lead's kickoff **pre-contract reference** (JSON, A/B/C, no schema/display).
 The lead's kickoff explicitly says its output is **not** to be shipped as the
 pair artifact; the pinned composition (85/34/51 + sub-bands) **replaces** its
 80/50/40. That script is left on main untouched for reference.
+
+## 7. B0/B1 scoring — implementation + precomputed scores (landed 2026-08-28, pre-gold)
+
+**Artifacts**
+- `score_m1.py` — B0 oracle + B1 scoring, two stages:
+  - `--precompute` → `b1_scores.jsonl` (per pair: `pair_id, conv_a, conv_b, band,
+    sub_band, b0_pool, b1_cosine`). **No gold required.**
+  - `--gold <gold.jsonl>` → `m1_results.json` + `m1_report.md` (FFR, recall,
+    F1, bar verdict) once RUNBOOK-m1 S3 lands
+    `research/phase2/m1/gold/gold_m1_pairs_agentlabeled.jsonl`.
+- `b1_scores.jsonl` — **B1 score for all 170 pairs, precomputed and committed
+  now** (sha256:16 `9fe3e4b3c0978e1f`, deterministic — byte-identical on re-run).
+- `selftest_stage_b.py` — proves the stage-B join/metric math against an
+  independent plain-Python recomputation on the real 170-pair file (43
+  assertions; synthetic labels, pipeline test only, **not** a gold set).
+- `recall_preview.py` — label-free recall-half analysis below.
+
+**B1 configuration (pre-registered here, before the gold set is seen)**
+- text: full customer turns of each conversation (delexed, `speaker=="customer"`,
+  non-empty, in order), space-joined. **Agent turns excluded** (boilerplate;
+  method doc B1 rule). Action trace is **not** a B1 feature (it is corroborating
+  evidence for the labeler, protocol R4).
+- `TfidfVectorizer(lowercase=True, sublinear_tf=True, unigrams, stop_words=None)`,
+  **fitted on all 10,042 corpus customer-turn documents** (population IDF — not
+  tuned to the 170-pair set), transformed on the 318 pair conversations.
+  Vocabulary: 8,368 terms.
+- score = cosine; pool iff cosine ≥ t. Threshold selection over the full sweep of
+  all 169 unique scores + pool-nothing sentinel (pre-registered in §5): bar-pass
+  = argmax pairwise-F1 among thresholds with FFR ≤ 0.10 and recall_sm ≥ 0.60
+  (deterministic tie-break: lowest t); if none, report min-FFR threshold + its
+  recall (the missed bar is the finding).
+- **B2: gated.** No B2 code exists by design — it runs only if B1 fails the
+  frozen bar (method doc: falsification-only).
+
+**B0 oracle** (same `subflow` ⇒ pool; subflow is unique per flow on this corpus,
+0/96 subflows shared across flows): by construction it pools 85/85 should-match,
+0/34 ambiguous, 0/51 should-not-match. Per-band recall against gold and its FFR
+fall out of the stage-B join.
+
+**Label-free results measured now (band = engineer's construction metadata, NOT
+gold labels — the recall half of the D18 operating curve; FFR is the other axis
+and requires the gold set):**
+
+| band | n | min | p25 | p50 | p75 | p90 | max |
+|---|---|---|---|---|---|---|---|
+| should-match | 85 | 0.0553 | 0.1633 | 0.2183 | 0.2743 | 0.3249 | 0.6258 |
+| ambiguous | 34 | 0.0042 | 0.0707 | 0.1314 | 0.1991 | 0.2231 | 0.2590 |
+| should-not-match | 51 | 0.0000 | 0.0587 | 0.0958 | 0.1285 | 0.1713 | 0.2837 |
+
+Operating points on the label-free recall curve:
+- tightest threshold meeting **recall_sm ≥ 60%**: t ≥ **0.196495** → pools 63
+  pairs; recall_sm = 0.600, R_ambiguous = 0.265, R_should-not-match = **0.059**
+  (3/51 false-friend-band pairs score in the should-match region).
+- best sm/snm separation on the sweep: t ≥ **0.174772** → recall_sm = 0.741,
+  R_should-not-match = 0.098 (5/51), gap 0.643.
+- B1 separates the construction bands strongly. **Label-free false-friend fact
+  at the 60%-recall operating point (t ≥ 0.196495):** 63 pairs are pooled = 51
+  should-match + 9 ambiguous + 3 should-not-match; i.e. only **3/51 = 5.9%** of
+  the false-friend band scores in the pooled region. **This is not yet the FFR** —
+  FFR = (pooled ∩ gold-`unrelated`) / (gold-`unrelated`), and the labeler can
+  label `unrelated` from the ambiguous band (and, in principle, any band) on
+  problem shape (protocol R3/R4), so both the numerator and the denominator are
+  gold-dependent. The 5.9% is the label-free overlap of the pooled set with the
+  should-not-match *band*; the stage-B join computes the real FFR against the
+  gold-`unrelated` class.
+
+**What is NOT yet measured (blocked on the gold set, not on this code):**
+inter-pass disagreement rate, canonical label counts, **the false-friend rate on
+the gold-`unrelated` class, the bar verdict, and pairwise F1**. The join is a
+single command:
+`python3 research/phase2/m1/score_m1.py --gold research/phase2/m1/gold/gold_m1_pairs_agentlabeled.jsonl`
+
+**Hypothesis linkage:** H-m1 (method doc §M1). Pre-gold reading: on this data the
+problem shape separates lexically at the band level (should-match p50 0.218 vs
+should-not-match p50 0.096, near-zero overlap at the 60%-recall operating
+point). Whether B1 *passes the frozen D18 bar* is answered only against the
+agent-labeled gold set — the label-free overlap bound (≤5.9%) is consistent with
+a pass, and the method doc's pre-registered branch (B1 passes ⇒ "problem shape
+is lexical on this data", B2 dropped) is the standing expectation, not a
+conclusion.
+
