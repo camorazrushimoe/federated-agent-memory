@@ -184,3 +184,66 @@ Remaining R1 dependencies, in order: (a) evaluation: pass 2 (fresh context) →
 `gold_m1_pairs_agentlabeled.jsonl` + disagreement number on #6; (b) engineer: B1 precompute
 over all 170 pairs (already assigned, `5448472885` §6) — B0/B1/B2 then join; (c) lead:
 review the gold set on landing, post the closure line, close BON-41.
+
+## Round 1 (M1) — CLOSED 2026-08-28 (main @72e344b) · counter at **2/6**
+
+**Status: R1 CLOSED — number three-way confirmed. R2 (M2) PRE-REGISTERED and assigned.
+BON-41 Done. Round counter 2/6.**
+
+R1 final state (source of truth: GH #6 comments 5448920977 (lead verification + closure +
+findings) and **5449115746** (R1 formal closure + R2 pre-registration + taskings)):
+
+- **Closure line (three-way confirmed — lead 05:44Z, engineer re-derivation, lead's third
+  path 06:0xZ; ZERO mismatches):** B1 (TF-IDF cosine, customer turns) at t ≥ **0.196495**:
+  **FFR 6.3% (4/63 gold-unrelated) at recall_sm 60.0% (51/85)** → **PASS** of the frozen
+  D18 bar (≤10% at ≥60%). Pre-registered op point t ≥ 0.175964: 9.5% (6/63), recall_sm
+  72.9%, F1 0.7211; max-recall pass point t ≥ 0.171686: 74.1% at 9.5% (2-way tie at
+  0.174772, tie-break lowest t — recorded). B0 oracle: 100% at 4.8% (3/63). 18
+  bar-passing thresholds. **B2 DROPPED** (pre-registered rule) → finding: *problem shape
+  is lexical on this data.* HONESTY CLAUSE rides with every citation: gold is
+  AGENT-LABELED; 21/170 = 0.1235 inter-pass disagreement is a self-consistency floor,
+  NOT human agreement.
+- **Findings F1–F3 stand** (5448920977 §4): F1 false-friend danger is INSIDE the flow
+  (same-flow FFR 13.3% > cross-flow at both thresholds; m1-0089 + m1-0119
+  manage_dispute_bill adjacency) — inverts method doc §5; §8.1 sharing scope stays open,
+  sharper shape: subflow-granularity constraint within a flow. F2 cross-flow same-problem
+  UNTESTED, not zero (69/69 gold same-problem same-flow). F3 oracle ≠ ground truth
+  (m1-0010/0038/0061 = B0's entire FFR; B1 rejects all three correctly).
+- **Engineer artifacts on main @72e344b** (cherry-pick after the #17/#18 merges):
+  `research/phase2/m1/` — `m1_report.md` (full 169-row sweep + F1–F3 + closure line +
+  honesty clause), `m1_results.json` (machine-readable incl. `join_findings` + full curve;
+  `fp` field = n_pooled − tp, FFR on gold-unrelated only — pinned in denominators),
+  `join_verify.py` + `recompute_b1.py` (audit scripts), `README.md` §8 re-run contract.
+  Pinned shas verified on main: b1_scores `9fe3e4b3c0978e1f`, gold
+  `792df7d24fc0609a` (under `research/phase2/m1/gold/`), pairs `42215fc5969e600e`.
+- **R5 decision-logic ledger after R1:** KEY stage now has MEASURED parameters
+  (threshold 0.175964 op / 0.196495 bar; worked-example scores W1 0.218476 pooled,
+  W2 0.151571 rejected, W3 0.171299 rejected). STORE/PROMOTE/SERVE/REJECT stay
+  ASSUMED/BLOCKED until M2/M3/§4 land.
+- **Process record (D17, 2026-08-28):** the engineer's report landed by direct
+  cherry-pick because #17 was already merged when the branch cut — content confirmed
+  correct, but the landing bypassed "review posted, then merge." Rule re-affirmed, no
+  size exceptions: every `research/**` / `docs/**` landing via PR with posted lead review.
+  No round burned.
+
+**R2 (M2 — extraction) — PRE-REGISTERED 2026-08-28 (frozen before sample draw; full text
+on GH #6 5449115746 §3):** unit = {problem_shape, constraint, unlock, what_worked,
+receipt} (`what_failed` OUT — pending §4/R3; collapse rule pre-registered); baselines
+B0 transcript / B1 action trace / B2 structured record scored identically; sample N=80
+(8/flow × 10 flows, seed 42, R1's 318 convos excluded, ≤2/subflow, 20–32
+empty-product); blind two-pass reconstruction test Q1–Q3 + reference-anchored rubric
+(value = mean of Q1/Q2/Q3 scores); **bar (D18): ≥70% of convos with value(B2) ≥ 0.8×
+value(B0) at tokens ≤ 1/10 (aggregate too)**; token counter + cost frozen (640 bounded
+judge calls); honesty clause (agent-judged) from the first call. Taskings: engineer →
+`sample.py` (PR) then `extract.py` (B0/B1/B2 renders + frozen token counts) +
+judge-harness plumbing; evaluation → blind two-pass answering + scoring pass (per-item
+committed, agreement number); lead → drafts the 80 B2 units (proposal author drafts;
+blind judge falsifies) + bar adjudication + R3 pre-registration after R2.
+
+**Linear (lead-moved 2026-08-28):** BON-42 → **In Progress** (R2 kickoff). BON-41 Done
+(result line 05:48Z, D21). BON-43/44 Todo. **BON-45 ANOMALY — flagged for founder
+(5449115746 §5):** state "Done" since 2026-08-28T05:10:51Z by the owner account, no
+result line, conflicts with D21 + DECIDED record (R5 = round 5, report does not exist,
+counter 2/6); no crew action set it; NOT reverted by the lead (founder-side change) —
+awaiting founder confirmation or correction.
+
