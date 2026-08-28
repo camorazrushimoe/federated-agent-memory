@@ -1,0 +1,1 @@
+{"dialogue_id": "d-011", "tenant_id": "abcd-shop", "vertical": "customer-support", "agent_id": "agent-a", "channel": "web", "turns": [{"role": "customer", "text": "I need to exchange sneakers but the tag is already cut off, is there any way"}, {"role": "agent", "text": "let me check what we can do for you"}]}

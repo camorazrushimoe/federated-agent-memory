@@ -1,0 +1,29 @@
+{
+ "run_id": "2026-08-28_S0_deepseek-v4-flash",
+ "arm": "B0",
+ "n_holdout": 4,
+ "primary": {
+  "unlock_hit_label": 0.0,
+  "wrong": 0.0,
+  "abstain": 1.0
+ },
+ "secondary": {
+  "unlock_hit_smoke": 0.0,
+  "serve_rate": 0.0,
+  "cluster_purity": 0.928571,
+  "unlock_conflict": 1,
+  "duplicate_in_packet": 0,
+  "scope_leak": 0,
+  "votes_hist": {
+   "1": 13,
+   "2": 1,
+   "3+": 0
+  },
+  "packet_size_hist": {
+   "1": 0,
+   "2": 0,
+   "3": 0
+  }
+ },
+ "judge": null
+}

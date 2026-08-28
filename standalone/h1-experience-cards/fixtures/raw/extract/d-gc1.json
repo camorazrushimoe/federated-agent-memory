@@ -1,0 +1,23 @@
+{
+ "dialogue_id": "d-gc1",
+ "request": {
+  "system": "You extract one experience card from a finished customer-support chat.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  unlock          string, ≤12 words, the move that unblocked it, or \"none\"\n  what_worked     array of 1-8 short step names\n  contains_pii    boolean\n\nRules:\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- If you had to strip an identifier, set contains_pii=true. That flag does\n  NOT discard the card. It only marks that a scrub happened.\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n- unlock is the turning point, not a summary of the whole chat.\n- If nothing useful happened, use \"none\" and a short what_worked anyway.\n- No markdown. No extra keys. No commentary.",
+  "user": "Scope: abcd-shop/customer-support\nChannel: web\n\nTranscript:\ncustomer: hi do you sell gift cards in the store\nagent: yes we do, digital and physical gift cards are available\ncustomer: great, and can I use one for any product\nagent: gift cards can be used on most items, there are a few exclusions\ncustomer: thanks that helps"
+ },
+ "response": "{\"problem_shape\":\"gift card availability and usage eligibility\",\"constraint\":\"product exclusions apply\",\"unlock\":\"confirmed availability and mentioned exclusions\",\"what_worked\":[\"asked about gift cards\",\"confirmed availability\",\"noted product exclusions\"],\"contains_pii\":false}",
+ "model": "deepseek-v4-flash",
+ "usage": {
+  "prompt_tokens": 412,
+  "completion_tokens": 350,
+  "total_tokens": 762,
+  "prompt_tokens_details": {
+   "cached_tokens": 256
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 293
+  },
+  "prompt_cache_hit_tokens": 256,
+  "prompt_cache_miss_tokens": 156
+ },
+ "ms": 3874
+}

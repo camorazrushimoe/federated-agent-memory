@@ -1,0 +1,17 @@
+{
+ "extract": {
+  "calls": 16,
+  "prompt_tokens": 9161,
+  "completion_tokens": 6446,
+  "usd_total": null,
+  "usd_per_1000_dialogues": null,
+  "ms_p50": 3594,
+  "ms_p95": 8546
+ },
+ "serve": {
+  "ms_p50": 0,
+  "ms_p95": 0
+ },
+ "deterministic_half_wall_clock_s": 70.766,
+ "price_source": "provider rate unknown at run time; tokens reported, usd_total null (C-EV9)"
+}

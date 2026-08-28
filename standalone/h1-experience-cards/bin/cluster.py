@@ -297,9 +297,12 @@ def main(argv=None) -> int:
         if errs:
             raise RuntimeError(f"cluster produced invalid card {c['card_id']}: {errs}")
     write_jsonl(cards_path, new_cards)
+    # record the POST-pass store sha: a re-run on this exact store is a no-op
+    post_sha = hashlib.sha256("".join(
+        json.dumps(c, sort_keys=True) + "\n" for c in new_cards).encode()).hexdigest()
     cursor["last_dialogue_count"] = n
     cursor["last_run_at"] = clock.now()
-    cursor["last_cards_sha"] = store_sha
+    cursor["last_cards_sha"] = post_sha
     cursor["independence"] = result["independence"]
     cursor_path.write_text(json.dumps(cursor, indent=1), encoding="utf-8")
 

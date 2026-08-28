@@ -1,0 +1,1 @@
+{"dialogue_id": "d-012", "tenant_id": "abcd-shop", "vertical": "billing", "agent_id": "agent-a", "channel": "web", "turns": [{"role": "customer", "text": "my credit card was charged twice this month, can you help"}, {"role": "agent", "text": "I can look into the billing statement"}]}

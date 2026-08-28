@@ -6,8 +6,10 @@
 # DELIVERABLE-PACKAGE §4 overrides for the REFERENCE run only: it is committed
 # in full INCLUDING raw/ (the replay fuel). When the reference run lands,
 # add an exception for runs/<reference_run_id>/raw/ in this file.
+#
+# Patterns are relative to this file's directory (runs/).
 
-*/
+*/*
 !*/
 */manifest.json
 */metrics.json
@@ -20,9 +22,10 @@
 */report.md
 */per_dialogue.jsonl
 */controls.json
-*/data/
+*/replay_result.json
 */raw/
-*/replay_verify/
-*/fixtures_work/
+*/data/
 */packets/
-*/data/*
+*/fixtures_work/
+*/replay_verify/
+*/control_nc1/
