@@ -36,8 +36,10 @@ point an operator needs. `--force` exists for fixtures.
 | `RUN-PROTOCOL.md` | how a run is executed and recorded: data mapping, run dir, manifest + metrics schemas, replay mode |
 | `CHECKS.md` | per-step contract assertions with ids, HARD/SOFT, plus negative controls |
 | `LAB-BRIEF.md` | the hand-off: roles, deliverables D1–D7, round budget, reporting format, honesty rules |
+| `DELIVERABLE-PACKAGE.md` | what "packaged and reproducible" means: folder layout, quickstart, the committed reference run, model portability (D8) |
 | `data/` | committed input pack: 1000-dialogue pool + 200-dialogue frozen hold-out, with ground-truth `unlock_guideline` |
 | `fixtures/` | added when scripts land |
+| `RESULTS.md`, `MODEL-MATRIX.md`, `runs/` | added when the experiment runs: the headline numbers, the per-model table, the committed reference run |
 
 ## Order of work
 

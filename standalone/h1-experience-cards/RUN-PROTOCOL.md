@@ -251,7 +251,15 @@ run dir. No hand-typed numbers in that table.
   pack and must stay unmodified (`C-L1`).
 - Commit run artifacts that are small and decisive: `manifest.json`,
   `metrics.json`, `checks.json`, `audit.json`, `cost.json`, `report.md`,
-  `per_dialogue.jsonl`. Keep `raw/` and `cards.jsonl` local unless a reviewer
-  asks — state their sha256 in the manifest either way.
+  `per_dialogue.jsonl`. For **exploratory** runs, `raw/` and `cards.jsonl` may
+  stay local — state their sha256 in the manifest either way.
+  **Exception, and it is the important one:** the single **reference run**
+  (`DELIVERABLE-PACKAGE.md` §4) commits `raw/`, `cards.jsonl` and `packets/` in
+  full. Those recorded responses are what makes `--replay` work for someone who
+  just cloned the repo. Dropping them to save space breaks the package.
+- `call_llm` takes its model, base URL and key from `--model`,
+  `H1_BASE_URL`/`--base-url` and `H1_API_KEY`. No model name, endpoint or key
+  literal in `bin/`, not even as a default — a model swap is a flag, never an
+  edit (`DELIVERABLE-PACKAGE.md` §6).
 - A run that changed prompts, thresholds or mapping mid-flight is void. Start a
   new run id and disclose the change.
