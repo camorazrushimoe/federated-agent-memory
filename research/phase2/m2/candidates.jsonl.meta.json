@@ -1,0 +1,128 @@
+{
+ "artifact": "research/phase2/m2/candidates.jsonl",
+ "round": "R2 (M2 extraction) \u2014 candidates per GH #6 5449115746 \u00a74 item 2; sample frozen PR #21 (main @4d68187), D22 accepted as documented",
+ "created": "2026-08-28",
+ "inputs": {
+  "corpus": "data/abcd/abcd_v1.1.json",
+  "corpus_sha256_16": "005d425e890b30a1",
+  "n_universe": 10042,
+  "sample": "research/phase2/m2/sample.jsonl",
+  "sample_sha256_16": "f2195e7a6abe2221",
+  "ontology": "data/abcd/ontology.json",
+  "ontology_sha256_16": "2e1c1d763518ba08"
+ },
+ "canonical_vocab": {
+  "definition": "union of the category keys of ontology.json['actions']: kb_query \u222a interaction \u222a faq_policy",
+  "by_category": {
+   "kb_query": [
+    "ask-the-oracle",
+    "make-password",
+    "promo-code",
+    "subscription-status",
+    "validate-purchase",
+    "verify-identity"
+   ],
+   "interaction": [
+    "enter-details",
+    "make-purchase",
+    "notify-team",
+    "offer-refund",
+    "pull-up-account",
+    "record-reason",
+    "send-link",
+    "shipping-status",
+    "update-account",
+    "update-order"
+   ],
+   "faq_policy": [
+    "instructions",
+    "log-out-in",
+    "membership",
+    "search-boots",
+    "search-faq",
+    "search-jacket",
+    "search-jeans",
+    "search-membership",
+    "search-policy",
+    "search-pricing",
+    "search-shirt",
+    "search-timing",
+    "select-faq",
+    "try-again"
+   ]
+  },
+  "total": 30
+ },
+ "renders": {
+  "b0": "all `original` turns as 'speaker: text', space-joined",
+  "b1": "ordered targets[2] action names (D11), space-joined",
+  "b2": "JSON of the unit, schema key order, receipt included, default separators (', ', ': ') \u2014 see the RENDERING NOTE flagged for lead confirmation",
+  "token_counter": "whitespace-split of the rendered candidate (frozen)"
+ },
+ "b2_skeleton": {
+  "schema": [
+   "problem_shape",
+   "constraint",
+   "unlock",
+   "what_worked",
+   "receipt"
+  ],
+  "receipt_schema": [
+   "corpus",
+   "convo_id",
+   "flow",
+   "subflow",
+   "event_span",
+   "scope",
+   "confidence"
+  ],
+  "judgment_fields_null_until_lead_draft": [
+   "problem_shape",
+   "constraint",
+   "unlock",
+   "receipt.event_span",
+   "receipt.scope",
+   "receipt.confidence"
+  ],
+  "mechanical_prefill": [
+   "what_worked (ordered targets[2] sequence, D11 \u2014 pre-registration: 'the resolution action sequence from targets[2]'; the lead's 80-unit draft is authoritative at join time)",
+   "receipt.corpus / receipt.convo_id / receipt.flow / receipt.subflow"
+  ],
+  "note": "n_tokens_b2 (the `b2` field's token count) is PROVISIONAL \u2014 the final B2 token count is computed on the lead's unit at join time (5449115746 \u00a74 item 4); `b2_unit` carries the skeleton structure, `b2` its render",
+  "what_failed": "OUT of the R2 unit (pending \u00a74/R3; collapse rule pre-registered)"
+ },
+ "token_stats": {
+  "b0": {
+   "median": 187.0,
+   "p95_nearest_rank": 277,
+   "min": 65,
+   "max": 417,
+   "total": 15340
+  },
+  "b1": {
+   "median": 3.0,
+   "p95_nearest_rank": 6,
+   "min": 1,
+   "max": 8,
+   "total": 286
+  },
+  "b2_skeleton_provisional": {
+   "median": 25.0,
+   "p95_nearest_rank": 28,
+   "min": 23,
+   "max": 30,
+   "total": 2046
+  }
+ },
+ "unmapped": {
+  "definition": "targets[2] value outside the canonical 30-name vocab (FLAGGED, never dropped \u2014 stays in the b1 trace and per-row `unmapped` list)",
+  "n_sample": 0,
+  "n_sample_action_turns": 286,
+  "names": {},
+  "corpus_wide_check": "measured at sample-construction time (NOTES.md \u00a75): all 36,482 corpus action turns use exactly the 30 ontology names \u2014 0 unmapped",
+  "precision_note": "the R1-era '10 unmapped' gap was vs guidelines.json Title-Case button names, NOT vs the canonical vocab; vs the canonical vocab the measured value is 0/30 unmapped. 0 is the number; the guard is the guard."
+ },
+ "honesty_clause": "agent-judged from the first judge call; inter-pass disagreement is a self-consistency floor, NOT human inter-rater agreement (rides with every M2 number)",
+ "determinism": "byte-identical on re-run: pinned input shas verified, convo_id-sorted rows, fixed key order, fixed date string",
+ "candidates_sha256_16": "dd1869a2d72c6b2b"
+}

@@ -1,0 +1,1047 @@
+{
+ "candidate_codename -> {convo_id, candidate}": {
+  "02a99d|0cb0cb": {
+   "candidate": "b0",
+   "convo_id": 3539
+  },
+  "02a99d|155b32": {
+   "candidate": "b2",
+   "convo_id": 3539
+  },
+  "02a99d|70e57f": {
+   "candidate": "b1",
+   "convo_id": 3539
+  },
+  "02d7e0|0353dc": {
+   "candidate": "b1",
+   "convo_id": 9451
+  },
+  "02d7e0|908790": {
+   "candidate": "b2",
+   "convo_id": 9451
+  },
+  "02d7e0|de3a00": {
+   "candidate": "b0",
+   "convo_id": 9451
+  },
+  "035c55|0a48a1": {
+   "candidate": "b2",
+   "convo_id": 3092
+  },
+  "035c55|3d4879": {
+   "candidate": "b0",
+   "convo_id": 3092
+  },
+  "035c55|b53b7b": {
+   "candidate": "b1",
+   "convo_id": 3092
+  },
+  "03d006|03e7b1": {
+   "candidate": "b2",
+   "convo_id": 5989
+  },
+  "03d006|223969": {
+   "candidate": "b1",
+   "convo_id": 5989
+  },
+  "03d006|e5db65": {
+   "candidate": "b0",
+   "convo_id": 5989
+  },
+  "04c7e1|081885": {
+   "candidate": "b1",
+   "convo_id": 7861
+  },
+  "04c7e1|3b750a": {
+   "candidate": "b0",
+   "convo_id": 7861
+  },
+  "04c7e1|5ee893": {
+   "candidate": "b2",
+   "convo_id": 7861
+  },
+  "0b1e8f|1925f3": {
+   "candidate": "b2",
+   "convo_id": 1224
+  },
+  "0b1e8f|369f10": {
+   "candidate": "b0",
+   "convo_id": 1224
+  },
+  "0b1e8f|e60fa4": {
+   "candidate": "b1",
+   "convo_id": 1224
+  },
+  "133f32|002aec": {
+   "candidate": "b0",
+   "convo_id": 8890
+  },
+  "133f32|5c9478": {
+   "candidate": "b2",
+   "convo_id": 8890
+  },
+  "133f32|b3f8e7": {
+   "candidate": "b1",
+   "convo_id": 8890
+  },
+  "136266|113f49": {
+   "candidate": "b1",
+   "convo_id": 9847
+  },
+  "136266|d087e3": {
+   "candidate": "b2",
+   "convo_id": 9847
+  },
+  "136266|fb7f58": {
+   "candidate": "b0",
+   "convo_id": 9847
+  },
+  "1387de|23cad3": {
+   "candidate": "b0",
+   "convo_id": 921
+  },
+  "1387de|8bbba3": {
+   "candidate": "b1",
+   "convo_id": 921
+  },
+  "1387de|c48306": {
+   "candidate": "b2",
+   "convo_id": 921
+  },
+  "148aea|2364a1": {
+   "candidate": "b1",
+   "convo_id": 9816
+  },
+  "148aea|244d91": {
+   "candidate": "b2",
+   "convo_id": 9816
+  },
+  "148aea|b27444": {
+   "candidate": "b0",
+   "convo_id": 9816
+  },
+  "149c84|21f59a": {
+   "candidate": "b0",
+   "convo_id": 4158
+  },
+  "149c84|9d82b4": {
+   "candidate": "b1",
+   "convo_id": 4158
+  },
+  "149c84|afb746": {
+   "candidate": "b2",
+   "convo_id": 4158
+  },
+  "15f26c|5e6015": {
+   "candidate": "b1",
+   "convo_id": 7534
+  },
+  "15f26c|6a7180": {
+   "candidate": "b0",
+   "convo_id": 7534
+  },
+  "15f26c|895e8e": {
+   "candidate": "b2",
+   "convo_id": 7534
+  },
+  "237199|05ec4a": {
+   "candidate": "b0",
+   "convo_id": 2969
+  },
+  "237199|394e38": {
+   "candidate": "b1",
+   "convo_id": 2969
+  },
+  "237199|7d0f57": {
+   "candidate": "b2",
+   "convo_id": 2969
+  },
+  "2ce0d9|8836dd": {
+   "candidate": "b1",
+   "convo_id": 6028
+  },
+  "2ce0d9|a117f8": {
+   "candidate": "b2",
+   "convo_id": 6028
+  },
+  "2ce0d9|e81c45": {
+   "candidate": "b0",
+   "convo_id": 6028
+  },
+  "2e01f3|157079": {
+   "candidate": "b1",
+   "convo_id": 9953
+  },
+  "2e01f3|2597af": {
+   "candidate": "b0",
+   "convo_id": 9953
+  },
+  "2e01f3|fffe05": {
+   "candidate": "b2",
+   "convo_id": 9953
+  },
+  "32282a|1d4680": {
+   "candidate": "b1",
+   "convo_id": 8300
+  },
+  "32282a|2e37da": {
+   "candidate": "b0",
+   "convo_id": 8300
+  },
+  "32282a|e64f2f": {
+   "candidate": "b2",
+   "convo_id": 8300
+  },
+  "32f03c|2015b4": {
+   "candidate": "b0",
+   "convo_id": 9468
+  },
+  "32f03c|3aba5e": {
+   "candidate": "b2",
+   "convo_id": 9468
+  },
+  "32f03c|b1222e": {
+   "candidate": "b1",
+   "convo_id": 9468
+  },
+  "3a8902|78f32e": {
+   "candidate": "b0",
+   "convo_id": 9142
+  },
+  "3a8902|b729a0": {
+   "candidate": "b1",
+   "convo_id": 9142
+  },
+  "3a8902|c20826": {
+   "candidate": "b2",
+   "convo_id": 9142
+  },
+  "3bba40|0009e5": {
+   "candidate": "b1",
+   "convo_id": 116
+  },
+  "3bba40|be79a5": {
+   "candidate": "b0",
+   "convo_id": 116
+  },
+  "3bba40|d76850": {
+   "candidate": "b2",
+   "convo_id": 116
+  },
+  "3c203d|4f4902": {
+   "candidate": "b0",
+   "convo_id": 605
+  },
+  "3c203d|650a5c": {
+   "candidate": "b2",
+   "convo_id": 605
+  },
+  "3c203d|ba815d": {
+   "candidate": "b1",
+   "convo_id": 605
+  },
+  "452e33|4bd84b": {
+   "candidate": "b2",
+   "convo_id": 6517
+  },
+  "452e33|7038d5": {
+   "candidate": "b1",
+   "convo_id": 6517
+  },
+  "452e33|f828fb": {
+   "candidate": "b0",
+   "convo_id": 6517
+  },
+  "4a60df|52c1d5": {
+   "candidate": "b2",
+   "convo_id": 7961
+  },
+  "4a60df|8a57a9": {
+   "candidate": "b1",
+   "convo_id": 7961
+  },
+  "4a60df|c4909b": {
+   "candidate": "b0",
+   "convo_id": 7961
+  },
+  "4bb014|2a7856": {
+   "candidate": "b1",
+   "convo_id": 5640
+  },
+  "4bb014|6c3efb": {
+   "candidate": "b0",
+   "convo_id": 5640
+  },
+  "4bb014|844ef2": {
+   "candidate": "b2",
+   "convo_id": 5640
+  },
+  "4d3003|274f8b": {
+   "candidate": "b0",
+   "convo_id": 4416
+  },
+  "4d3003|32e411": {
+   "candidate": "b2",
+   "convo_id": 4416
+  },
+  "4d3003|ac3476": {
+   "candidate": "b1",
+   "convo_id": 4416
+  },
+  "4e795d|40ebe0": {
+   "candidate": "b1",
+   "convo_id": 7523
+  },
+  "4e795d|7458f6": {
+   "candidate": "b0",
+   "convo_id": 7523
+  },
+  "4e795d|855171": {
+   "candidate": "b2",
+   "convo_id": 7523
+  },
+  "4ef5cf|5fe7b4": {
+   "candidate": "b2",
+   "convo_id": 6026
+  },
+  "4ef5cf|a0a6af": {
+   "candidate": "b0",
+   "convo_id": 6026
+  },
+  "4ef5cf|b3c876": {
+   "candidate": "b1",
+   "convo_id": 6026
+  },
+  "51392e|429886": {
+   "candidate": "b0",
+   "convo_id": 2639
+  },
+  "51392e|4c9fdb": {
+   "candidate": "b1",
+   "convo_id": 2639
+  },
+  "51392e|b7e688": {
+   "candidate": "b2",
+   "convo_id": 2639
+  },
+  "529f98|1ca2f1": {
+   "candidate": "b2",
+   "convo_id": 7053
+  },
+  "529f98|4dac6f": {
+   "candidate": "b1",
+   "convo_id": 7053
+  },
+  "529f98|8b47a8": {
+   "candidate": "b0",
+   "convo_id": 7053
+  },
+  "530a78|0ff6fe": {
+   "candidate": "b0",
+   "convo_id": 3411
+  },
+  "530a78|74225f": {
+   "candidate": "b2",
+   "convo_id": 3411
+  },
+  "530a78|fbd32d": {
+   "candidate": "b1",
+   "convo_id": 3411
+  },
+  "53b139|ad3ff9": {
+   "candidate": "b2",
+   "convo_id": 7666
+  },
+  "53b139|aff28c": {
+   "candidate": "b0",
+   "convo_id": 7666
+  },
+  "53b139|d599b3": {
+   "candidate": "b1",
+   "convo_id": 7666
+  },
+  "57956d|25dd66": {
+   "candidate": "b1",
+   "convo_id": 5716
+  },
+  "57956d|2f9248": {
+   "candidate": "b0",
+   "convo_id": 5716
+  },
+  "57956d|7e7760": {
+   "candidate": "b2",
+   "convo_id": 5716
+  },
+  "5c9fcb|18da2e": {
+   "candidate": "b2",
+   "convo_id": 10059
+  },
+  "5c9fcb|2739b6": {
+   "candidate": "b1",
+   "convo_id": 10059
+  },
+  "5c9fcb|c318ac": {
+   "candidate": "b0",
+   "convo_id": 10059
+  },
+  "659426|2e2a9a": {
+   "candidate": "b0",
+   "convo_id": 4894
+  },
+  "659426|721a30": {
+   "candidate": "b2",
+   "convo_id": 4894
+  },
+  "659426|852434": {
+   "candidate": "b1",
+   "convo_id": 4894
+  },
+  "6916a2|257296": {
+   "candidate": "b2",
+   "convo_id": 6902
+  },
+  "6916a2|716d61": {
+   "candidate": "b0",
+   "convo_id": 6902
+  },
+  "6916a2|a2575f": {
+   "candidate": "b1",
+   "convo_id": 6902
+  },
+  "692c91|2667cd": {
+   "candidate": "b2",
+   "convo_id": 5157
+  },
+  "692c91|843aa0": {
+   "candidate": "b0",
+   "convo_id": 5157
+  },
+  "692c91|df1933": {
+   "candidate": "b1",
+   "convo_id": 5157
+  },
+  "6bddf9|4beb95": {
+   "candidate": "b2",
+   "convo_id": 5424
+  },
+  "6bddf9|71e91f": {
+   "candidate": "b1",
+   "convo_id": 5424
+  },
+  "6bddf9|83c904": {
+   "candidate": "b0",
+   "convo_id": 5424
+  },
+  "6e5399|4a8efb": {
+   "candidate": "b1",
+   "convo_id": 8538
+  },
+  "6e5399|5b7afd": {
+   "candidate": "b0",
+   "convo_id": 8538
+  },
+  "6e5399|a86de3": {
+   "candidate": "b2",
+   "convo_id": 8538
+  },
+  "6f11c6|132acf": {
+   "candidate": "b1",
+   "convo_id": 4332
+  },
+  "6f11c6|a1404b": {
+   "candidate": "b0",
+   "convo_id": 4332
+  },
+  "6f11c6|d54fd4": {
+   "candidate": "b2",
+   "convo_id": 4332
+  },
+  "72b5a6|832a52": {
+   "candidate": "b2",
+   "convo_id": 9321
+  },
+  "72b5a6|b06fd1": {
+   "candidate": "b1",
+   "convo_id": 9321
+  },
+  "72b5a6|b50e4d": {
+   "candidate": "b0",
+   "convo_id": 9321
+  },
+  "7e25af|02e587": {
+   "candidate": "b2",
+   "convo_id": 2856
+  },
+  "7e25af|a9b798": {
+   "candidate": "b0",
+   "convo_id": 2856
+  },
+  "7e25af|cb3393": {
+   "candidate": "b1",
+   "convo_id": 2856
+  },
+  "7f5c7b|2f50ba": {
+   "candidate": "b0",
+   "convo_id": 274
+  },
+  "7f5c7b|b49e4f": {
+   "candidate": "b1",
+   "convo_id": 274
+  },
+  "7f5c7b|cac233": {
+   "candidate": "b2",
+   "convo_id": 274
+  },
+  "7ff0eb|3e010c": {
+   "candidate": "b2",
+   "convo_id": 3167
+  },
+  "7ff0eb|bb495a": {
+   "candidate": "b0",
+   "convo_id": 3167
+  },
+  "7ff0eb|ef84c6": {
+   "candidate": "b1",
+   "convo_id": 3167
+  },
+  "8158fe|97183e": {
+   "candidate": "b0",
+   "convo_id": 778
+  },
+  "8158fe|981997": {
+   "candidate": "b2",
+   "convo_id": 778
+  },
+  "8158fe|e802a3": {
+   "candidate": "b1",
+   "convo_id": 778
+  },
+  "868331|29b9d8": {
+   "candidate": "b0",
+   "convo_id": 7061
+  },
+  "868331|5b2c6d": {
+   "candidate": "b1",
+   "convo_id": 7061
+  },
+  "868331|ad8619": {
+   "candidate": "b2",
+   "convo_id": 7061
+  },
+  "8774a5|787511": {
+   "candidate": "b0",
+   "convo_id": 2782
+  },
+  "8774a5|9bf115": {
+   "candidate": "b1",
+   "convo_id": 2782
+  },
+  "8774a5|c0af69": {
+   "candidate": "b2",
+   "convo_id": 2782
+  },
+  "8ca6be|4ca8ca": {
+   "candidate": "b2",
+   "convo_id": 8725
+  },
+  "8ca6be|7b186c": {
+   "candidate": "b0",
+   "convo_id": 8725
+  },
+  "8ca6be|c24e5c": {
+   "candidate": "b1",
+   "convo_id": 8725
+  },
+  "8cbd8c|4d154d": {
+   "candidate": "b2",
+   "convo_id": 3161
+  },
+  "8cbd8c|c15264": {
+   "candidate": "b0",
+   "convo_id": 3161
+  },
+  "8cbd8c|fee483": {
+   "candidate": "b1",
+   "convo_id": 3161
+  },
+  "8ef121|39f970": {
+   "candidate": "b2",
+   "convo_id": 9472
+  },
+  "8ef121|548d58": {
+   "candidate": "b0",
+   "convo_id": 9472
+  },
+  "8ef121|c8a68a": {
+   "candidate": "b1",
+   "convo_id": 9472
+  },
+  "909782|396f99": {
+   "candidate": "b2",
+   "convo_id": 7933
+  },
+  "909782|3a3038": {
+   "candidate": "b1",
+   "convo_id": 7933
+  },
+  "909782|69ec00": {
+   "candidate": "b0",
+   "convo_id": 7933
+  },
+  "917935|a0736b": {
+   "candidate": "b2",
+   "convo_id": 3658
+  },
+  "917935|a1f8a8": {
+   "candidate": "b0",
+   "convo_id": 3658
+  },
+  "917935|c4fd79": {
+   "candidate": "b1",
+   "convo_id": 3658
+  },
+  "9efdff|2e55db": {
+   "candidate": "b0",
+   "convo_id": 5111
+  },
+  "9efdff|94510a": {
+   "candidate": "b2",
+   "convo_id": 5111
+  },
+  "9efdff|ec1334": {
+   "candidate": "b1",
+   "convo_id": 5111
+  },
+  "a10988|67142f": {
+   "candidate": "b2",
+   "convo_id": 2212
+  },
+  "a10988|6ea33d": {
+   "candidate": "b1",
+   "convo_id": 2212
+  },
+  "a10988|8e3e8d": {
+   "candidate": "b0",
+   "convo_id": 2212
+  },
+  "a1d324|00690c": {
+   "candidate": "b2",
+   "convo_id": 8974
+  },
+  "a1d324|3e1d30": {
+   "candidate": "b1",
+   "convo_id": 8974
+  },
+  "a1d324|7477de": {
+   "candidate": "b0",
+   "convo_id": 8974
+  },
+  "a2cd8d|316db3": {
+   "candidate": "b1",
+   "convo_id": 9707
+  },
+  "a2cd8d|8b1f84": {
+   "candidate": "b0",
+   "convo_id": 9707
+  },
+  "a2cd8d|c1a636": {
+   "candidate": "b2",
+   "convo_id": 9707
+  },
+  "a2dc0a|52af46": {
+   "candidate": "b1",
+   "convo_id": 429
+  },
+  "a2dc0a|78b6ac": {
+   "candidate": "b2",
+   "convo_id": 429
+  },
+  "a2dc0a|9d8639": {
+   "candidate": "b0",
+   "convo_id": 429
+  },
+  "a66592|7c1bbc": {
+   "candidate": "b2",
+   "convo_id": 4697
+  },
+  "a66592|8f6e68": {
+   "candidate": "b1",
+   "convo_id": 4697
+  },
+  "a66592|90bad2": {
+   "candidate": "b0",
+   "convo_id": 4697
+  },
+  "a74af3|53b0fb": {
+   "candidate": "b2",
+   "convo_id": 6121
+  },
+  "a74af3|71c820": {
+   "candidate": "b0",
+   "convo_id": 6121
+  },
+  "a74af3|9e1461": {
+   "candidate": "b1",
+   "convo_id": 6121
+  },
+  "a82b85|157bbd": {
+   "candidate": "b1",
+   "convo_id": 5365
+  },
+  "a82b85|a8e6fd": {
+   "candidate": "b2",
+   "convo_id": 5365
+  },
+  "a82b85|f35f1e": {
+   "candidate": "b0",
+   "convo_id": 5365
+  },
+  "a8bcdc|155570": {
+   "candidate": "b0",
+   "convo_id": 5059
+  },
+  "a8bcdc|93cb5d": {
+   "candidate": "b2",
+   "convo_id": 5059
+  },
+  "a8bcdc|b9a0a9": {
+   "candidate": "b1",
+   "convo_id": 5059
+  },
+  "ac70be|307862": {
+   "candidate": "b1",
+   "convo_id": 5544
+  },
+  "ac70be|38d9b4": {
+   "candidate": "b2",
+   "convo_id": 5544
+  },
+  "ac70be|4198ab": {
+   "candidate": "b0",
+   "convo_id": 5544
+  },
+  "ae7531|716797": {
+   "candidate": "b2",
+   "convo_id": 3650
+  },
+  "ae7531|ca4450": {
+   "candidate": "b1",
+   "convo_id": 3650
+  },
+  "ae7531|d1b9fa": {
+   "candidate": "b0",
+   "convo_id": 3650
+  },
+  "b34ee0|2e4c1f": {
+   "candidate": "b0",
+   "convo_id": 2410
+  },
+  "b34ee0|a0ac7e": {
+   "candidate": "b2",
+   "convo_id": 2410
+  },
+  "b34ee0|e1f452": {
+   "candidate": "b1",
+   "convo_id": 2410
+  },
+  "b3ec6c|4c2640": {
+   "candidate": "b2",
+   "convo_id": 4265
+  },
+  "b3ec6c|78e02a": {
+   "candidate": "b0",
+   "convo_id": 4265
+  },
+  "b3ec6c|c40b89": {
+   "candidate": "b1",
+   "convo_id": 4265
+  },
+  "bee391|1ed1c4": {
+   "candidate": "b2",
+   "convo_id": 8806
+  },
+  "bee391|2f84c5": {
+   "candidate": "b1",
+   "convo_id": 8806
+  },
+  "bee391|4fd373": {
+   "candidate": "b0",
+   "convo_id": 8806
+  },
+  "c40b74|311826": {
+   "candidate": "b1",
+   "convo_id": 6629
+  },
+  "c40b74|4eb914": {
+   "candidate": "b2",
+   "convo_id": 6629
+  },
+  "c40b74|f41640": {
+   "candidate": "b0",
+   "convo_id": 6629
+  },
+  "c6d5c8|306564": {
+   "candidate": "b0",
+   "convo_id": 7079
+  },
+  "c6d5c8|8e9ad1": {
+   "candidate": "b2",
+   "convo_id": 7079
+  },
+  "c6d5c8|f0caf5": {
+   "candidate": "b1",
+   "convo_id": 7079
+  },
+  "c916fc|844bf7": {
+   "candidate": "b2",
+   "convo_id": 755
+  },
+  "c916fc|97c456": {
+   "candidate": "b0",
+   "convo_id": 755
+  },
+  "c916fc|dc4bda": {
+   "candidate": "b1",
+   "convo_id": 755
+  },
+  "d1f86f|85ec86": {
+   "candidate": "b1",
+   "convo_id": 345
+  },
+  "d1f86f|bdb63b": {
+   "candidate": "b2",
+   "convo_id": 345
+  },
+  "d1f86f|fa24c0": {
+   "candidate": "b0",
+   "convo_id": 345
+  },
+  "d31956|1382e2": {
+   "candidate": "b1",
+   "convo_id": 2695
+  },
+  "d31956|3c9e3a": {
+   "candidate": "b0",
+   "convo_id": 2695
+  },
+  "d31956|8f1d99": {
+   "candidate": "b2",
+   "convo_id": 2695
+  },
+  "d7a1ba|44e75b": {
+   "candidate": "b2",
+   "convo_id": 5386
+  },
+  "d7a1ba|65f2a2": {
+   "candidate": "b1",
+   "convo_id": 5386
+  },
+  "d7a1ba|947bfc": {
+   "candidate": "b0",
+   "convo_id": 5386
+  },
+  "da72fa|5b39b7": {
+   "candidate": "b1",
+   "convo_id": 455
+  },
+  "da72fa|62bef8": {
+   "candidate": "b2",
+   "convo_id": 455
+  },
+  "da72fa|91c3ce": {
+   "candidate": "b0",
+   "convo_id": 455
+  },
+  "e4b696|4c319f": {
+   "candidate": "b0",
+   "convo_id": 1328
+  },
+  "e4b696|5a9122": {
+   "candidate": "b2",
+   "convo_id": 1328
+  },
+  "e4b696|c24948": {
+   "candidate": "b1",
+   "convo_id": 1328
+  },
+  "e6f354|57e191": {
+   "candidate": "b1",
+   "convo_id": 678
+  },
+  "e6f354|d812ff": {
+   "candidate": "b2",
+   "convo_id": 678
+  },
+  "e6f354|eced18": {
+   "candidate": "b0",
+   "convo_id": 678
+  },
+  "eb0a1f|129d4d": {
+   "candidate": "b0",
+   "convo_id": 581
+  },
+  "eb0a1f|34918f": {
+   "candidate": "b2",
+   "convo_id": 581
+  },
+  "eb0a1f|a11574": {
+   "candidate": "b1",
+   "convo_id": 581
+  },
+  "ec5004|04236e": {
+   "candidate": "b0",
+   "convo_id": 374
+  },
+  "ec5004|96662d": {
+   "candidate": "b1",
+   "convo_id": 374
+  },
+  "ec5004|d01899": {
+   "candidate": "b2",
+   "convo_id": 374
+  },
+  "ecd679|01e808": {
+   "candidate": "b2",
+   "convo_id": 7608
+  },
+  "ecd679|32e736": {
+   "candidate": "b0",
+   "convo_id": 7608
+  },
+  "ecd679|c322c8": {
+   "candidate": "b1",
+   "convo_id": 7608
+  },
+  "ed3d17|83d114": {
+   "candidate": "b1",
+   "convo_id": 5687
+  },
+  "ed3d17|aa12ab": {
+   "candidate": "b0",
+   "convo_id": 5687
+  },
+  "ed3d17|bd0881": {
+   "candidate": "b2",
+   "convo_id": 5687
+  },
+  "f30241|137c51": {
+   "candidate": "b1",
+   "convo_id": 9968
+  },
+  "f30241|67d018": {
+   "candidate": "b2",
+   "convo_id": 9968
+  },
+  "f30241|71c20d": {
+   "candidate": "b0",
+   "convo_id": 9968
+  },
+  "f864a7|0750ed": {
+   "candidate": "b0",
+   "convo_id": 2154
+  },
+  "f864a7|3f5533": {
+   "candidate": "b2",
+   "convo_id": 2154
+  },
+  "f864a7|c6292f": {
+   "candidate": "b1",
+   "convo_id": 2154
+  },
+  "f9469d|2123b4": {
+   "candidate": "b0",
+   "convo_id": 8363
+  },
+  "f9469d|5725b9": {
+   "candidate": "b2",
+   "convo_id": 8363
+  },
+  "f9469d|f9917e": {
+   "candidate": "b1",
+   "convo_id": 8363
+  }
+ },
+ "convo_codename -> convo_id": {
+  "02a99d": 3539,
+  "02d7e0": 9451,
+  "035c55": 3092,
+  "03d006": 5989,
+  "04c7e1": 7861,
+  "0b1e8f": 1224,
+  "133f32": 8890,
+  "136266": 9847,
+  "1387de": 921,
+  "148aea": 9816,
+  "149c84": 4158,
+  "15f26c": 7534,
+  "237199": 2969,
+  "2ce0d9": 6028,
+  "2e01f3": 9953,
+  "32282a": 8300,
+  "32f03c": 9468,
+  "3a8902": 9142,
+  "3bba40": 116,
+  "3c203d": 605,
+  "452e33": 6517,
+  "4a60df": 7961,
+  "4bb014": 5640,
+  "4d3003": 4416,
+  "4e795d": 7523,
+  "4ef5cf": 6026,
+  "51392e": 2639,
+  "529f98": 7053,
+  "530a78": 3411,
+  "53b139": 7666,
+  "57956d": 5716,
+  "5c9fcb": 10059,
+  "659426": 4894,
+  "6916a2": 6902,
+  "692c91": 5157,
+  "6bddf9": 5424,
+  "6e5399": 8538,
+  "6f11c6": 4332,
+  "72b5a6": 9321,
+  "7e25af": 2856,
+  "7f5c7b": 274,
+  "7ff0eb": 3167,
+  "8158fe": 778,
+  "868331": 7061,
+  "8774a5": 2782,
+  "8ca6be": 8725,
+  "8cbd8c": 3161,
+  "8ef121": 9472,
+  "909782": 7933,
+  "917935": 3658,
+  "9efdff": 5111,
+  "a10988": 2212,
+  "a1d324": 8974,
+  "a2cd8d": 9707,
+  "a2dc0a": 429,
+  "a66592": 4697,
+  "a74af3": 6121,
+  "a82b85": 5365,
+  "a8bcdc": 5059,
+  "ac70be": 5544,
+  "ae7531": 3650,
+  "b34ee0": 2410,
+  "b3ec6c": 4265,
+  "bee391": 8806,
+  "c40b74": 6629,
+  "c6d5c8": 7079,
+  "c916fc": 755,
+  "d1f86f": 345,
+  "d31956": 2695,
+  "d7a1ba": 5386,
+  "da72fa": 455,
+  "e4b696": 1328,
+  "e6f354": 678,
+  "eb0a1f": 581,
+  "ec5004": 374,
+  "ecd679": 7608,
+  "ed3d17": 5687,
+  "f30241": 9968,
+  "f864a7": 2154,
+  "f9469d": 8363
+ },
+ "use": "de-anonymization at JOIN time only \u2014 NEVER part of the scoring context"
+}
