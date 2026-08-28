@@ -22,12 +22,22 @@ candidates.jsonl against:
      order); every name in the canonical vocab; `unmapped` == [] on every
      row (the flag aggregate must be 0 on this corpus); committed
      n_tokens_b1 == whitespace-split of b1 == sample row's n_action_turns
-  F. B2 skeleton: b2_unit has the frozen schema key order; judgment
-     fields (problem_shape/constraint/unlock + receipt.event_span/scope/
-     confidence) null; mechanical prefill correct (what_worked == B1
-     sequence; receipt.corpus/convo_id/flow/subflow from the corpus);
-     committed b2 == json.dumps(b2_unit) (default separators); committed
-     n_tokens_b2 == whitespace-split of b2
+  F. B2: b2_unit has the frozen schema key order; mechanical prefill
+     correct (what_worked == B1 sequence; receipt.corpus/convo_id/flow/
+     subflow from the corpus); committed b2 == json.dumps(b2_unit)
+     (default separators); committed n_tokens_b2 == whitespace-split of b2.
+     The judgment fields are checked MODE-AWARE (the validator detects the
+     committed artifact's mode):
+       SKELETON (PR #22; --draft omitted): F2 — problem_shape/constraint/
+         unlock + receipt.event_span/scope/confidence all null (draft
+         pending).
+       FILLED (R2 fix-forward, 5450060638 §1 item 1; --draft given):
+         F2' — judgment fields NON-NULL where drafted (problem_shape/
+         constraint + receipt.event_span/scope/confidence non-null on
+         every row; `unlock` null ALLOWED — 53/80 on this draft), AND F6 —
+         the committed b2_unit equals the pinned b2_draft.jsonl's (sha
+         5063a85c4ab79465) unit for that convo (the join slots, never
+         mutates, the lead's unit).
   G. token stats: B0 median/p95/min/max match the sample meta exactly
      (187.0 / 277 / 65 / 417)
 
@@ -39,7 +49,10 @@ Usage:
       --corpus data/abcd/abcd_v1.1.json \
       --sample research/phase2/m2/sample.jsonl \
       --ontology data/abcd/ontology.json \
-      --candidates research/phase2/m2/candidates.jsonl
+      --candidates research/phase2/m2/candidates.jsonl \
+      [--draft research/phase2/m2/b2_draft.jsonl]
+      (--draft enables the FILLED-unit F-checks; omit to validate the
+      SKELETON artifact)
 """
 import argparse
 import hashlib
@@ -51,6 +64,7 @@ from collections import Counter
 CORPUS_SHA = "005d425e890b30a1"
 SAMPLE_SHA = "f2195e7a6abe2221"
 ONTOLOGY_SHA = "2e1c1d763518ba08"
+DRAFT_SHA = "5063a85c4ab79465"   # b2_draft.jsonl (the lead's 80-unit draft)
 CATEGORIES = ["kb_query", "interaction", "faq_policy"]
 N_SAMPLE = 80
 FROZEN_FIELDS = ["convo_id", "flow", "subflow", "n_action_turns",
@@ -75,6 +89,11 @@ def main():
     ap.add_argument("--sample", default="research/phase2/m2/sample.jsonl")
     ap.add_argument("--ontology", default="data/abcd/ontology.json")
     ap.add_argument("--candidates", default="research/phase2/m2/candidates.jsonl")
+    ap.add_argument("--draft", default=None,
+                    help="b2_draft.jsonl (sha 5063a85c4ab79465): enable the "
+                         "FILLED-unit F-checks (F2' non-null-where-drafted + "
+                         "F6 unit == draft unit). Omit to validate the SKELETON "
+                         "(PR #22) artifact.")
     args = ap.parse_args()
 
     failures = []
@@ -103,7 +122,21 @@ def main():
     check("A4 canonical vocab size 30 (re-derived)", len(vocab) == 30,
           f"got {len(vocab)}")
 
+    # --draft pin (FILLED mode): the lead's 80-unit draft
+    draft_units = None
+    if args.draft:
+        dsha = sha16(args.draft)
+        check("A5 draft pinned sha", dsha == DRAFT_SHA, f"got {dsha}")
+        draft_units = {json.loads(l)["convo_id"]: json.loads(l)["b2_unit"]
+                       for l in open(args.draft) if l.strip()}
+        check("A6 draft has 80 units", len(draft_units) == N_SAMPLE,
+              f"got {len(draft_units)}")
+
     rows = [json.loads(l) for l in open(args.candidates) if l.strip()]
+    # MODE-AWARE (5450060638 §1 item 1): the validator detects the committed
+    # artifact's mode. FILLED iff --draft is given (the pinned draft is the
+    # authority on the B2 unit); otherwise SKELETON.
+    FILLED = args.draft is not None
 
     # B. schema
     bad = [(i, list(r.keys())) for i, r in enumerate(rows)
@@ -168,18 +201,39 @@ def main():
     check("E4 n_tokens_b1 == frozen counter of b1", not bad_t1, f"{bad_t1[:5]}")
     check("E5 n_tokens_b1 == sample n_action_turns", not bad_a1, f"{bad_a1[:5]}")
 
-    # F. B2 skeleton
+    # F. B2 (mode-aware): F1/F3/F4/F5 are mode-independent; F2 checks the
+    # judgment fields per the committed mode (SKELETON = null, FILLED =
+    # non-null where drafted with `unlock` null allowed); F6 (FILLED only)
+    # checks the committed unit == the pinned draft's unit (slot, don't
+    # mutate).
     bad_schema, bad_null, bad_prefill, bad_render, bad_t2 = [], [], [], [], []
+    bad_nonnull, bad_eq = [], []
+    n_unlock_null = 0
     for r in rows:
         c = by_id[r["convo_id"]]
         u = r["b2_unit"]
         if list(u.keys()) != B2_SCHEMA or list(u["receipt"].keys()) != RECEIPT_SCHEMA:
             bad_schema.append(r["convo_id"])
             continue
-        if any(u[k] is not None for k in ("problem_shape", "constraint", "unlock")) \
-           or any(u["receipt"][k] is not None
-                  for k in ("event_span", "scope", "confidence")):
-            bad_null.append(r["convo_id"])
+        if FILLED:
+            # F2' — non-null where drafted: problem_shape/constraint +
+            # receipt.event_span/scope/confidence non-null on every row;
+            # `unlock` null ALLOWED (53/80 on this draft)
+            if any(u[k] is None for k in ("problem_shape", "constraint")) \
+               or any(u["receipt"][k] is None
+                      for k in ("event_span", "scope", "confidence")):
+                bad_nonnull.append(r["convo_id"])
+            if u["unlock"] is None:
+                n_unlock_null += 1
+            # F6 — committed unit == the pinned draft's unit for this convo
+            if u != draft_units.get(r["convo_id"]):
+                bad_eq.append(r["convo_id"])
+        else:
+            # F2 — SKELETON: all six judgment fields null (draft pending)
+            if any(u[k] is not None for k in ("problem_shape", "constraint", "unlock")) \
+               or any(u["receipt"][k] is not None
+                      for k in ("event_span", "scope", "confidence")):
+                bad_null.append(r["convo_id"])
         if u["what_worked"] != r["b1"].split() \
            or u["receipt"]["corpus"] != "abcd_v1.1" \
            or u["receipt"]["convo_id"] != r["convo_id"] \
@@ -191,8 +245,15 @@ def main():
         if len(r["b2"].split()) != r["n_tokens_b2"]:
             bad_t2.append(r["convo_id"])
     check("F1 b2_unit frozen schema key order", not bad_schema, f"{bad_schema[:5]}")
-    check("F2 judgment fields null (lead draft pending)", not bad_null,
-          f"{bad_null[:5]}")
+    if FILLED:
+        check("F2' judgment fields non-null where drafted "
+              "(problem_shape/constraint/receipt.event_span/scope/confidence; "
+              "unlock null allowed)", not bad_nonnull, f"{bad_nonnull[:5]}")
+        check("F6 b2_unit == pinned draft unit (slot, don't mutate)",
+              not bad_eq, f"{bad_eq[:5]}")
+    else:
+        check("F2 judgment fields null (lead draft pending)", not bad_null,
+              f"{bad_null[:5]}")
     check("F3 mechanical prefill correct (what_worked + receipt)",
           not bad_prefill, f"{bad_prefill[:5]}")
     check("F4 b2 == json.dumps(b2_unit) (default separators)", not bad_render,
@@ -210,9 +271,12 @@ def main():
 
     # ---- report ----
     print("validate_candidates.py — M2 candidates (R2), independent re-derivation")
+    print(f"  mode:          {'FILLED (lead draft slotted — --draft given)' if FILLED else 'SKELETON (judgment fields null)'}")
     print(f"  corpus {args.corpus} sha256:16 {csha}")
     print(f"  sample {args.sample} sha256:16 {ssh}")
     print(f"  ontology {args.ontology} sha256:16 {osha} (vocab {len(vocab)})")
+    if FILLED:
+        print(f"  draft  {args.draft} sha256:16 {sha16(args.draft)}")
     print(f"  candidates {args.candidates} sha256:16 {sha16(args.candidates)} rows {len(rows)}")
     print("-" * 72)
     for name, ok, detail in checks:
@@ -226,8 +290,13 @@ def main():
                                       for f in sorted(per_flow)))
     print(f"  B1 tokens: total {n_action_total} min {t1s[0]} max {t1s[-1]} "
           f"(== per-row n_action_turns)")
-    print(f"  B2 skeleton tokens: min {t2s[0]} median {(t2s[39]+t2s[40])/2} "
-          f"max {t2s[-1]} (PROVISIONAL until lead's draft)")
+    if FILLED:
+        print(f"  B2 draft tokens (FINAL): min {t2s[0]} median {(t2s[39]+t2s[40])/2} "
+              f"max {t2s[-1]} total {sum(t2s)}  |  unlock null: {n_unlock_null}/80 "
+              f"(allowed)")
+    else:
+        print(f"  B2 skeleton tokens: min {t2s[0]} median {(t2s[39]+t2s[40])/2} "
+              f"max {t2s[-1]} (PROVISIONAL until lead's draft)")
     print(f"  unmapped aggregate: {sum(len(r['unmapped']) for r in rows)}")
     print("-" * 72)
     if failures:
@@ -235,7 +304,9 @@ def main():
         for f in failures:
             print(f"  FAIL {f}")
         sys.exit(1)
-    print("VERDICT: PASS (all checks; every render re-derived from the raw corpus)")
+    n_chk = len(checks)
+    print(f"VERDICT: PASS — {n_chk}/{n_chk} checks (every render re-derived "
+          f"from the raw corpus; mode={'FILLED' if FILLED else 'SKELETON'})")
     sys.exit(0)
 
 

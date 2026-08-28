@@ -333,3 +333,104 @@ disabling the rule (ask posted on GH #6). **BON-45 stays Todo until R2,
 R3 and R4 have posted their numbers; no touch on BON-45 before then.**
 Counter 2/6.
 
+## Round 2 (M2) — CORRECTION + fix-forward in flight (GH #6 `5450060638`, lead, 2026-08-28 08:07Z) · main @d8a8f33
+
+**Status: R2 fix-forward PR in flight (engineer). The PR #22 + PR #23 merges
+STAND (both re-verified by re-execution — pins, determinism, validator,
+anti-leak, bind byte-identity). The round does NOT start judging until the
+re-bound inputs are merged. BON-42 back to In Progress (D21 — reverted per
+the correction; the round's numbers do not exist yet). BON-45 stays Todo.**
+
+**BLOCKER (evaluation):** the committed bind layers
+(`judge/binding/pass1_input.jsonl` + `pass2_input.jsonl`, 240 items/pass;
+`judge/scoring/scoring_input.jsonl`, 80 items) were bound from
+`candidates.jsonl` (`dd1869a2d72c6b2b`) whose `b2_unit` judgment fields are
+**null (skeleton)**. Verified: all 80/80 blind B2 items and 80/80 scoring B2
+candidates carried `"problem_shape": null`. The S0 brief is explicit — the
+judge scores the **DRAFT** unit, not the skeleton. The draft IS on main
+(`b2_draft.jsonl` sha `5063a85c4ab79465`) but the staged inputs were not
+derived from it. Running S1/S2 on the skeleton would burn the single frozen
+blind pass on an empty unit and make S3's B2 scores meaningless.
+
+**Interpretation #3 — LEAD ADJUDICATION (overrides 5449907074 §2.3):** the
+frozen cost line (5449115746 §3) is "80 × (1 reference call + 1 scoring call
+over all 3 candidates) = 160" — a **two-call** structure: (a) a **reference**
+call (transcript ONLY → R1–R3, the anchor formed in a context that has NOT
+seen the candidates) and (b) a **scoring** call (transcript + 3 anonymized
+candidates + the committed reference → scores). The combined single call (80)
+was confirmed in error and is overridden. Cost: 480 blind + 80 reference +
+80 scoring = **640 — exactly the frozen ceiling** (the "560 ≤ 640" round-post
+figure assumed the combined call). S1/S2 unaffected; S3 uses the 2-call
+structure. **Interpretations #1 (default separators) and #2 (presentation-scope
+hints) stand confirmed — no change.**
+
+**Fix-forward (engineer, single PR, D17 review, off main @d8a8f33):**
+1. **Re-extract:** slot `b2_draft.jsonl` (sha `5063a85c4ab79465`) into
+   `candidates.jsonl` `b2_unit`/`b2` — final B2 render + final `n_tokens_b2`
+   on the lead's unit (frozen counter, default separators; interpretation #1).
+   New `candidates.jsonl` sha256:16 **`a54f52a557ce38b5`** (skeleton B0/B1
+   renders unchanged; only the B2 items change). `extract.py` gains a
+   `--draft` slotting mode; skeleton mode still byte-reproduces the PR #22
+   artifact (`dd1869a2d72c6b2b`) for audit.
+2. **Validator extended** for the FILLED unit (`--draft`): judgment fields
+   non-null where drafted (`problem_shape`/`constraint` +
+   `receipt.event_span`/`scope`/`confidence`; `unlock` null allowed — 53/80),
+   frozen schema key order, mechanical prefill, `b2 == json.dumps(b2_unit)`
+   round-trip, `n_tokens_b2` frozen counter, and F6 (committed unit == the
+   pinned draft's unit — slot, don't mutate). **FILLED verdict: PASS 29/29.**
+   (Precision note: the as-merged note recorded "24/24"; the validator
+   mechanically runs **26** checks in skeleton mode (A4 + B1 + C5 + D3 +
+   E5 + F5 + G3) and **29** in filled mode (adds A5 draft sha, A6 draft
+   count, F6 unit-equality; F2 → F2') — the "24" was a write-time miscount,
+   corrected here per D21.)
+3. **Re-bind BOTH layers** from the new candidates → new committed bind layers
+   (new shas). B0/B1 renders unchanged (0/0 changed), **only the B2 items
+   change (80/80 per blind pass; 80/80 scoring)**. Blind:
+   `pass1_input` sha256 `5ef2d7cc…`, `pass2_input` sha256 `17d701f9…` (orders
+   + anti-leak field set intact; codenames deterministic →
+   `candidate_mapping.json` unchanged). Scoring: `reference_input` sha256
+   `d3d6ef8a…` (transcript ONLY — candidate-free context), `scoring_base`
+   sha256 `6a76e5e7…` (transcript + 3 candidates; the scoring input is built
+   at stage time from the committed reference).
+4. **Scoring structure restored to the frozen 2-call** in
+   `PROTOCOL-m2-scoring.md` + `stage_scoring_pass.py`: Call 1 = reference
+   (transcript ONLY → R1–R3), Call 2 = scoring (transcript + 3 candidates +
+   committed reference → scores); two separate fresh contexts. Budget line in
+   the protocol + manifest: 480 + 80 + 80 = **640 (the frozen ceiling)**.
+5. **`B2-DRAFT-NOTES.md` numbers corrected** (recomputed from the pinned
+   artifacts; see table below).
+6. **This `PHASE2_STATE.md` mirror** (this section).
+
+**Number corrections — `B2-DRAFT-NOTES.md` (recomputed from candidates
+`dd1869a2d72c6b2b` + draft `5063a85c4ab79465`):**
+
+| figure | as merged | corrected |
+|---|---|---|
+| B0 total (80 convos) | 13,396 | **15,340** |
+| B2 draft total | 3,202 | **3,667** |
+| aggregate ratio draft/B0 | 0.2390 | **0.2390** (correct — 3667/15340) |
+| aggregate floor (skeleton) | 23×80/13,396 = 0.137 | **2,046/15,340 = 0.1334** (skeleton is 23–30/convo, not flat 23) |
+| schema floor vs per-convo bar | "exceeds `tokens(B0)/10` for all 80" | skeleton (23–30) is **under** the bar for **7/80** convos (B0 ≥ 230: 116, 274, 374, 1224, 3161, 4332, 10059); the "0/80-at-the-floor" claim does not stand |
+| draft vs per-convo bar | 0/80 | **0/80** (correct — draft 37–57 vs allowance 6.5–41.7), **stated as the draft's** |
+
+**Structural conclusion (unchanged, on correct numbers):** the DRAFT unit is
+0/80 on the per-convo token bar and 0.239 on the aggregate (bar ≤ 0.1) — the
+token half is structurally unreachable for this unit (property of frozen
+schema + counter + sample, independent of drafting). Token half = structural
+FAIL; value half = measured by the blind judge; **B1 (trace) carries the
+token side — aggregate 0.0186 (≤ 0.1), 80/80 per-convo — the pre-registered
+collapse candidate.** The per-convo "0/80-at-the-floor" claim must not stand
+in the artifact (7 convos sit above it) — corrected per D21.
+
+**Sequencing (strict, per the correction):** engineer fix-forward PR → lead
+D17 review → merge → evaluation S1 (blind pass 1, fresh context, 240 items
+from the RE-BOUND inputs) → S2 (fresh staged context) → S3 (reference calls,
+then scoring calls — 2-call structure) → join + bar adjudication. **No judge
+call before the re-bind.** Evaluation is HOLDING S1/S2/S3 until the re-bound
+inputs land.
+
+**Ticket (correction §4):** BON-42 → **In Progress** (reverted from the
+premature Done; D21 — no judge numbers, no bar adjudication, no
+`m2_results.json`/`m2_report.md` yet; the join is the ticket's named
+artifact). BON-39 In Progress. **BON-45 stays Todo.** Counter 2/6.
+

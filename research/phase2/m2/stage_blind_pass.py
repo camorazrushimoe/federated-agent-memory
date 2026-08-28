@@ -54,9 +54,9 @@ relation to convo/candidate) + per-pass seeded shuffle; the judge never
 sees which candidate is which, which convo it came from, or any
 flow/band/product metadata. The transcript is NOT given to the answering
 judge (that is the point of the reconstruction test); it appears only in
-the SCORING pass (fresh context, separately staged — scoring plumbing is
-built after the lead's B2 draft lands, since the scored B2 is the final
-unit, not the skeleton).
+the SCORING pass (fresh context, separately staged — the scored B2 is the
+FINAL unit (the lead's 80-unit draft slotted in, R2 fix-forward), never
+the skeleton).
 
 Honesty clause (rides with every M2 number): agent-judged; inter-pass
 disagreement is a self-consistency floor, NOT human inter-rater agreement.
@@ -80,7 +80,7 @@ import shutil
 import sys
 from pathlib import Path
 
-PINNED_CANDIDATES_SHA16 = "dd1869a2d72c6b2b"
+PINNED_CANDIDATES_SHA16 = "a54f52a557ce38b5"   # R2 fix-forward candidates (filled B2 draft slotted)
 CANDIDATES = ["b0", "b1", "b2"]
 N_CONVO_DEFAULT = 80
 SEED1_DEFAULT, SEED2_DEFAULT = 20260901, 20261001

@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
 """extract.py — M2 candidate extraction (R2): per sample convo, the B0 render,
-the B1 action trace, the B2 structured-record SKELETON, and the frozen token
+the B1 action trace, the B2 structured-record unit, and the frozen token
 counts.
+
+Two modes (same frozen render/counter definitions; the B2 unit differs):
+
+  DEFAULT (skeleton) — B2 = the SKELETON (judgment fields null). This is the
+      PR #22 artifact (candidates sha dd1869a2d72c6b2b); the skeleton
+      n_tokens_b2 is the schema cost floor (PROVISIONAL until the draft).
+
+  --draft <b2_draft.jsonl> (FILLED) — slot the lead's 80-unit DRAFT (b2_draft
+      sha 5063a85c4ab79465) into each row's b2_unit/b2: the FINAL B2 render +
+      FINAL n_tokens_b2 computed on the lead's unit by the frozen counter,
+      default separators (GH #6 5450060638 §1 item 1; interpretation #1
+      confirmed). The draft's own b2_render / n_tokens_b2 /
+      n_tokens_b2_skeleton are cross-checked against this re-derivation and
+      MUST agree (they do). This is the R2 fix-forward join.
 
 Pre-registered spec: GH #6 comment 5449115746 §4 item 2 (on the frozen sample,
 PR #21 → main @4d68187; D22 accepted as documented, GH #6 5449438507).
@@ -68,6 +82,7 @@ Usage:
       --sample research/phase2/m2/sample.jsonl \
       --ontology data/abcd/ontology.json \
       --out research/phase2/m2/candidates.jsonl
+      [--draft research/phase2/m2/b2_draft.jsonl]
   python3 research/phase2/m2/extract.py --selftest
       (synthetic out-of-vocab / non-str names: the flag path must fire)
 """
@@ -80,6 +95,7 @@ from collections import Counter
 PINNED_CORPUS_SHA16 = "005d425e890b30a1"
 PINNED_SAMPLE_SHA16 = "f2195e7a6abe2221"
 PINNED_ONTOLOGY_SHA16 = "2e1c1d763518ba08"
+PINNED_DRAFT_SHA16 = "5063a85c4ab79465"   # b2_draft.jsonl (lead's 80-unit draft)
 ONTOLOGY_CATEGORIES = ["kb_query", "interaction", "faq_policy"]
 CORPUS_NAME = "abcd_v1.1"
 B2_SCHEMA = ["problem_shape", "constraint", "unlock", "what_worked", "receipt"]
@@ -181,6 +197,11 @@ def main():
     ap.add_argument("--sample", default="research/phase2/m2/sample.jsonl")
     ap.add_argument("--ontology", default="data/abcd/ontology.json")
     ap.add_argument("--out", default="research/phase2/m2/candidates.jsonl")
+    ap.add_argument("--draft", default=None,
+                    help="b2_draft.jsonl (sha 5063a85c4ab79465): slot the lead's "
+                         "FILLED 80-unit draft into b2_unit/b2 (final render + "
+                         "final n_tokens_b2). Omit for the SKELETON (PR #22) "
+                         "artifact.")
     args = ap.parse_args()
 
     # ---- pinned-input integrity (verified BEFORE any work) ----
@@ -190,6 +211,17 @@ def main():
     assert corpus_sha == PINNED_CORPUS_SHA16, f"corpus sha mismatch: {corpus_sha}"
     assert sample_sha == PINNED_SAMPLE_SHA16, f"sample sha mismatch: {sample_sha}"
     assert ontology_sha == PINNED_ONTOLOGY_SHA16, f"ontology sha mismatch: {ontology_sha}"
+
+    # ---- the lead's 80-unit draft (FILLED mode only) ----
+    draft_by_id = None
+    draft_sha = None
+    if args.draft:
+        draft_sha = sha16(args.draft)
+        assert draft_sha == PINNED_DRAFT_SHA16, \
+            f"draft sha mismatch: {draft_sha} (pin {PINNED_DRAFT_SHA16})"
+        draft_by_id = {json.loads(l)["convo_id"]: json.loads(l)
+                       for l in open(args.draft) if l.strip()}
+        assert len(draft_by_id) == 80, f"draft must have 80 rows, got {len(draft_by_id)}"
 
     corpus = json.load(open(args.corpus))
     convos = corpus["train"] + corpus["dev"] + corpus["test"]
@@ -243,7 +275,42 @@ def main():
 
         b2 = b2_skeleton(c, names)
         b2s = render_b2(b2)
-        t2 = n_tokens(b2s)
+        t2_skel = n_tokens(b2s)
+        if draft_by_id is None:
+            # SKELETON mode (PR #22 artifact, unchanged): judgment fields null,
+            # n_tokens_b2 = the schema cost floor (PROVISIONAL until the draft).
+            t2 = t2_skel
+        else:
+            # FILLED mode (R2 fix-forward join): slot the lead's draft unit.
+            d = draft_by_id[r["convo_id"]]
+            du = d["b2_unit"]
+            # key order must be the frozen schema (the render is schema-ordered)
+            assert list(du.keys()) == B2_SCHEMA, \
+                f"convo {r['convo_id']}: draft b2_unit key order {list(du.keys())}"
+            assert list(du["receipt"].keys()) == RECEIPT_SCHEMA, \
+                f"convo {r['convo_id']}: draft receipt key order {list(du['receipt'].keys())}"
+            # the draft's mechanical fields MUST equal this extraction's
+            # prefill (the draft is the join's authority on the JUDGMENT
+            # fields; the mechanical fields cross-check the corpus)
+            assert du["what_worked"] == list(names), \
+                f"convo {r['convo_id']}: draft what_worked {du['what_worked']} != B1 {names}"
+            assert du["receipt"]["corpus"] == CORPUS_NAME
+            assert du["receipt"]["convo_id"] == r["convo_id"]
+            assert du["receipt"]["flow"] == c["scenario"]["flow"]
+            assert du["receipt"]["subflow"] == c["scenario"]["subflow"]
+            # FINAL B2 render + FINAL n_tokens_b2 on the lead's unit:
+            # frozen counter, default separators (interpretation #1)
+            b2 = du
+            b2s = render_b2(b2)
+            t2 = n_tokens(b2s)
+            # the draft's own recorded render / counts MUST agree with this
+            # re-derivation (the draft is self-consistent; assert it)
+            assert b2s == d["b2_render"], \
+                f"convo {r['convo_id']}: re-derived b2 render != draft b2_render"
+            assert t2 == d["n_tokens_b2"], \
+                f"convo {r['convo_id']}: re-derived n_tokens_b2 {t2} != draft {d['n_tokens_b2']}"
+            assert t2_skel == d["n_tokens_b2_skeleton"], \
+                f"convo {r['convo_id']}: skeleton count {t2_skel} != draft {d['n_tokens_b2_skeleton']}"
 
         rows.append({
             "convo_id": r["convo_id"],
@@ -272,10 +339,27 @@ def main():
     t1s = sorted(r["n_tokens_b1"] for r in rows)
     t2s = sorted(r["n_tokens_b2"] for r in rows)
     n_unmapped = sum(unmapped.values())
+    filled = draft_by_id is not None
+    if filled:
+        round_str = ("R2 (M2 extraction) — candidates per GH #6 5449115746 §4 item 2; "
+                     "sample frozen PR #21 (main @4d68187), D22 accepted as documented. "
+                     "R2 fix-forward (GH #6 5450060638 §1 item 1): the lead's 80-unit "
+                     "DRAFT (b2_draft sha 5063a85c4ab79465) is SLOTTED into b2_unit/b2 — "
+                     "final B2 render + final n_tokens_b2 on the lead's unit, frozen "
+                     "counter, default separators (interpretation #1 confirmed). "
+                     "SKELETON B0/B1 renders unchanged; only the B2 items change.")
+        b2_render_desc = ("JSON of the unit, schema key order, receipt included, "
+                          "default separators (', ', ': ') — interpretation #1 "
+                          "CONFIRMED (GH #6 5450060638 §2)")
+    else:
+        round_str = ("R2 (M2 extraction) — candidates per GH #6 5449115746 §4 item 2; "
+                     "sample frozen PR #21 (main @4d68187), D22 accepted as documented")
+        b2_render_desc = ("JSON of the unit, schema key order, receipt included, "
+                          "default separators (', ', ': ') — see the RENDERING NOTE "
+                          "flagged for lead confirmation")
     meta = {
         "artifact": "research/phase2/m2/candidates.jsonl",
-        "round": ("R2 (M2 extraction) — candidates per GH #6 5449115746 §4 item 2; "
-                  "sample frozen PR #21 (main @4d68187), D22 accepted as documented"),
+        "round": round_str,
         "created": "2026-08-28",
         "inputs": {
             "corpus": args.corpus,
@@ -285,6 +369,13 @@ def main():
             "sample_sha256_16": sample_sha,
             "ontology": args.ontology,
             "ontology_sha256_16": ontology_sha,
+            **({"b2_draft": args.draft,
+                "b2_draft_sha256_16": draft_sha,
+                "b2_draft_role": ("the lead's 80-unit DRAFT (5449115746 §4); "
+                                  "slotted into b2_unit/b2 — final B2 render + "
+                                  "final n_tokens_b2 on the lead's unit (frozen "
+                                  "counter, default separators, interpretation #1)")}
+               if filled else {}),
         },
         "canonical_vocab": {
             "definition": ("union of the category keys of ontology.json['actions']: "
@@ -295,30 +386,46 @@ def main():
         "renders": {
             "b0": "all `original` turns as 'speaker: text', space-joined",
             "b1": "ordered targets[2] action names (D11), space-joined",
-            "b2": "JSON of the unit, schema key order, receipt included, default separators (', ', ': ') — see the RENDERING NOTE flagged for lead confirmation",
+            "b2": b2_render_desc,
             "token_counter": "whitespace-split of the rendered candidate (frozen)",
         },
-        "b2_skeleton": {
+        ("b2_draft" if filled else "b2_skeleton"): {
             "schema": B2_SCHEMA,
             "receipt_schema": RECEIPT_SCHEMA,
-            "judgment_fields_null_until_lead_draft":
+            "judgment_fields": (
                 ["problem_shape", "constraint", "unlock",
-                 "receipt.event_span", "receipt.scope", "receipt.confidence"],
+                 "receipt.event_span", "receipt.scope", "receipt.confidence"]
+                if filled else
+                ["problem_shape", "constraint", "unlock",
+                 "receipt.event_span", "receipt.scope", "receipt.confidence"]),
+            "judgment_fields_state": (
+                "FILLED from the lead's 80-unit draft (problem_shape/constraint/"
+                "event_span/scope/confidence non-null where drafted; unlock null "
+                "allowed — 53/80 null on this draft)"
+                if filled else
+                "NULL until the lead's 80-unit draft lands"),
             "mechanical_prefill":
                 ["what_worked (ordered targets[2] sequence, D11 — pre-registration: "
                  "'the resolution action sequence from targets[2]'; the lead's 80-unit "
                  "draft is authoritative at join time)",
                  "receipt.corpus / receipt.convo_id / receipt.flow / receipt.subflow"],
-            "note": ("n_tokens_b2 (the `b2` field's token count) is PROVISIONAL — "
-                     "the final B2 token count is computed on the lead's unit at "
-                     "join time (5449115746 §4 item 4); `b2_unit` carries the "
-                     "skeleton structure, `b2` its render"),
+            "note": (
+                "n_tokens_b2 (the `b2` field's token count) is FINAL — computed on "
+                "the lead's unit by the frozen counter (5450060638 §1 item 1; "
+                "interpretation #1). `b2_unit` carries the filled unit, `b2` its "
+                "render; the draft's own b2_render/n_tokens_b2/n_tokens_b2_skeleton "
+                "were cross-checked against this re-derivation and agree."
+                if filled else
+                "n_tokens_b2 (the `b2` field's token count) is PROVISIONAL — "
+                "the final B2 token count is computed on the lead's unit at "
+                "join time (5449115746 §4 item 4); `b2_unit` carries the "
+                "skeleton structure, `b2` its render"),
             "what_failed": "OUT of the R2 unit (pending §4/R3; collapse rule pre-registered)",
         },
         "token_stats": {
             "b0": quantiles(t0s),
             "b1": quantiles(t1s),
-            "b2_skeleton_provisional": quantiles(t2s),
+            ("b2_draft_final" if filled else "b2_skeleton_provisional"): quantiles(t2s),
         },
         "unmapped": {
             "definition": ("targets[2] value outside the canonical 30-name vocab "
@@ -348,15 +455,22 @@ def main():
         fh.write("\n")
 
     # ---- summary ----
-    q0, q1s_, q2s_ = meta["token_stats"]["b0"], meta["token_stats"]["b1"], meta["token_stats"]["b2_skeleton_provisional"]
+    q0, q1s_ = meta["token_stats"]["b0"], meta["token_stats"]["b1"]
+    b2_key = "b2_draft_final" if filled else "b2_skeleton_provisional"
+    q2s_ = meta["token_stats"][b2_key]
     print(f"candidates:    {args.out}  (sha256:16 {candidates_sha})")
     print(f"meta:          {meta_path}")
+    print(f"mode:          {'FILLED (lead draft slotted)' if filled else 'SKELETON (judgment fields null)'}")
     print(f"n=80  b0 tokens: median {q0['median']} p95 {q0['p95_nearest_rank']} "
           f"min {q0['min']} max {q0['max']} (must match sample meta)")
     print(f"b1 tokens:     total {q1s_['total']} (== sample action turns 286 expected) "
           f"min {q1s_['min']} max {q1s_['max']}")
-    print(f"b2 skeleton:   min {q2s_['min']} max {q2s_['max']} median {q2s_['median']} "
-          f"(PROVISIONAL until lead's draft)")
+    if filled:
+        print(f"b2 draft FINAL: min {q2s_['min']} max {q2s_['max']} median {q2s_['median']} "
+              f"total {q2s_['total']} (final B2 token count on the lead's unit)")
+    else:
+        print(f"b2 skeleton:   min {q2s_['min']} max {q2s_['max']} median {q2s_['median']} "
+              f"(PROVISIONAL until lead's draft)")
     print(f"unmapped:      {n_unmapped} (flag path {'FIRED' if n_unmapped else 'not fired — guard intact'})")
     if unmapped_rows:
         for cid, pos, key in unmapped_rows:

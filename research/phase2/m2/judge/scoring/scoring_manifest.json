@@ -1,19 +1,44 @@
 {
+ "budget": {
+  "blind": 480,
+  "ceiling": 640,
+  "reference": 80,
+  "scoring": 80,
+  "total": 640
+ },
  "candidates_per_item": [
   "b0",
   "b1",
   "b2"
  ],
- "honesty_clause": "agent-judged; single scoring pass; NOT human agreement",
+ "honesty_clause": "agent-judged; reference and scores in separate fresh contexts (reference candidate-free); NOT human agreement",
  "n_convos": 80,
  "n_items": 80,
- "purpose": "M2 reconstruction SCORING pass: 80 convos x (own references R1-R3 + rubric scores of all 3 candidates) \u2014 one combined call per convo, which executes the pre-registered sequence (first write your own references, then score each candidate) in order. Frozen budget for this half: 160 (80 reference + 80 scoring calls); the combined call uses 80 \u2014 within the frozen bound, no extra calls",
- "renders_source": "byte-identical to the pinned candidates.jsonl fields (transcript == `b0`; candidates == `b0`/`b1`/`b2` anonymized + per-convo seeded-shuffled)",
- "rule": "candidates scored under IDENTICAL treatment (anonymized codenames, shuffled order, no labels \u2014 'baselines scored identically'); the transcript is visible (it is the B0 render) and B0 itself is one of the scored candidates \u2014 its value is MEASURED, not assumed; no flow/band/product metadata anywhere in the scoring context",
+ "purpose": "M2 reconstruction SCORING pass (frozen TWO-CALL structure, restored per 5450060638 \u00a72): per convo, Call 1 = reference (transcript ONLY \u2192 R1-R3, candidate-free context) + Call 2 = scoring (transcript + 3 candidates + the committed reference \u2192 scores). 80 convos x (1 reference + 1 scoring) = 160 calls; round total 480 blind + 80 reference + 80 scoring = 640 (exactly the frozen ceiling, 5449115746 \u00a73)",
+ "reference_fields": [
+  "convo_codename",
+  "transcript"
+ ],
+ "renders_source": "byte-identical to the pinned candidates.jsonl fields (transcript == `b0`; candidates == `b0`/`b1`/`b2` anonymized + per-convo seeded-shuffled); the scored B2 is the FINAL unit (the lead's 80-unit draft slotted in, 5450060638 \u00a71 item 1)",
+ "rule": "candidates scored under IDENTICAL treatment (anonymized codenames, shuffled order, no labels \u2014 'baselines scored identically'); the reference is formed in a candidate-free context (the anchor is transcript-derived, not corrupted by the candidates); the transcript is visible (it is the B0 render) and B0 itself is one of the scored candidates \u2014 its value is MEASURED, not assumed; no flow/band/product metadata anywhere in the scoring context",
+ "scoring_base_fields": [
+  "convo_codename",
+  "transcript",
+  "candidates"
+ ],
+ "scoring_input_fields": [
+  "convo_codename",
+  "transcript",
+  "reference",
+  "candidates"
+ ],
+ "scoring_input_note": "scoring_input.jsonl is NOT committed: it is built at the scoring stage (stage-scoring) from scoring_base + the committed reference answers (the reference does not exist until Call 1 runs)",
  "seed": 20261101,
  "sha256": {
-  "PROTOCOL-m2-scoring": "c58c3acd01f0f5839a0b2f1a7e032404aabe6973eac64b9b334586c29a330736",
-  "convo_mapping": "490e5f71eb0a8ce3cdbee30784a3ebabfe3348f07aee60a2ff0794932ec41cfd",
-  "scoring_input": "0e7c6d9bc078742d4d4a813a9812aab14649d204d86ad37669e17eb6b5ae1be3"
- }
+  "PROTOCOL-m2-scoring": "16f235e1d8713dd7bedbe3749305c8eafc925e5ab47235cd638a42e665a8a65e",
+  "convo_mapping": "5c7c1ac9682a399a61b6056996e77a7548791841be9a5785ddcfd7eaf0bd4813",
+  "reference_input": "d3d6ef8aca37e59396148c1a698ed2b1c9855a8d5937145405328154eb4c5ddd",
+  "scoring_base": "6a76e5e722e5060cf9b4af5b9947e8350581263f8fa213264ad788c988dc4106"
+ },
+ "structure": "2 calls per convo \u2014 (1) reference call (transcript ONLY, no candidates in context) \u2192 committed R1-R3; (2) scoring call (transcript + 3 anonymized candidates + the committed reference) \u2192 scores. Separate fresh contexts."
 }
