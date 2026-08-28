@@ -251,6 +251,23 @@ judge-harness plumbing; evaluation → blind two-pass answering + scoring pass (
 committed, agreement number); lead → drafts the 80 B2 units (proposal author drafts;
 blind judge falsifies) + bar adjudication + R3 pre-registration after R2.
 
+**R2 sample — FROZEN 2026-08-28 (PR #21 MERGED → main @4d68187):**
+`research/phase2/m2/sample.jsonl` sha256:16 **`f2195e7a6abe2221`** (80 convos:
+8/flow × 10; seed 42; R1-318 exclusion overlap 0/80; empty-product 22/80; B1 coverage
+80/80; tokens_b0 median 187 / p95 277 / min 65 / max 417) + `sample.py` /
+`validate_sample.py` / `sample.jsonl.meta.json` / `NOTES.md`. Lead verification
+(independent of the PR body): separate re-implementation of the frozen draw procedure
+→ 80/80 rows byte-identical; determinism re-run byte-identical; every row re-joined to
+the raw corpus; the "0 unmapped action names" fact confirmed (36,482 action turns all
+inside the 30 canonical ontology names). **DECIDED D22 (GH #6 5449438507): the
+pre-registered (8/flow, ≤2/subflow) pair is jointly infeasible for `account_access`
+(exactly 3 available subflows — a defect in the lead's pre-registration, all other 9
+flows have ≥ 4) — the minimal relaxation (cap `ceil(8/n_sub)` only for sub-4-subflow
+flows → 3 for `account_access` only) is ACCEPTED AS DOCUMENTED**; it preserves 8/flow
+× 10 and fires only where infeasibility holds (G2/G3 machine-checked). PR #21 lead
+review 5449427387 (D17 pre-merge). Next: engineer `extract.py`; lead drafting the 80
+B2 units now.
+
 **Linear (lead-moved 2026-08-28):** BON-42 → **In Progress** (R2 kickoff). BON-41 Done
 (result line 05:48Z, D21). BON-43/44 Todo. **BON-45 ANOMALY — flagged for founder
 (5449115746 §5):** state "Done" since 2026-08-28T05:10:51Z by the owner account, no
