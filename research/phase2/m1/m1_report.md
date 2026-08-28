@@ -8,7 +8,7 @@
 - Selected operating point: pool iff cosine `>= 0.175964` → **recall_sm = 0.729**, **FFR = 0.095**, pairwise F1 = 0.721
 - Bar-passing thresholds on the sweep: 18
 - B0 oracle (same subflow): recall_sm = 1.000, FFR = 0.048, F1 = 0.883 (ceiling reference)
-- Inter-pass disagreement: 0.123 (21/170)
+- Inter-pass disagreement: 21/170 (0.1235)
 - Canonical label counts: related-but-different=38, same-problem=69, unrelated=63
 
 ### Interpretation
@@ -17,7 +17,7 @@ B1 meets the frozen bar, so per the method doc the finding is: **problem shape i
 
 ## B1 operating curve (full sweep)
 
-| threshold | n_pooled | recall_sm | FFR | recall_amb | recall_snm | precision | F1 |
+| threshold | n_pooled | recall_sm | FFR | ambiguous | should-not-match | precision | F1 |
 |---|---|---|---|---|---|---|---|
 | none (pool nothing) | 0 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
 | >= 0.000000 | 170 | 1.000 | 1.000 | 1.000 | 1.000 | 0.406 | 0.577 |
@@ -202,7 +202,7 @@ Full curve (170 rows) in `m1_results.json` → `b1.curve`.
 
 ## Agreement (two passes, agent-labeled)
 
-- disagreement rate: **0.123** (21/170)
+- disagreement rate: **21/170 (0.1235)**
 - ambiguous: 0.235 (8/34)
 - should-match: 0.141 (12/85)
 - should-not-match: 0.020 (1/51)

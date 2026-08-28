@@ -529,8 +529,8 @@ def write_report(md, out):
         f"- Bar-passing thresholds on the sweep: {b1['n_bar_passing_thresholds']}",
         f"- B0 oracle (same subflow): recall_sm = {b0['recall_sm']:.3f}, "
         f"FFR = {b0['ffr']:.3f}, F1 = {b0['f1']:.3f} (ceiling reference)",
-        f"- Inter-pass disagreement: {ag['disagreement_rate']:.3f} "
-        f"({ag['n'] - ag['agreed']}/{ag['n']})",
+        f"- Inter-pass disagreement: {ag['n'] - ag['agreed']}/{ag['n']} "
+        f"({ag['disagreement_rate']:.4f})",
         f"- Canonical label counts: " + ", ".join(
             f"{k}={v}" for k, v in sorted(ag["canonical_counts"].items())),
         "",
@@ -558,7 +558,7 @@ def write_report(md, out):
     lines += [
         "## B1 operating curve (full sweep)",
         "",
-        "| threshold | n_pooled | recall_sm | FFR | recall_amb | recall_snm | precision | F1 |",
+        "| threshold | n_pooled | recall_sm | FFR | ambiguous | should-not-match | precision | F1 |",
         "|---|---|---|---|---|---|---|---|",
     ]
     # compact table: every unique threshold, but cap to keep the report readable
@@ -587,8 +587,8 @@ def write_report(md, out):
         "",
         "## Agreement (two passes, agent-labeled)",
         "",
-        f"- disagreement rate: **{ag['disagreement_rate']:.3f}** "
-        f"({ag['n'] - ag['agreed']}/{ag['n']})",
+        f"- disagreement rate: **{ag['n'] - ag['agreed']}/{ag['n']} "
+        f"({ag['disagreement_rate']:.4f})**",
     ]
     for b, r in ag["per_band"].items():
         lines.append(f"- {b}: {r['rate']:.3f} ({r['disagreements']}/{r['n']})")
