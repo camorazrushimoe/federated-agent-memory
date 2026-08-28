@@ -42,7 +42,8 @@ are trivially satisfied — a missing id is treated as a failure.
 | `C-EX1` | HARD | Every card validates against the `SPEC.md` §4 schema, including `status=private`, `role=canonical`, `votes=1`, `members=[]`, `cluster_id == card_id`, `receipt.last_closed_at == receipt.closed_at`. |
 | `C-EX2` | HARD | `card_id == "c-" + sha256(dialogue_id)[:12]`, for every card. |
 | `C-EX3` | HARD | Field limits hold: `problem_shape` ≤12 words and non-empty; `constraint`/`unlock` ≤12 words or exactly `none`; `what_worked` has 1–8 items. |
-| `C-EX4` | HARD | **Grounding:** for every non-`none` `problem_shape` / `constraint` / `unlock`, at least one content word (≥5 chars, lowercased) also appears in the source transcript. Report the per-field violation count. |
+| `C-EX4a` | HARD | **No invented specifics.** Every number, order/account identifier, tool name and proper noun appearing in any card field MUST also appear in the source transcript. A card may paraphrase; it may not introduce an entity that is not in the chat. Zero tolerance — this is the hallucination gate. |
+| `C-EX4b` | SOFT | **Lexical grounding rate.** For every non-`none` `problem_shape` / `constraint` / `unlock`, record whether at least one content word (≥5 chars, lowercased) also appears in the transcript. Report the per-field ungrounded **count and rate**; do not abort the run. Cards flagged here MUST be included in the L3 judge sample (`EVAL-PLAN.md` §5) — a faithful paraphrase with zero lexical overlap is a limitation of a string test, not evidence of invention, and only the judge can tell the two apart. |
 | `C-EX5` | HARD | **PII:** no card field matches `\S+@\S+`, `\+?\d[\d\-\s]{7,}\d`, `\d{10,}`, `\bcvv\b`, `\biban\b`, `\bssn\b` — scanned across the entire store, not just the fixture. |
 | `C-EX6` | HARD | On the §10.1 fixture: the card survives, `4412` is absent from every field, and it is **not** rejected merely because `contains_pii=true`. |
 | `C-EX7` | HARD | A transcript containing the bare word `card` (e.g. "gift card") does not set `contains_pii` on that ground alone. |
@@ -51,6 +52,18 @@ are trivially satisfied — a missing id is treated as a failure.
 | `C-EX10` | HARD | Every dialogue has a matching file in `raw/extract/` with request, response, model id and usage. Count equals the number of extract calls in `cost.json`. |
 | `C-EX11` | SOFT | Unparseable-JSON rate from the model is reported; each occurrence keeps its raw response for inspection. |
 | `C-EX12` | SOFT | No card field contains a customer name present in the transcript (identity leak beyond the regex gate). |
+
+> **Why `C-EX4` was split (amended 2026-08-28, pre-registered before re-measuring):**
+> the original single check conflated two different questions and failed a card
+> whose `constraint` read *"payment rejected despite retry"* against a transcript
+> saying *"credit card won't work, says invalid"* plus two retries — a correct
+> paraphrase with no shared ≥5-char word. Relaxing the string rule (e.g. to
+> shared 4-char prefixes) would have let real invention through in order to
+> excuse one false positive. So invention stays HARD and exact (`C-EX4a`),
+> paraphrase quality moves to the L3 judge, and the lexical overlap rate survives
+> as a reported SOFT number (`C-EX4b`). The n=16 readings taken at S0 are
+> draw-dependent; the rate that counts is measured at S1 on 200 dialogues.
+> Any run that reports `C-EX4` as a single check is running stale code.
 
 ## Cluster (`cluster.py`, deterministic)
 

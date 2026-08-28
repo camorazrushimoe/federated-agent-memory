@@ -25,6 +25,35 @@ Rule that does not bend: **the person who wrote a thing does not approve it.**
 Lead reviews the engineer's code by re-running it in a clean worktree and
 comparing shas. Engineer reviews the lead's verdict against `per_dialogue.jsonl`.
 
+### 1.1 One module, one owner (added 2026-08-28 — this went wrong once already)
+
+Round 1 produced **two complete parallel implementations** of the same pipeline:
+PR #35 (14 modules) and PR #38 (22 modules), both containing their own
+`cluster.py`, `eval.py`, `extract.py`, `match.py`, `serve.py`, `tick.py`,
+`run_experiment.py`, and both rewriting `README.md`, `RESULTS.md` and
+`MODEL-MATRIX.md`. Four D1 branches exist on origin (`h1/d1-scripts`,
+`h1/d1-scripts-engineer`, `h1/d1-scripts-verified`, `feat/h1-bin-d1`). That is
+the same coordination race the Office paid for with PRs #23/#24/#25, now in code
+— and two divergent pipelines mean nobody can say whose numbers are real.
+
+Consolidation order, decided by oversight:
+
+1. **PR #35 is the canonical `bin/`.** It already carries both critical round-1
+   fixes: smoothed IDF (`log((1+N)/(1+df)) + 1`) and the `true_label` scoring
+   path. It merges first, after an independent re-execution review.
+2. **PR #38 then rebases onto the post-#35 `main` and becomes additive only**:
+   `audit.py`, `checks.py`, `compare.py`, `a4_verify.py`, `schema.py`,
+   `scrub.py`, `store.py`, `clock.py`, `prompts.py`, the fixtures it adds, and
+   the D8 package files. It **drops its duplicate** `cluster/eval/extract/match/
+   serve/tick/run_experiment/config`. If any of its duplicates is genuinely
+   better than the canonical one, that is a **separate one-file PR against the
+   canonical module** with the reason, not a second pipeline.
+3. The three redundant D1 branches are abandoned and deleted after #35 lands.
+   Do not push to them again.
+4. From now on: **one module has one owner.** Nobody edits a module owned by
+   another lane in their own tree; you open a PR against it or you report the
+   bug with a reproduction and let the owner fix it.
+
 ---
 
 ## 2. Deliverables, in order

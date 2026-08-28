@@ -252,6 +252,65 @@ already have.
 cluster passes. Note the count in the report; do not switch to per-scope
 counting silently (SPEC §5).
 
+### 7.1 A4 FIRED — threshold selection procedure (pre-registered 2026-08-28)
+
+**Measured, twice, independently:** within-label card-to-card cosine median
+**0.084–0.100**, fraction of pairs `>= CLUSTER_THRESHOLD (0.35)` = **0.0**
+(engineer: 0.088; evaluation: 0.084–0.100 on a fresh 44-card extraction; both
+per-scope and cross-scope fits agree). Consequence: at 0.35 nothing ever
+clusters, `votes` stays 1, nothing becomes `shared`, and the observed
+`serve_rate` at S0 is `0.0` for the treatment arm. The promote path is dead as
+configured. `0.35` was a guessed default, not a finding — the audit did its job.
+
+**Do NOT hand-pick a replacement number.** Picking `0.12` because the median is
+`0.09` is the tuning this plan forbids. Instead, run a sweep and apply a rule
+that is fixed *before* the sweep output is read.
+
+#### The sweep (pool only — the hold-out stays frozen)
+
+For each candidate threshold in `0.05 … 0.35` step `0.01`, over the pool's
+extracted cards, report:
+
+| column | meaning |
+|--|--|
+| `pairs_same_merged` | fraction of card pairs sharing one `unlock_guideline` that land in the same cluster |
+| `pairs_diff_merged` | fraction of pairs with **different** `unlock_guideline` that land in the same cluster — **this number does not exist yet and it is the decisive one** |
+| `cluster_purity` | clusters whose member dialogues all share one `unlock_guideline` |
+| `shared_rate` | canonical cards reaching `shared` |
+| `serve_rate_ceiling` | fraction of hold-out-shaped queries that would get ≥1 card (computed on a pool tail slice, never on the hold-out) |
+
+Commit the full table as `audit_threshold_sweep.md` plus the raw rows in
+`audit.json`. A single number without the curve is not an answer.
+
+#### The selection rule (fixed now, before the numbers are seen)
+
+> Choose the **largest** threshold whose `cluster_purity >= 0.70` **and**
+> `serve_rate_ceiling >= 0.30`. Among ties, prefer the larger threshold —
+> stricter merging is the safer error.
+>
+> If **no** threshold in the range satisfies both, the verdict is
+> **NOT FIT for lexical card-text clustering on this data**, stated with the
+> curve as evidence. In that case do **not** lower `cluster_purity` or
+> `serve_rate` to manufacture a pass, and do not proceed to a full S2 run of the
+> treatment arm: report the sweep, the ceiling, and stop.
+
+The chosen value is recorded here with its row from the sweep, the date, and the
+word "derived". Any later change requires a new sweep and a new pre-registered
+rule.
+
+**Separation, not level, is what matters.** If `pairs_same_merged` and
+`pairs_diff_merged` rise together as the threshold falls, the signal cannot
+discriminate and no threshold rescues it — that is the finding, and it is worth
+more than a tuned pipeline.
+
+#### Structural alternative — noted, deliberately NOT taken in this pass
+
+Card text is at most ~36 words of LLM paraphrase, which is thin material for
+lexical similarity. Clustering on the source dialogue's **customer turns**
+(hundreds of words) would very likely separate better. That is a change to
+`SPEC.md` §5 and therefore out of scope here: record it as follow-up **F5** and
+do not implement it inside this pass.
+
 ---
 
 ## 8. Model matrix
