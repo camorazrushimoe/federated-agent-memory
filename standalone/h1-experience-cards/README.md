@@ -9,26 +9,28 @@ Issue: [#28](https://github.com/camorazrushimoe/federated-agent-memory/issues/28
 ## What you implement
 
 A handful of scripts that turn finished customer chats into short cards,
-keep most of them private, and — when a later chat looks the same — hand
-the next agent a **recommendation packet**, never a rule.
+merge the ones that are the same story, and — when a later chat looks the
+same — hand the next agent a **recommendation packet**, never a rule.
 
 ```
 chat closed
-    → extract_card     (prompt in PROMPTS.md)
-    → store            (status = private)
-    → match            (same scope, lexical)
-    → promote          (private → shared at K=2 independent hits)
-    → serve_packet     (evidence prompt in PROMPTS.md)
-    → feedback         (helpful keeps it; wrong/stale expires it)
+    → extract_card          (prompt in PROMPTS.md, status = private)
+    → every 100 new chats   cluster.py   (same-scope cards collapse into one)
+    →                       promote      (canonical card with votes ≥ K → shared)
+    → live chat             match+serve  (top-3 shared canonical cards)
+    →                       feedback     (wrong/stale expires the canonical card)
 ```
+
+Clustering is a **volume trigger**, not a timer. After 100 new ingested chats
+since the last run, `cluster.py` fires. `--force` exists for fixtures.
 
 ## Files
 
 | file | role |
 |--|--|
-| `SPEC.md` | contract: data, scripts, states, matching, promotion, eval |
+| `SPEC.md` | contract: data, states, scripts, clustering, eval |
 | `PROMPTS.md` | frozen prompts: extract, serve, feedback-label |
-| `fixtures/` | added when scripts land; keep empty until then |
+| `fixtures/` | added when scripts land |
 
 ## Order of work
 
