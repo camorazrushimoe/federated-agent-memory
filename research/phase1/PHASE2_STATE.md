@@ -434,3 +434,26 @@ premature Done; D21 — no judge numbers, no bar adjudication, no
 `m2_results.json`/`m2_report.md` yet; the join is the ticket's named
 artifact). BON-39 In Progress. **BON-45 stays Todo.** Counter 2/6.
 
+**Addendum (engineer, same fix-forward PR — join re-pin):** `join_m2.py` (PR #24,
+main @a4bca095) is adapted in THIS PR to the fix-forward's artifacts, so the lead's
+"one command on main when the judge's numbers land" holds after merge:
+- gate 1 pin: `candidates.jsonl` `dd1869a2d72c6b2b` → **`a54f52a557ce38b5`** (FILLED;
+  the skeleton sha is byte-reproducible via `extract.py` (no `--draft`) for audit).
+- gate 2: the committed candidates' `b2_unit` must equal the pinned draft's unit on
+  all 80 rows (slot, never mutate — mirrors the validator's F6).
+- gate 4: the frozen 2-call judge contract (5450060638 §2) — the join consumes
+  `reference_answers.jsonl` (Call 1: convo_codename + r1/r2/r3, in the committed
+  `reference_input` order, candidate-free input asserted) and
+  `scoring_answers.jsonl` (Call 2: convo_codename + scores ONLY, in the committed
+  `scoring_base` order); references inside a Call-2 file now REJECT at the gate.
+  The command is:
+  `python3 research/phase2/m2/join_m2.py --pass1 <p1> --pass2 <p2> --reference <ref> --scoring <scoring>`.
+- `selftest_join_m2.py`: both scenarios re-run green (byte-identical, independent
+  re-derivation MATCH, 3 tamper tests incl. the new 2-call-contract gate).
+- Floor reconciliation adopted in the join's report (lead PR #24 review
+  5450249538 §5): canonical = the join's flat-23 empty-unit floor (per-convo
+  blocked 61/80; aggregate 23×80/15,340 = 0.1199 — the tighter bound); the
+  measured-skeleton floor (23–30/convo; blocked 73/80; aggregate 2,046/15,340 =
+  0.1334) is the other floor both tables measured. Both are true; the structural
+  finding is unchanged under either. The join prints the derivation measured from
+  the pinned rows at join time.

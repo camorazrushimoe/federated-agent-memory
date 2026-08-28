@@ -72,7 +72,8 @@ def make_judge_files(tag, collapse):
     code_to_cid = conv_map_file["convo_codename -> convo_id"]
     pass1_input = load_lines(f"{M2}/judge/binding/pass1_input.jsonl")
     pass2_input = load_lines(f"{M2}/judge/binding/pass2_input.jsonl")
-    scoring_input = load_lines(f"{M2}/judge/scoring/scoring_input.jsonl")
+    ref_input = load_lines(f"{M2}/judge/scoring/reference_input.jsonl")
+    base_input = load_lines(f"{M2}/judge/scoring/scoring_base.jsonl")
 
     # --- blind pass answers (item_id keyed; order = each pass's input order)
     pass1_rows = []
@@ -98,12 +99,25 @@ def make_judge_files(tag, collapse):
     write_jsonl(f"{d}/pass1_answers.jsonl", pass1_rows)
     write_jsonl(f"{d}/pass2_answers.jsonl", pass2_rows)
 
-    # --- scoring answers
+    # --- scoring answers (frozen 2-call structure, 5450060638 s2) ---
     code_of = {}
     for c, v in flat.items():
         code_of[(v["convo_id"], v["candidate"])] = c.split("|", 1)[1]
+    # Call 1 (reference): transcript-only context -> R1-R3 (synthetic)
+    reference_rows = []
+    for it in ref_input:
+        code = it["convo_codename"]
+        cid = code_to_cid[code]
+        reference_rows.append({
+            "convo_codename": code,
+            "r1": f"synthetic reference problem for convo {cid}",
+            "r2": f"synthetic reference constraint for convo {cid}",
+            "r3": f"synthetic reference actions for convo {cid}",
+        })
+    write_jsonl(f"{d}/reference_answers.jsonl", reference_rows)
+    # Call 2 (scoring): the committed reference is the anchor -> scores only
     scoring_rows = []
-    for i, it in enumerate(scoring_input):
+    for i, it in enumerate(base_input):
         code = it["convo_codename"]
         cid = code_to_cid[code]
         def sc_for(cand):
@@ -116,9 +130,6 @@ def make_judge_files(tag, collapse):
             return {"s1": v, "s2": v, "s3": v}
         scoring_rows.append({
             "convo_codename": code,
-            "r1": "synthetic reference problem",
-            "r2": "synthetic reference constraint",
-            "r3": "synthetic reference actions",
             "scores": {code_of[(cid, c)]: sc_for(c) for c in ("b0", "b1", "b2")},
         })
     write_jsonl(f"{d}/scoring_answers.jsonl", scoring_rows)
@@ -129,6 +140,7 @@ def run_join(d, out_dir, tag):
     cmd = [PY, JOIN, "--m2", M2,
            "--pass1", f"{d}/pass1_answers.jsonl",
            "--pass2", f"{d}/pass2_answers.jsonl",
+           "--reference", f"{d}/reference_answers.jsonl",
            "--scoring", f"{d}/scoring_answers.jsonl",
            "--out-dir", out_dir, "--dry-run",
            "--results", f"m2_results.{tag}.json", "--report", f"m2_report.{tag}.md"]
@@ -225,7 +237,8 @@ def tamper_tests():
     rows[0], rows[1] = rows[1], rows[0]
     write_jsonl(f"{d}/pass1_shuffled.jsonl", rows)
     cmd = [PY, JOIN, "--m2", M2, "--pass1", f"{d}/pass1_shuffled.jsonl",
-           "--pass2", f"{d}/pass2_answers.jsonl", "--scoring", f"{d}/scoring_answers.jsonl",
+           "--pass2", f"{d}/pass2_answers.jsonl", "--reference", f"{d}/reference_answers.jsonl",
+           "--scoring", f"{d}/scoring_answers.jsonl",
            "--out-dir", d, "--dry-run", "--results", "x.json", "--report", "x.md"]
     r = subprocess.run(cmd, capture_output=True, text=True)
     assert r.returncode == 1 and "order != input order" in r.stderr, f"tamper1: {r.returncode} {r.stderr[:200]}"
@@ -235,11 +248,25 @@ def tamper_tests():
     sc[0]["scores"][list(sc[0]["scores"])[0]]["s1"] = 0.3
     write_jsonl(f"{d}/scoring_bad.jsonl", sc)
     cmd = [PY, JOIN, "--m2", M2, "--pass1", f"{d}/pass1_answers.jsonl",
-           "--pass2", f"{d}/pass2_answers.jsonl", "--scoring", f"{d}/scoring_bad.jsonl",
+           "--pass2", f"{d}/pass2_answers.jsonl", "--reference", f"{d}/reference_answers.jsonl",
+           "--scoring", f"{d}/scoring_bad.jsonl",
            "--out-dir", d, "--dry-run", "--results", "x.json", "--report", "x.md"]
     r = subprocess.run(cmd, capture_output=True, text=True)
     assert r.returncode == 1 and "non-frozen score values" in r.stderr, f"tamper2: {r.returncode} {r.stderr[:200]}"
     print("  [tamper-2] non-frozen s1=0.3 -> JOIN GATE FAILED (frozen rubric values) — correct")
+    # 3) combined-call shape (r1/r2/r3 inside the scoring answers) -> the
+    #    frozen 2-call contract gate must fire (5450060638 s2: references
+    #    live in the Call-1 file, not the Call-2 file)
+    sc = load_lines(f"{d}/scoring_answers.jsonl")
+    sc[0]["r1"] = sc[0]["r2"] = sc[0]["r3"] = "leaked reference"
+    write_jsonl(f"{d}/scoring_combined.jsonl", sc)
+    cmd = [PY, JOIN, "--m2", M2, "--pass1", f"{d}/pass1_answers.jsonl",
+           "--pass2", f"{d}/pass2_answers.jsonl", "--reference", f"{d}/reference_answers.jsonl",
+           "--scoring", f"{d}/scoring_combined.jsonl",
+           "--out-dir", d, "--dry-run", "--results", "x.json", "--report", "x.md"]
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    assert r.returncode == 1 and "frozen 2-call contract" in r.stderr, f"tamper3: {r.returncode} {r.stderr[:200]}"
+    print("  [tamper-3] r1/r2/r3 inside scoring answers -> JOIN GATE FAILED (frozen 2-call contract) — correct")
 
 
 def main():

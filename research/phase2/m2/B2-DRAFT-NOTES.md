@@ -60,11 +60,14 @@ default separators — interpretation #1, confirmed)
   0.2390** (B0 sum **15,340**; B2 sum **3,667**).
 - **per-convo `tokens(B2) ≤ tokens(B0)/10`: 0/80 — stated for the DRAFT.**
   The draft (37–57 tokens) is above the per-convo allowance (6.5–41.7) in
-  every one of the 80 convos. The SKELETON floor, by contrast, is UNDER the
-  per-convo allowance in **7/80** convos (the large-B0 tail, B0 ≥ 230:
-  convos 116, 274, 374, 1224, 3161, 4332, 10059) and at or above it in the
-  remaining 73/80. The per-convo bar is therefore not met by the DRAFT in
-  any convo — the 0/80 is the draft's, not a floor claim.
+  every one of the 80 convos. The SKELETON (the thinnest conforming unit —
+  mechanical prefill with null judgment fields), by contrast, is UNDER the
+  per-convo allowance in exactly **7/80** convos (116, 274, 374, 1224, 3161,
+  4332, 10059 — all in the large-B0 tail, B0 253–417) and above it in the
+  remaining 73/80; in those 7 the allowance exceeds the skeleton by only
+  0.3–16.7 tokens, so only token-neutral placeholder strings (no real
+  content) would fit. The per-convo bar is therefore not met by the DRAFT
+  in any convo — the 0/80 is the draft's, not a floor claim.
 - The **median** B0 is 187 → median B2 allowed ≤ 18 tokens — **below the
   23-token empty-schema floor**. The frozen bar is **structurally
   unreachable by any content-bearing unit in the frozen schema**.
