@@ -182,3 +182,29 @@ STEP 4: S1 (200 pool + 40 pool tail) with the derived threshold — only after
 
 Structural alternative (clustering on customer turns) = follow-up F5, changes
 SPEC.md §5 — NOT implemented in this pass.
+
+## 3e. Post-merge verification (21:40Z) — D2 gate CLI + determinism fixes (`38c08f6`)
+
+After #38 merged, the D2 gate had NO CLI entry (checks.py main() ran only the
+fixture suite) and the fixture/NC1 rewires had reproducibility defects that
+only surface when the full registry runs against a canonical-runner-produced
+run dir. Fixed + verified on a fresh canonical S0 run (59/59 HARD, exit 0):
+
+- `checks.py --run-dir <dir> --pool P --holdout H` — the D2 gate: loads
+  manifest/metrics/cost/data, runs fixture suite + negative controls (canonical
+  eval CLI) + full registry, writes checks.json/controls.json/audit.json, exits
+  2 on any HARD failure.
+- FixtureSuite replay source = committed fixtures (read-only); raw output =
+  workdir-local (canonical copy_replay_record WRITES to raw-dir — the merged
+  version clobbered committed d-*.json on every run, C-L1).
+- FixtureSuite + NC1 start from a CLEAN workdir (ingest/extract/cluster/
+  feedback UPSERT; stale dirs accumulated duplicates: C-CL10 11 cards,
+  C-FB2 14 rows).
+- C-EV6 replay runs in-place on an identically-named copy (run_id derives from
+  the out-dir basename) → byte-identical confirmed.
+- C-EV7 requires shas only where recorded (canonical leaves holdout.sha256
+  null at S0); C-EX10 counts fixture-track raw records (16 pool + 26 fx = 42);
+  NC1 slice built from RAW pool rows filtered to recorded ids.
+- Pipeline-owner finding (reported, not fixed): the canonical runner's S0
+  fixture track uses LIVE extraction, not committed replay records —
+  non-deterministic (fx10_2 passed/failed across two identical runs).
