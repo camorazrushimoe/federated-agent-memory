@@ -1,0 +1,38 @@
+{
+  "arm": "B1",
+  "judge": null,
+  "n_holdout": 200,
+  "notes": [
+    "age-stale disabled by construction: timeline=compressed",
+    "independence=agent+dialogue"
+  ],
+  "primary": {
+    "abstain": 0.005,
+    "unlock_hit_label": 0.735,
+    "wrong": 0.26
+  },
+  "run_id": "2026-08-28_S2_B1",
+  "secondary": {
+    "cluster_purity": null,
+    "cluster_rate": null,
+    "duplicate_in_packet": 0,
+    "extract_yield": null,
+    "independence": "agent+dialogue",
+    "packet_size_hist": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "reject_rate": null,
+    "scope_leak": 0,
+    "serve_rate": 0.995,
+    "shared_rate": null,
+    "unlock_conflict": null,
+    "unlock_hit_smoke": 0.81,
+    "votes_hist": {
+      "1": 0,
+      "2": 0,
+      "3+": 0
+    }
+  }
+}

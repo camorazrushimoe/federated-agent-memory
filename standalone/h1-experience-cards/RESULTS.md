@@ -1,10 +1,11 @@
 # H1 Experience Cards — Results
 
-> Status: **D3 gate fired — verdict published, no S2 run** (the §7.1 sweep and
-> the §7.2 F5 fallback both returned NOT FIT under the pre-registered rule; per
-> the rule no S2 treatment arm was run and no gate was lowered). Numbers below
-> come from run dirs (`metrics.json` / `cost.json`), `audit.json` or
-> `compare.py` — never hand-typed.
+> Status: **D3 gate fired — verdict published, no S2 treatment arm** (the §7.1
+> sweep and the §7.2 F5 fallback both returned NOT FIT under the pre-registered
+> rule; per the rule no S2 treatment arm was run and no gate was lowered).
+> Baselines **B1 and B2 were measured on the real 200-dialogue hold-out in the
+> final round (4/4)** — §3. Numbers below come from run dirs (`metrics.json` /
+> `cost.json`), `audit.json` or `compare.py` — never hand-typed.
 
 ## 1. Hypothesis
 
@@ -32,12 +33,33 @@ serves.**
 
 ## 3. Primary table (T next to every baseline)
 
+Measured on the real 200-dialogue hold-out in the final round (4/4), opened
+exactly once, for baseline scoring only. Run dirs:
+`runs/2026-08-28_S2_B1/` and `runs/2026-08-28_S2_B2/` (each with
+`metrics.json`, `per_dialogue.jsonl`, `cost.json` — calls=0, usd=0 — and
+`manifest.json`). B0 and T were **not run**: the D3 gate fired before any
+treatment run, and T is not fabricated from the sweep.
+
 | arm | unlock_hit_label | wrong | abstain | serve_rate | USD/1k |
 |--|--|--|--|--|--|
-| B0 no memory | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
-| B1 raw retrieval, no cards | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
-| **T card pipeline** | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| B2 oracle | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
+| B0 no memory | _not run (D3 gate)_ | _not run (D3 gate)_ | _not run (D3 gate)_ | _not run (D3 gate)_ | 0 |
+| **B1 raw retrieval, no cards** | **0.735** | **0.26** | **0.005** | **0.995** | **0** |
+| **T card pipeline** | _not run (D3 gate)_ | _not run (D3 gate)_ | _not run (D3 gate)_ | _not run (D3 gate)_ | _not run_ |
+| B2 oracle | 1.0 | 0.0 | 0.0 | 1.0 | 0 |
+
+> **T ≤ B1 — resolved by measurement: TRUE.** On the real hold-out, raw
+> retrieval B1 scores `unlock_hit_label = 0.735` (147/200 hit, 52 wrong, 1
+> abstain) at **0 LLM calls / $0.00**; B1's `serve_rate = 0.995` (199/200)
+> matches the A1 coverage prediction. The card pipeline T (not run — D3 gate)
+> is bounded above by its own measured serve ceiling: a hit requires a served
+> packet, and the pre-registered sweep measured `serve_rate_ceiling = 0.15`
+> (card-text) / 0.175 (customer-turns), so **T ≤ 0.175 < 0.735 = B1**. Oracle
+> B2 = **1.0** exactly (C-EV4 — the scoring code is sound). The whole story in
+> one number: raw retrieval of the past chat already names the right
+> `unlock_guideline` for **73.5% of real hold-out chats at zero extraction
+> cost**, while the card pipeline could serve at most ~17.5% of them even
+> before extraction quality is considered — **cards add nothing over raw
+> retrieval on this data.**
 
 ## 4. What the audit found (A1–A5)
 

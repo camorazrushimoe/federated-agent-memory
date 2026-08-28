@@ -1,0 +1,21 @@
+{
+  "deterministic_half_wall_clock_s": 1.609,
+  "extract": {
+    "calls": 0,
+    "completion_tokens": 0,
+    "ms_p50": 0,
+    "ms_p95": 0,
+    "prompt_tokens": 0,
+    "usd_per_1000_dialogues": 0.0,
+    "usd_total": 0.0
+  },
+  "notes": [
+    "baseline arm: ZERO LLM calls by construction (calls=0, usd=0.0); cost recorded for completeness per RUN-PROTOCOL §4.3",
+    "serve latency null: baseline arms have no packet serve path (B1 scoring is in-memory TF-IDF inside eval.py)"
+  ],
+  "price_source": "https://api-docs.deepseek.com/quick_start/pricing/ (retrieved 2026-08-28)",
+  "serve": {
+    "ms_p50": null,
+    "ms_p95": null
+  }
+}
