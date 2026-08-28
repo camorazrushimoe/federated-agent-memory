@@ -1,0 +1,21 @@
+{"check_id": "C-L2", "step": "leakage", "hard": true, "passed": true, "observed": "clean", "expected": "ground truth never reaches the model", "note": ""}
+{"check_id": "C-L3", "step": "leakage", "hard": true, "passed": true, "observed": "all imports stdlib or bin/", "expected": "", "note": ""}
+{"check_id": "C-L4", "step": "leakage", "hard": true, "passed": true, "observed": "clean", "expected": "no forbidden deps", "note": ""}
+{"check_id": "C-IN1", "step": "ingest", "hard": true, "passed": true, "observed": "kept=16 dropped=0 rows=16", "expected": "kept + dropped == input rows", "note": ""}
+{"check_id": "C-IN2", "step": "ingest", "hard": true, "passed": true, "observed": "kept all have >=1 customer turn, 0 dropped with 0", "expected": "one-customer-turn rule", "note": ""}
+{"check_id": "C-IN3", "step": "ingest", "hard": true, "passed": true, "observed": "all records pass §3 schema", "expected": "dialogue_id/tenant_id/vertical/agent_id/channel/closed_at/turns roles in {customer,agent,tool}", "note": ""}
+{"check_id": "C-IN4", "step": "ingest", "hard": true, "passed": true, "observed": "16 unique ids", "expected": "unique", "note": ""}
+{"check_id": "C-IN5", "step": "ingest", "hard": true, "passed": true, "observed": "16 dialogues byte-identical", "expected": "turn text verbatim, no normalisation", "note": ""}
+{"check_id": "C-IN6", "step": "ingest", "hard": true, "passed": true, "observed": "byte-identical re-ingest", "expected": "", "note": ""}
+{"check_id": "C-IN7", "step": "ingest", "hard": false, "passed": false, "observed": ["agent-c:5", "agent-d:3"], "expected": "within ±20% of uniform", "note": ""}
+{"check_id": "C-EX1", "step": "extract", "hard": true, "passed": true, "observed": "16 cards valid", "expected": "SPEC §4 schema; fresh state for never-clustered cards", "note": ""}
+{"check_id": "C-EX2", "step": "extract", "hard": true, "passed": true, "observed": "all card_ids = c- + sha256[:12]", "expected": "deterministic card id", "note": ""}
+{"check_id": "C-EX3", "step": "extract", "hard": true, "passed": true, "observed": "all field limits hold", "expected": "≤12 words / none / 1-8 what_worked", "note": ""}
+{"check_id": "C-EX4", "step": "extract", "hard": true, "passed": false, "observed": {"violations": {"problem_shape": 1, "constraint": 1, "unlock": 0}, "examples": ["c-3f0329ed4937:problem_shape ungrounded", "c-ed829e03166a:constraint ungrounded"]}, "expected": "grounding holds", "note": ""}
+{"check_id": "C-EX5", "step": "extract", "hard": true, "passed": true, "observed": "full store scan clean (16 cards)", "expected": "no PII patterns in any card field", "note": ""}
+{"check_id": "C-EX6", "step": "extract", "hard": true, "passed": true, "observed": {"status": "private", "contains_pii": true, "fields_clean_4412": true}, "expected": "card survives, 4412 absent, pii alone not a reject", "note": ""}
+{"check_id": "C-EX7", "step": "extract", "hard": true, "passed": true, "observed": "gift card chat: contains_pii=false", "expected": "bare word 'card' must not set contains_pii", "note": ""}
+{"check_id": "C-EX8", "step": "extract", "hard": true, "passed": true, "observed": "rejected=['d-rej1', 'd-rej2']; d-pii accepted", "expected": "rejection only per the post-scrub rule", "note": ""}
+{"check_id": "C-EX9", "step": "extract", "hard": true, "passed": true, "observed": "23 cards, no dups, merged card untouched", "expected": "upsert by card_id; clustered cards skipped", "note": ""}
+{"check_id": "C-EX11", "step": "extract", "hard": false, "passed": true, "observed": "unparseable rate 0.0 (0/16)", "expected": "reported", "note": "SOFT: rate only"}
+{"check_id": "C-EX12", "step": "extract", "hard": false, "passed": true, "observed": "no name-like tokens in fields", "expected": "no identity leak beyond regex gate", "note": "SOFT"}
