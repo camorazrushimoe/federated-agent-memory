@@ -1,0 +1,30 @@
+{
+ "candidates": [
+  "b0",
+  "b1",
+  "b2"
+ ],
+ "honesty_clause": "agent-judged; inter-pass disagreement = self-consistency floor, not human agreement",
+ "n_convos": 80,
+ "n_items_per_pass": 240,
+ "orders_differ": true,
+ "pass_input_fields": [
+  "item_id",
+  "codename",
+  "question",
+  "render"
+ ],
+ "purpose": "M2 blind answering passes (Q1\u2013Q3): 80 convos x 3 candidates (b0/b1/b2) x 2 passes = 240 items/pass",
+ "renders_source": "byte-identical to the `b0`/`b1`/`b2` fields of the pinned candidates.jsonl (see its meta for the render definitions)",
+ "rule": "pass inputs carry ONLY item_id + codename + question + render (no convo_id, no candidate type, no flow/subflow/product \u2014 anti-leak, asserted mechanically); codenames are deterministic 6-hex digests with no structural relation to convo/candidate; pass2 uses a different seeded order than pass1; each pass runs in a FRESH agent context staged by stage (below) with no access to the other pass's answers; the transcript is NOT given to the answering judge (the scoring pass sees it, separately staged)",
+ "seeds": {
+  "pass1": 20260901,
+  "pass2": 20261001
+ },
+ "sha256": {
+  "PROTOCOL-m2-blind": "da776647e33cd2f6c5419f224f2e193e1c3aea817a1122657d59b6187b162936",
+  "candidate_mapping": "c9ae3b70526c0fe3eacaac72aa9d21e71100ed1114284107a1a1f07829dca36d",
+  "pass1_input": "03c49be6a33abe220b055766e69bf05a1eecdd99d2053019eabed5b4cfee1543",
+  "pass2_input": "990e3a0d206b598466d0f589d54f9785fc000e68b7fd5566d12f4e308dea11ae"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "candidates_per_item": [
+  "b0",
+  "b1",
+  "b2"
+ ],
+ "honesty_clause": "agent-judged; single scoring pass; NOT human agreement",
+ "n_convos": 80,
+ "n_items": 80,
+ "purpose": "M2 reconstruction SCORING pass: 80 convos x (own references R1-R3 + rubric scores of all 3 candidates) \u2014 one combined call per convo, which executes the pre-registered sequence (first write your own references, then score each candidate) in order. Frozen budget for this half: 160 (80 reference + 80 scoring calls); the combined call uses 80 \u2014 within the frozen bound, no extra calls",
+ "renders_source": "byte-identical to the pinned candidates.jsonl fields (transcript == `b0`; candidates == `b0`/`b1`/`b2` anonymized + per-convo seeded-shuffled)",
+ "rule": "candidates scored under IDENTICAL treatment (anonymized codenames, shuffled order, no labels \u2014 'baselines scored identically'); the transcript is visible (it is the B0 render) and B0 itself is one of the scored candidates \u2014 its value is MEASURED, not assumed; no flow/band/product metadata anywhere in the scoring context",
+ "seed": 20261101,
+ "sha256": {
+  "PROTOCOL-m2-scoring": "c58c3acd01f0f5839a0b2f1a7e032404aabe6973eac64b9b334586c29a330736",
+  "convo_mapping": "490e5f71eb0a8ce3cdbee30784a3ebabfe3348f07aee60a2ff0794932ec41cfd",
+  "scoring_input": "0e7c6d9bc078742d4d4a813a9812aab14649d204d86ad37669e17eb6b5ae1be3"
+ }
+}
