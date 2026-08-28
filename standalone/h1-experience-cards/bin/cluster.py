@@ -40,7 +40,7 @@ import sys
 
 import config as cfg
 import jsonio as hio
-from common import TFIDF, card_text, days_since, now_iso
+from common import TFIDF, card_text, customer_turns_key, days_since, now_iso
 
 
 def load_store(cards_path):
@@ -161,8 +161,14 @@ def inherit_fields(canonical, members):
 
 
 def run_cluster(cards_path, dialogues_path, force=False, cursor_path=None,
-                pinned_now=None, overrides=None):
-    """Core cluster. Returns the summary dict (also printed by main())."""
+                pinned_now=None, overrides=None, cluster_key="card-text"):
+    """Core cluster. Returns the summary dict (also printed by main()).
+
+    cluster_key: "card-text" (SPEC §6.3, the measured contract) or
+    "customer-turns" (F5, EVAL-PLAN §7.2 — the source dialogue's customer
+    turns as the similarity key). Default keeps the committed behaviour
+    byte-identical.
+    """
     cfg_obj = cfg.Config(overrides)
     if pinned_now is None:
         raise ValueError("cluster.py requires --now (pinned determinism, "
@@ -184,6 +190,12 @@ def run_cluster(cards_path, dialogues_path, force=False, cursor_path=None,
 
     store = load_store(cards_path)
     dialogues = _dialogue_lookup(dialogues_path)
+
+    def _key_of(card):
+        if cluster_key == "customer-turns":
+            src = (card.get("receipt") or {}).get("source_dialogue_id")
+            return customer_turns_key(dialogues.get(src))
+        return card_text(card)
 
     # pre-existing cluster structure (C-CL7/C-CL9): already-merged members
     # stay on their canonical card across runs. They are never candidates, so
@@ -215,7 +227,7 @@ def run_cluster(cards_path, dialogues_path, force=False, cursor_path=None,
         candidates = sorted(scopes[scope], key=_sort_key)
         if not candidates:
             continue
-        texts = [card_text(c) for c in candidates]
+        texts = [_key_of(c) for c in candidates]
         tfidf = TFIDF().fit(texts)
         clusters = []  # list of [canonical, [members]]
         for i, card in enumerate(candidates):
@@ -223,7 +235,7 @@ def run_cluster(cards_path, dialogues_path, force=False, cursor_path=None,
             carried = list(pre_members.get(card["card_id"], []))
             joined = None
             for cl in clusters:
-                if tfidf.score(card_text(card), card_text(cl[0])) >= \
+                if tfidf.score(_key_of(card), _key_of(cl[0])) >= \
                         cfg_obj.CLUSTER_THRESHOLD:
                     joined = cl
                     break
@@ -313,12 +325,17 @@ def main(argv=None):
     ap.add_argument("--cursor", dest="cursor_path", default=None)
     ap.add_argument("--now", default=None,
                     help="pinned ISO timestamp (required; brief §6)")
+    ap.add_argument("--cluster-key", choices=("card-text", "customer-turns"),
+                    default="card-text",
+                    help="cluster similarity key: card-text (SPEC §6.3, default) "
+                         "or customer-turns (F5, EVAL-PLAN §7.2)")
     cfg.add_set_flag(ap)
     args = ap.parse_args(argv)
 
     summary = run_cluster(args.cards_path, args.dialogues_path, args.force,
                           args.cursor_path, args.now,
-                          cfg.parse_overrides(args.set))
+                          cfg.parse_overrides(args.set),
+                          cluster_key=args.cluster_key)
     print(hio.dumps(summary))
     return 0
 
