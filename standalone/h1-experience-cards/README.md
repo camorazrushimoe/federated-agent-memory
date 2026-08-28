@@ -55,6 +55,41 @@ point an operator needs. `--force` exists for fixtures.
 
 No service, no database, no vector DB. JSONL on disk is enough for this hypothesis.
 
+## Quickstart
+
+Requirements: Python 3.11+ (stdlib only + the OS HTTP client — no pip
+install), an API key for any OpenAI-compatible endpoint.
+
+```bash
+git clone https://github.com/camorazrushimoe/federated-agent-memory
+cd federated-agent-memory/standalone/h1-experience-cards
+
+export H1_API_KEY=<your key>
+export H1_BASE_URL=https://api.deepseek.com/v1     # any OpenAI-compatible endpoint
+
+# 1. reproduce our numbers without spending a token
+python bin/run_experiment.py --replay runs/<reference_run_id>
+
+# 2. smoke the wiring on fixtures + 20 dialogues (a few LLM calls)
+python bin/run_experiment.py --stage S0 --model deepseek-v4-flash --out runs/my-s0
+
+# 3. the full measured run (~1000 extract calls)
+python bin/run_experiment.py --stage S2 --model deepseek-v4-flash --out runs/my-s2
+```
+
+**Cost of each command (measured on the reference run — filled at D8 when the
+reference S2 run is committed; no number is hand-typed):**
+
+| command | LLM calls | prompt tokens | completion tokens | USD | wall-clock |
+|--|--|--|--|--|--|
+| `--replay <reference_run_id>` | 0 | 0 | 0 | $0.00 | <measured at D8> |
+| `--stage S0 --model deepseek-v4-flash` | <measured at D8> | <measured at D8> | <measured at D8> | <measured or N/A> | <measured at D8> |
+| `--stage S2 --model deepseek-v4-flash` | ~1000 | <measured at D8> | <measured at D8> | <measured or N/A> | <measured at D8> |
+
+USD is null if no published price exists for the model (recorded, never
+guessed). The full run costs ~1000 extract calls before you start — the S0
+smoke exists exactly so a wiring bug never costs you that.
+
 Layer names matter here: the per-step checks are **contract tests**, the metrics
 against `unlock_guideline` are **offline eval**, the judge over card quality is
 **auto-eval**, and the go/no-go at the end is **fitness for purpose**. They fail
