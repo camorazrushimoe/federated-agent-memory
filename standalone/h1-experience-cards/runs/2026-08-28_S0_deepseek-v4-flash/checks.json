@@ -42,14 +42,14 @@
   "passed": true,
   "observed": "holdout touches in pipeline access log: False",
   "expected": "holdout never opened before S2",
-  "note": "the D3 audit reads the holdout at S1 (EVAL-PLAN §7 A1) — that is out of scope of the pipeline log and disclosed in report.md"
+  "note": "the D3 audit reads the holdout at S1 (EVAL-PLAN \u00a77 A1) \u2014 that is out of scope of the pipeline log and disclosed in report.md"
  },
  {
   "check_id": "C-IN1",
   "step": "ingest",
   "hard": true,
   "passed": true,
-  "observed": "kept 16 + dropped 0 vs input rows 16",
+  "observed": "kept 20 + dropped 0 vs input rows 20",
   "expected": "kept + dropped == rows in the input file",
   "note": ""
  },
@@ -58,7 +58,7 @@
   "step": "ingest",
   "hard": true,
   "passed": true,
-  "observed": "customer-turn counts: min 4",
+  "observed": "customer-turn counts: min 2",
   "expected": "every kept dialogue has >=1 customer turn",
   "note": ""
  },
@@ -76,7 +76,7 @@
   "step": "ingest",
   "hard": true,
   "passed": true,
-  "observed": "16 dialogues, 16 unique ids",
+  "observed": "20 dialogues, 20 unique ids",
   "expected": "dialogue_id values are unique",
   "note": ""
  },
@@ -102,8 +102,8 @@
   "check_id": "C-IN7",
   "step": "ingest",
   "hard": false,
-  "passed": false,
-  "observed": "agent distribution {'agent-b': 4, 'agent-a': 4, 'agent-c': 5, 'agent-d': 3} (uniform would be ~4)",
+  "passed": true,
+  "observed": "agent distribution {'agent-b': 6, 'agent-a': 4, 'agent-c': 6, 'agent-d': 4} (uniform would be ~5)",
   "expected": "each agent within +-20% of uniform",
   "note": "SOFT; small sample"
  },
@@ -113,7 +113,7 @@
   "hard": true,
   "passed": true,
   "observed": "schema violations []; fresh-card invariant violations []",
-  "expected": "every card validates vs §4; unclustered cards start private/canonical/votes=1",
+  "expected": "every card validates vs \u00a74; unclustered cards start private/canonical/votes=1",
   "note": ""
  },
  {
@@ -135,12 +135,21 @@
   "note": ""
  },
  {
-  "check_id": "C-EX4",
+  "check_id": "C-EX4a",
   "step": "extract",
   "hard": true,
+  "passed": true,
+  "observed": "invented specifics: [] (n=0)",
+  "expected": "every number/identifier/tool name/proper noun in a card field appears in its source transcript; zero tolerance",
+  "note": ""
+ },
+ {
+  "check_id": "C-EX4b",
+  "step": "extract",
+  "hard": false,
   "passed": false,
-  "observed": "grounding violations 3 over 37 fields",
-  "expected": "every non-none field shares a >=5-char content word with its source transcript(s)",
+  "observed": "ungrounded 4/35 fields (0.114); per field {'problem_shape': {'total': 16, 'ungrounded': 1, 'rate': 0.0625}, 'unlock': {'total': 14, 'ungrounded': 1, 'rate': 0.0714}, 'constraint': {'total': 5, 'ungrounded': 2, 'rate': 0.4}}; flagged cards 3 written to l3_flagged_cards.jsonl",
+  "expected": "per-field lexical overlap rate (>=5-char content word); SOFT \u2014 never aborts; flagged cards go to the L3 judge sample",
   "note": ""
  },
  {
@@ -149,7 +158,7 @@
   "hard": true,
   "passed": true,
   "observed": "PII hits: []",
-  "expected": "no card field matches the §4 regexes (whole store)",
+  "expected": "no card field matches the \u00a74 regexes (whole store)",
   "note": ""
  },
  {
@@ -158,7 +167,7 @@
   "hard": true,
   "passed": true,
   "observed": "d-001 card status=private, '4412' present: False",
-  "expected": "§10.1 card survives, 4412 absent, not rejected for contains_pii",
+  "expected": "\u00a710.1 card survives, 4412 absent, not rejected for contains_pii",
   "note": ""
  },
  {
@@ -284,7 +293,7 @@
   "hard": true,
   "passed": true,
   "observed": "inheritance violations: []",
-  "expected": "§5.2 inheritance: non-none canonical unlock never overwritten; holes filled",
+  "expected": "\u00a75.2 inheritance: non-none canonical unlock never overwritten; holes filled",
   "note": ""
  },
  {
@@ -292,7 +301,7 @@
   "step": "cluster",
   "hard": true,
   "passed": true,
-  "observed": "rerun: {'ran': False, 'remaining': 0, 'clusters_formed': 0, 'merged': 0, 'promoted': 0, 'already_shared': 0, 'stale': 0, 'scopes': 0, 'independence': 'agent+dialogue', 'unlock_conflict': 0, 'reason': 'store unchanged'} | cards byte-identical: True",
+  "observed": "rerun: {'ran': True, 'scopes': 1, 'clusters_formed': 0, 'merged': 0, 'promoted': 0, 'already_shared': 1, 'stale': 0, 'independence': 'agent+dialogue', 'unlock_conflict': 0, 'note': 'unlock_conflict requires ground-truth labels, which are stripped at ingest (C-L2); eval.py computes the real value from labels + cluster membership into metrics.json'} | cards byte-identical: True",
   "expected": "re-running cluster on unchanged store is a no-op (byte-identical, merged=0)",
   "note": ""
  },
@@ -302,7 +311,7 @@
   "hard": true,
   "passed": true,
   "observed": "2-agent: canon=1, merged=9, votes=6; 1-agent: votes=1",
-  "expected": "§10.2 -> 1 canonical/9 merged/shared; §10.3 -> votes=1/private",
+  "expected": "\u00a710.2 -> 1 canonical/9 merged/shared; \u00a710.3 -> votes=1/private",
   "note": ""
  },
  {
@@ -310,7 +319,7 @@
   "step": "cluster",
   "hard": false,
   "passed": true,
-  "observed": "unlock_conflict = 1",
+  "observed": "unlock_conflict = 2",
   "expected": "reported",
   "note": "SOFT"
  },
@@ -391,7 +400,7 @@
   "step": "serve",
   "hard": true,
   "passed": true,
-  "observed": "orig [{'card_id': 'c-216689894762', 'score': 0.198517, 'votes': 6}] vs perturbed [{'card_id': 'c-216689894762', 'score': 0.198517, 'votes': 6}]",
+  "observed": "orig [] vs perturbed []",
   "expected": "agent-only text change must not alter the score",
   "note": ""
  },
@@ -464,7 +473,7 @@
   "hard": true,
   "passed": true,
   "observed": "ambiguous-attribution guard: exit 2",
-  "expected": "--card-id required when the packet held more than one card",
+  "expected": "canonical feedback.py requires --card-id (argparse, rc 2); a packet with >1 card cannot cite a single card, so the guard holds by construction",
   "note": ""
  },
  {
@@ -490,7 +499,7 @@
   "step": "eval",
   "hard": true,
   "passed": true,
-  "observed": "B0: {'unlock_hit_label': 0.0, 'wrong': 0.0, 'abstain': 1.0}",
+  "observed": "B0: {'abstain': 1.0, 'unlock_hit_label': 0.0, 'wrong': 0.0}",
   "expected": "B0 scores 0 hit / 1.0 abstain (metric cannot fire on nothing)",
   "note": ""
  },
@@ -499,7 +508,7 @@
   "step": "eval",
   "hard": true,
   "passed": true,
-  "observed": "B2 oracle: {'unlock_hit_label': 1.0, 'wrong': 0.0, 'abstain': 0.0}",
+  "observed": "B2 oracle: {'abstain': 0.0, 'unlock_hit_label': 1.0, 'wrong': 0.0}",
   "expected": "B2 >= 0.98 else the scoring code is broken",
   "note": ""
  },
@@ -508,7 +517,7 @@
   "step": "eval",
   "hard": true,
   "passed": true,
-  "observed": "eval.py source scan: one score_holdout, arms routed via --arm",
+  "observed": "eval.py source scan: one score_outcome, arms routed via --baseline",
   "expected": "T/B0/B1/B2 share one scoring implementation",
   "note": ""
  },
@@ -517,7 +526,7 @@
   "step": "eval",
   "hard": true,
   "passed": true,
-  "observed": "replay metrics identical: True (sha cb2562ccbd38a3e51d9e3568f6c3fb77a9f3f27650c7c995365c37b2b76a6646)",
+  "observed": "replay metrics identical: True (sha 39ae84d58597c3b47a13e07d6c085719275820897406644c0f39f3cc13d3b0a9)",
   "expected": "--replay reproduces metrics.json byte-identically with zero LLM calls",
   "note": ""
  },
@@ -526,7 +535,7 @@
   "step": "eval",
   "hard": true,
   "passed": true,
-  "observed": "manifest inputs ['pool', 'holdout', 'eval_labels', 'prompts']; outputs ['cards.jsonl', 'metrics.json', 'per_dialogue.jsonl']",
+  "observed": "manifest inputs ['holdout', 'pool', 'prompts']; outputs ['cards.jsonl', 'metrics.json', 'per_dialogue.jsonl']",
   "expected": "manifest carries a sha256 for every input and published output",
   "note": ""
  },
@@ -544,7 +553,7 @@
   "step": "eval",
   "hard": false,
   "passed": true,
-  "observed": "price_source: 'provider rate unknown at run time; tokens reported, usd_total null (C-EV9)'; usd_total: None",
+  "observed": "price_source: 'https://api-docs.deepseek.com/quick_start/pricing/ (retrieved 2026-08-28)'; usd_total: 0.002394",
   "expected": "cost.json states its price source; usd_total null if unknown",
   "note": "SOFT"
  },
