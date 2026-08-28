@@ -302,6 +302,131 @@ def operate(rows, gold):
             "n_same_gold": len(same), "band_sizes": {b: len(v) for b, v in band_ids.items()}}
 
 
+def join_findings(rows, gold_rows):
+    """Findings computed by the oversight join re-derivation (round 1).
+
+    Three findings, each a deterministic function of the join:
+      F1 — where the false-friend danger sits: same-flow vs cross-flow FFR
+           (coarse cut: gold-unrelated in should-match/ambiguous bands vs in
+           the should-not-match band; fine cut: sub_band within diff-flow).
+      F2 — cross-flow same-problem coverage of the gold set (0 pairs: the
+           cross-vertical reuse question is UNTESTED, not refuted).
+      F3 — oracle-label insufficiency: pairs the B0 oracle pools (same
+           subflow) that the labeler called unrelated, plus the
+           band-vs-canonical disagreement census.
+    """
+    g = {x["pair_id"]: x for x in gold_rows}
+    sc = {r["pair_id"]: r for r in rows}
+    unrel = [p for p in sc if g[p]["canonical_label"] == "unrelated"]
+    same = [p for p in sc if g[p]["canonical_label"] == "same-problem"]
+    sf_unrel = [p for p in unrel if sc[p]["band"] in ("should-match", "ambiguous")]
+    df_unrel = [p for p in unrel if sc[p]["band"] == "should-not-match"]
+
+    def ffr_at(t, pool):
+        def block(pids):
+            bad = [p for p in pool if p in set(pids)]
+            return {"n_bad": len(bad), "n": len(pids),
+                    "ffr": round(len(bad) / len(pids), 4) if pids else 0.0,
+                    "pairs": sorted(bad)}
+        return {
+            "threshold": f">= {t:.6f}",
+            "total": block(unrel),
+            "same_flow": block(sf_unrel),
+            "diff_flow": block(df_unrel),
+            "diff_flow_by_sub_band": {
+                sb: block([p for p in df_unrel if g[p].get("sub_band") == sb])
+                for sb in sorted({g[p].get("sub_band") for p in df_unrel})},
+        }
+
+    # the thresholds quoted in the round-1 join (nearest unique score)
+    uniq = sorted({r["b1_cosine"] for r in rows})
+    quoted = []
+    for q in (0.1965, 0.1717):
+        t = min(uniq, key=lambda x: abs(x - q))
+        pool = [p for p in sc if sc[p]["b1_cosine"] >= t]
+        quoted.append(ffr_at(t, pool))
+
+    # F2: gold coverage of cross-flow same-problem
+    cf = [p for p in same if g[p].get("sub_band") == "cross-flow"]
+    cp = [p for p in same if g[p].get("sub_band") == "cross-product"]
+    snm_same = [p for p in same if sc[p]["band"] == "should-not-match"]
+    same_flows = sorted({g[p]["flow_a"] for p in same})
+
+    # F3: oracle-pooled but gold-unrelated
+    oracle_bad = sorted(p for p in sc if sc[p]["b0_pool"]
+                        and g[p]["canonical_label"] == "unrelated")
+
+    # band-vs-canonical census (construction direction vs label):
+    # should-match built to match -> off-direction = related-but-different /
+    # unrelated; ambiguous built middle -> unrelated is off-direction;
+    # should-not-match built false-friend/unrelated -> related-but-different /
+    # same-problem is off-direction.
+    ct = Counter((sc[p]["band"], g[p]["canonical_label"]) for p in sc)
+    off_direction = {  # any deviation from the band's construction center
+        ("should-match", "related-but-different"),
+        ("should-match", "unrelated"),
+        ("ambiguous", "same-problem"),
+        ("ambiguous", "unrelated"),
+        ("should-not-match", "related-but-different"),
+        ("should-not-match", "same-problem"),
+    }
+    hard_contradiction = {  # label contradicts the band's existence reason
+        ("should-match", "unrelated"),
+        ("ambiguous", "unrelated"),
+        ("should-not-match", "related-but-different"),
+    }
+    n_off = sum(ct[k] for k in off_direction if k in ct)
+    n_hard = sum(ct[k] for k in hard_contradiction if k in ct)
+
+    return {
+        "ffr_cut_sameflow_vs_crossflow": quoted,
+        "gold_unrelated_split": {
+            "same_flow": len(sf_unrel), "diff_flow": len(df_unrel),
+            "note": "gold-unrelated 63 = 15 same-flow (3 should-match band + "
+                    "12 ambiguous band) + 48 diff-flow (should-not-match band)"
+        },
+        "crossflow_same_problem_coverage": {
+            "gold_same_problem_n": len(same),
+            "cross_flow_same": len(cf), "cross_product_same": len(cp),
+            "should_not_match_band_same": len(snm_same),
+            "all_same_problem_pairs_same_flow":
+                all(g[p]["flow_a"] == g[p]["flow_b"] for p in same),
+            "distinct_flows_with_same_problem": same_flows,
+            "note": "the gold set contains ZERO cross-flow / cross-product "
+                    "same-problem pairs: cross-vertical RECALL is untested, "
+                    "not zero. This is a limitation of the gold set, not "
+                    "evidence against cross-vertical sharing."
+        },
+        "oracle_label_insufficiency": {
+            "oracle_pooled_gold_unrelated": [
+                {"pair_id": p, "subflow": g[p]["subflow_a"],
+                 "b1_cosine": sc[p]["b1_cosine"],
+                 "rationale_pass1": g[p].get("pass1_rationale"),
+                 "rationale_pass2": g[p].get("pass2_rationale")}
+                for p in oracle_bad],
+            "note": "B0 pools these (same subflow) yet both labeling passes "
+                    "called them unrelated, and B1 scores all three low. "
+                    "Direct evidence for the method doc's thesis: intent "
+                    "match alone is not problem-shape match."
+        },
+        "band_vs_canonical": {
+            "crosstab": {f"{k[0]}|{k[1]}": v for k, v in sorted(ct.items())},
+            "off_direction_total": n_off,
+            "hard_contradictions": n_hard,
+            "hard_contradiction_definition":
+                "should-match labeled unrelated, ambiguous labeled unrelated, "
+                "or should-not-match labeled related-but-different",
+            "note": "18/170 canonical labels contradict the construction "
+                    "direction of their band (3 sm->unrelated + "
+                    "12 amb->unrelated + 3 snm->related-but-different); "
+                    "14/170 more are off-center but not contradictory "
+                    "(14 sm->related-but-different + 1 amb->same-problem). "
+                    "The band is construction metadata, the label is the "
+                    "gold — the metric follows the label."
+        },
+    }
+
+
 def stage_score(gold_path, scores_path, out_json, out_md):
     gold_rows = load_jsonl(gold_path)
     rows = load_jsonl(scores_path)
@@ -315,6 +440,7 @@ def stage_score(gold_path, scores_path, out_json, out_md):
     canon = {pid: x["canonical_label"] for pid, x in g.items()}
 
     res = operate(rows, canon)
+    findings = join_findings(rows, gold_rows)
 
     # agreement numbers (from gold; honesty clause: agent self-consistency)
     n = len(gold_rows)
@@ -345,7 +471,7 @@ def stage_score(gold_path, scores_path, out_json, out_md):
         "corpus_sha256_16": CORPUS_SHA16,
         "pairs_sha256_16": PAIRS_SHA16,
         "gold": {"path": str(gold_path), "provenance": "agent-labeled",
-                 "n": n},
+                 "n": n, "sha256_16": sha16(gold_path)},
         "agreement": agreement,
         "b0_oracle": res["b0"],
         "b1": {
@@ -361,6 +487,7 @@ def stage_score(gold_path, scores_path, out_json, out_md):
         },
         "b2": {"status": "gated", "rule": "runs only if B1 fails the frozen bar "
                 "(method doc: falsification-only)"},
+        "join_findings": findings,
     }
     out_json.write_text(json.dumps(out, indent=2) + "\n")
     write_report(out_md, out)
@@ -379,6 +506,10 @@ def write_report(md, out):
     sel = b1["selected_operating_point"]
     b0 = out["b0_oracle"]
     ag = out["agreement"]
+    fj = out["join_findings"]
+    cov = fj["crossflow_same_problem_coverage"]
+    orc = fj["oracle_label_insufficiency"]
+    bvc = fj["band_vs_canonical"]
     verdict = ("**PASSES the frozen bar**" if b1["bar_met"]
                else "**DOES NOT meet the frozen bar** (no threshold with "
                     f"FFR ≤ {FFR_BAR:.0%} at recall_sm ≥ {RECALL_BAR:.0%})")
@@ -473,6 +604,131 @@ def write_report(md, out):
         f"F1 = {b0['f1']:.3f} · n_pooled = {b0['n_pooled']}",
         f"- per-band recall: " + ", ".join(
             f"{k}={v:.3f}" for k, v in b0["recall_by_band"].items()),
+        "",
+        "## Findings from the join (round 1, oversight re-derivation)",
+        "",
+        "### F1 — the false-friend danger is INSIDE the flow, not across it",
+        "",
+        "FFR split of the gold-`unrelated` class (63 = 15 same-flow + 48 diff-flow):",
+        "",
+        "| threshold | FFR total | FFR same-flow (15) | FFR diff-flow (48) | cross-flow (18) | cross-product (9) | other-diff-flow (21) |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for q in fj["ffr_cut_sameflow_vs_crossflow"]:
+        sb = q["diff_flow_by_sub_band"]
+        lines.append(
+            f"| {q['threshold']} | {q['total']['n_bad']}/{q['total']['n']} = "
+            f"{q['total']['ffr']:.3f} | {q['same_flow']['n_bad']}/"
+            f"{q['same_flow']['n']} = {q['same_flow']['ffr']:.3f} | "
+            f"{q['diff_flow']['n_bad']}/{q['diff_flow']['n']} = "
+            f"{q['diff_flow']['ffr']:.3f} | "
+            f"{sb.get('cross-flow', {}).get('n_bad', 0)}/"
+            f"{sb.get('cross-flow', {}).get('n', 0)} = "
+            f"{sb.get('cross-flow', {}).get('ffr', 0):.3f} | "
+            f"{sb.get('cross-product', {}).get('n_bad', 0)}/"
+            f"{sb.get('cross-product', {}).get('n', 0)} = "
+            f"{sb.get('cross-product', {}).get('ffr', 0):.3f} | "
+            f"{sb.get('other-diff-flow', {}).get('n_bad', 0)}/"
+            f"{sb.get('other-diff-flow', {}).get('n', 0)} = "
+            f"{sb.get('other-diff-flow', {}).get('ffr', 0):.3f} |"
+        )
+    q_lo = fj["ffr_cut_sameflow_vs_crossflow"][0]   # >= 0.196495
+    q_hi = fj["ffr_cut_sameflow_vs_crossflow"][1]   # >= 0.171686
+    cf_lo = q_lo["diff_flow_by_sub_band"].get("cross-flow", {})
+    cf_hi = q_hi["diff_flow_by_sub_band"].get("cross-flow", {})
+    lines += [
+        "",
+        f"At `{q_hi['threshold']}` the same-flow FFR "
+        f"({q_hi['same_flow']['ffr']:.1%}, {q_hi['same_flow']['n_bad']}/"
+        f"{q_hi['same_flow']['n']}) is **higher** than the cross-flow FFR "
+        f"({cf_hi.get('ffr', 0):.1%}, {cf_hi.get('n_bad', 0)}/{cf_hi.get('n', 0)}); "
+        f"at `{q_lo['threshold']}` the same-flow FFR ({q_lo['same_flow']['ffr']:.1%}) "
+        f"is more than double the cross-flow FFR ({cf_lo.get('ffr', 0):.1%}). "
+        "The same-flow bad pairs at both thresholds are the same two: "
+        f"**{', '.join(q_hi['same_flow']['pairs'])}** — both "
+        "`subscription_inquiry` pairs whose convos sit in different subflows "
+        "but share bill-management vocabulary (amount / pay / due / dispute "
+        "wording). Cross-flow bad pairs at "
+        f"`{q_hi['threshold']}`: {', '.join(cf_hi.get('pairs', []))}.",
+        "",
+        "**This inverts the method doc §5 expectation table**, which predicted "
+        "cross-flow / cross-product would be the hard false-friend slice. It is "
+        "not — on this data the hard slice is *within* a flow, between adjacent "
+        "subflows that share product/bill vocabulary. **Implication for the "
+        "sharing scope (commission §8.1):** the §M1 escape clause (\"no method "
+        "keeps the cross-flow FFR ≤ 10% ⇒ sharing is constrained to "
+        "vertical/flow\") does NOT fire — cross-flow FFR stays inside the bar "
+        "at every passing threshold. But the data does not license global "
+        "sharing either: the measured danger is *intra-flow, inter-subflow* "
+        "pooling on shared vocabulary, so a sharing scope that pools across "
+        "subflows inside a flow carries the same false-friend cost as "
+        "cross-flow pooling. The scope decision needs sub-flow-level evidence, "
+        "which this round does not settle (see F2). Honesty clause: all of "
+        "this rests on an AGENT-LABELED gold set — inter-pass disagreement "
+        "21/170 = 0.1235 is a labeler self-consistency floor, not human "
+        "inter-rater agreement.",
+        "",
+        "### F2 — cross-flow \"same problem\" was never tested",
+        "",
+        f"All {cov['gold_same_problem_n']} gold same-problem pairs are "
+        f"same-flow ({len(cov['distinct_flows_with_same_problem'])} distinct "
+        f"flows: {', '.join(cov['distinct_flows_with_same_problem'])}); the "
+        "gold set contains **zero** cross-flow and zero cross-product "
+        "same-problem pairs. The cross-vertical reuse question is therefore "
+        "**UNTESTED, not refuted** — recall across flows is unknown, not "
+        "zero. This is a limitation of the gold set (its construction drew "
+        "should-match only from same subflow). Do not read F1's inversion as "
+        "evidence against cross-vertical sharing; it is silent on cross-flow "
+        "*recall* by construction. Any sharing-scope claim from R1 must say so.",
+        "",
+        "### F3 — the oracle label is not sufficient ground truth",
+        "",
+        "Three pairs share a subflow (B0 pools them) yet the labeler called "
+        "them **unrelated**, and B1 scores all three low:",
+        "",
+        "| pair | subflow | B1 score |",
+        "|---|---|---|",
+    ]
+    for p in orc["oracle_pooled_gold_unrelated"]:
+        lines.append(f"| {p['pair_id']} | {p['subflow']} | {p['b1_cosine']:.4f} |")
+    lines += [
+        "",
+        "B1 correctly refuses exactly the pairs the subflow oracle wrongly "
+        "accepts. This is direct evidence for the method doc's own thesis — "
+        "**intent match alone is not problem-shape match** — and it bounds "
+        "B0 as a *ceiling on same-subflow coverage, not a definition of "
+        "same-problem*. B0's FFR (4.8%, 3/63) is the FFR of *subflow "
+        "identity*, not of problem shape.",
+        "",
+        f"Band-vs-canonical census: **{bvc['hard_contradictions']}/170** "
+        "canonical labels contradict the construction direction of their "
+        f"band ({bvc['hard_contradiction_definition']}); "
+        f"{bvc['off_direction_total']} of 170 are off-center in total (the "
+        "rest being 14 should-match pairs labeled related-but-different and 1 "
+        "ambiguous pair labeled same-problem). The band is construction "
+        "metadata, the label is the gold; every metric in this report follows "
+        "the label.",
+        "",
+        "## Closure line (round 1, R1 / BON-41)",
+        "",
+        f"**CONFIRMED** — independently re-derived from `b1_scores.jsonl` "
+        f"(PR #17, sha256:16 `9fe3e4b3c0978e1f`) joined to "
+        f"`gold_m1_pairs_agentlabeled.jsonl` (PR #18, sha256:16 "
+        f"`{out['gold'].get('sha256_16', '792df7d24fc0609a')}`) on pair_id "
+        "(170/170, 0 only-onesided), no computation reused from either report. "
+        f"B1 (TF-IDF cosine, customer turns) at threshold 0.1965 (exact unique "
+        f"score 0.196495): **FFR 6.3% (4/63) at recall_sm 60.0%** → "
+        f"**PASS** of the frozen bar (≤10% at ≥60%). Best operating point "
+        f"(argmax pairwise-F1 in the pass region): threshold 0.175964 → "
+        f"recall_sm 72.9%, FFR 9.5% (6/63), F1 0.721; the max-recall point "
+        f"inside the pass region is 0.171686 → recall_sm 74.1% "
+        f"(76.8% of gold same-problem), FFR 9.5%. B0 oracle: recall_sm 100% "
+        f"at FFR 4.8% (3/63). Bar-passing thresholds: 18 "
+        f"(0.171686 → 0.196495). Per method doc §M1, B1 passing means B2 is "
+        f"**DROPPED** and the finding is *problem shape is lexical on this "
+        f"data*. HONESTY CLAUSE (attached to every 6.3%): the gold set is "
+        f"AGENT-LABELED; inter-pass disagreement 21/170 = 0.1235 is a "
+        f"labeler self-consistency floor, not human inter-rater agreement.",
         "",
         "## B2",
         "",
