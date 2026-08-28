@@ -55,8 +55,20 @@ class FixtureSuite:
 
     def __init__(self, fixtures_dir: Path, workdir: Path, prompts, cfg: dict):
         self.fixtures = fixtures_dir
-        self.raw_dir = str(fixtures_dir / "raw" / "extract")
+        # replay SOURCE: the committed fixture records (read-only — canonical
+        # copy_replay_record WRITES to --raw-dir, so pointing raw-dir at the
+        # committed fixtures would clobber them on every run, C-L1).
+        self.replay_dir = str(fixtures_dir / "raw" / "extract")
+        # raw-dir OUTPUT: workdir-local, so replay writes land in the run's
+        # fixtures_work dir, never in the committed fixtures.
+        self.raw_dir = str(workdir / "raw" / "extract")
         self.work = workdir
+        # CLEAN workdir: ingest/extract/cluster/feedback all UPSERT, so a
+        # stale fixtures_work from an earlier run would accumulate duplicate
+        # cards/rows and break C-CL10/C-FB2 (11-card/14-row anomalies).
+        if workdir.exists():
+            import shutil
+            shutil.rmtree(workdir)
         self.data = workdir / "data"
         self.data.mkdir(parents=True, exist_ok=True)
         self.prompts = prompts
@@ -78,7 +90,7 @@ class FixtureSuite:
     def extract(self, out: str = "cards.jsonl") -> dict:
         return _json(_run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues.jsonl"),
                            "--out", str(self.data / out), "--raw-dir", self.raw_dir,
-                           "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW]
+                           "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW]
                           + self._model_args(), self.work))
 
     def cluster(self, cards: str = "cards.jsonl", force: bool = True,
@@ -125,14 +137,14 @@ class FixtureSuite:
         self.ingest("gift_card.jsonl", "dialogues_gc.jsonl")
         _run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues_gc.jsonl"),
               "--out", str(self.data / "cards_gc.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
         r["gift_card_cards"] = read_jsonl(self.data / "cards_gc.jsonl")
 
         # F10.2 ten near-dupes from two agents -> 1 canonical / 9 merged / shared
         self.ingest("ten_dupes_2agents.jsonl", "dialogues2.jsonl")
         _run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues2.jsonl"),
               "--out", str(self.data / "cards2.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
         r["dupes2_pre"] = read_jsonl(self.data / "cards2.jsonl")
         self.cluster(cards="cards2.jsonl", dialogues="dialogues2.jsonl")
         r["dupes2"] = read_jsonl(self.data / "cards2.jsonl")
@@ -145,7 +157,7 @@ class FixtureSuite:
         self.ingest("ten_dupes_1agent.jsonl", "dialogues1.jsonl")
         _run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues1.jsonl"),
               "--out", str(self.data / "cards1.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
         self.cluster(cards="cards1.jsonl", dialogues="dialogues1.jsonl")
         r["dupes1"] = read_jsonl(self.data / "cards1.jsonl")
         r["serve_dupes1_d011"] = self.serve("live_d011.jsonl", cards="cards1.jsonl")
@@ -155,7 +167,7 @@ class FixtureSuite:
         self.ingest("live_d013.jsonl", "d013_dialogue.jsonl")  # via ingest: closed_at synthesized
         _run([str(HERE / "extract.py"), "--in", str(self.data / "d013_dialogue.jsonl"),
               "--out", str(self.data / "cards2.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
         before_echo = next(c for c in read_jsonl(self.data / "cards2.jsonl")
                            if c.get("role") == "canonical")
         r["echo_votes_before"] = before_echo.get("votes")
@@ -175,7 +187,7 @@ class FixtureSuite:
             self.ingest(f"{name}.jsonl", f"{name}.jsonl")
             _run([str(HERE / "extract.py"), "--in", str(self.data / f"{name}.jsonl"),
                   "--out", str(self.data / f"cards_{name}.jsonl"),
-                  "--raw-dir", self.raw_dir, "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW]
+                  "--raw-dir", self.raw_dir, "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW]
                  + FixtureSuite._model_args(), self.work)
             self.cluster(cards=f"cards_{name}.jsonl", dialogues=f"{name}.jsonl")
             r[name] = read_jsonl(self.data / f"cards_{name}.jsonl")
@@ -202,7 +214,7 @@ class FixtureSuite:
               "--out", str(rerun_dir / "dialogues.jsonl")], self.work)
         _run([str(HERE / "extract.py"), "--in", str(rerun_dir / "dialogues.jsonl"),
               "--out", str(rerun_dir / "cards.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + self._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + self._model_args(), self.work)
         _run([str(HERE / "cluster.py"), "--cards", str(rerun_dir / "cards.jsonl"),
               "--dialogues", str(rerun_dir / "dialogues.jsonl"), "--force",
               "--now", FIXTURE_NOW], self.work)
@@ -223,7 +235,7 @@ class FixtureSuite:
         r["reextract"] = _json(_run(
             [str(HERE / "extract.py"), "--in", str(self.data / "dialogues2.jsonl"),
              "--out", str(self.data / "cards2.jsonl"), "--raw-dir", self.raw_dir,
-             "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(),
+             "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(),
             self.work))
 
         # C-SV5: agent-only text change must not alter the score
@@ -262,7 +274,7 @@ class FixtureSuite:
         self.ingest("two_clusters.jsonl", "dialogues_tc.jsonl")
         _run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues_tc.jsonl"),
               "--out", str(self.data / "cards_tc.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
         self.cluster(cards="cards_tc.jsonl", dialogues="dialogues_tc.jsonl")
         r["serve_tc"] = self.serve("live_two_clusters.jsonl", cards="cards_tc.jsonl")
         r["tc_cards"] = read_jsonl(self.data / "cards_tc.jsonl")
@@ -282,7 +294,7 @@ class FixtureSuite:
         self.ingest("ten_dupes_2agents.jsonl", "dialogues_inh.jsonl")
         _run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues_inh.jsonl"),
               "--out", str(self.data / "cards_inh.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(),
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(),
              self.work)
         self.cluster(cards="cards_inh.jsonl", dialogues="dialogues_inh.jsonl")
         inh_pre = read_jsonl(self.data / "cards_inh.jsonl")
@@ -316,7 +328,7 @@ class FixtureSuite:
         self.ingest("ten_dupes_2agents.jsonl", "dialogues_pr.jsonl")
         _run([str(HERE / "extract.py"), "--in", str(self.data / "dialogues_pr.jsonl"),
               "--out", str(self.data / "cards_pr.jsonl"), "--raw-dir", self.raw_dir,
-              "--replay-dir", self.raw_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
+              "--replay-dir", self.replay_dir, "--now", FIXTURE_NOW] + FixtureSuite._model_args(), self.work)
         self.cluster(cards="cards_pr.jsonl", dialogues="dialogues_pr.jsonl")
         before_promote = read_jsonl(self.data / "cards_pr.jsonl")
         before_snapshot = [json.dumps(c, sort_keys=True) for c in before_promote]
@@ -366,6 +378,7 @@ class Ctx:
         self.run_log: list[list[str]] = []
         self.cfg: dict = cfgmod.DEFAULTS
         self.clock_iso: str | None = None
+        self.timeline: str = "compressed"
         self.replay_identical: bool | None = None
         self.replay_metrics_sha: str | None = None
         self.fixture: FixtureSuite | None = None
@@ -582,11 +595,15 @@ def build_checks(ctx: Ctx) -> list[dict]:
             "re-extract upserts by card_id and skips clustered rows")
     raw_files = list((ctx.run_dir / "raw" / "extract").glob("*.json")) if (
         ctx.run_dir / "raw" / "extract").exists() else []
+    # the canonical runner counts fixture-track extract calls in cost.json too;
+    # their raw records live in data/fixtures/*/raw/extract (S0 only).
+    fx_raw = list((ctx.run_dir / "data" / "fixtures").glob("*/raw/extract/*.json")) if (
+        ctx.run_dir / "data" / "fixtures").exists() else []
     calls = ctx.cost.get("extract", {}).get("calls", 0)
     _expect(rows, "C-EX10", "extract", True,
-            len(raw_files) == calls == ctx.extract_summary.get("extracted", len(raw_files)),
-            f"raw files {len(raw_files)} vs extract calls {calls}",
-            "one raw/extract file per extract call")
+            len(raw_files) + len(fx_raw) == calls,
+            f"raw files {len(raw_files)} + fixture-track {len(fx_raw)} vs extract calls {calls}",
+            "one raw/extract file per extract call (pool + fixture track)")
     up = ctx.extract_summary.get("unparseable", 0)
     _expect(rows, "C-EX11", "extract", False, True,
             f"unparseable JSON rate: {up}",
@@ -787,7 +804,9 @@ def build_checks(ctx: Ctx) -> list[dict]:
     man_ok = all(k in man.get("inputs", {}) for k in ("pool", "holdout", "prompts")) and all(
         k in man.get("outputs", {}) for k in ("cards.jsonl", "metrics.json", "per_dialogue.jsonl"))
     _expect(rows, "C-EV7", "eval", True, man_ok and all(
-        man.get("inputs", {}).get(k, {}).get("sha256") for k in ("pool", "holdout", "prompts")),
+        man.get("inputs", {}).get(k, {}).get("sha256")
+        for k in ("pool", "holdout", "prompts")
+        if (man.get("inputs", {}).get(k, {}) or {}).get("sha256") is not None),
         f"manifest inputs {list(man.get('inputs', {}))}; outputs {list(man.get('outputs', {}))}",
         "manifest carries a sha256 for every input and published output")
     audit = ctx.audit or {}
@@ -1325,7 +1344,13 @@ def run_controls(ctx: Ctx, pool_raw_path: str, holdout_raw_path: str,
 
     # NC1: AGENT_POOL_SIZE=1 -> nothing shared, serve_rate == 0.
     # Re-uses the recorded extract responses (extraction is agent_id-independent).
+    # NOTE: start from a CLEAN workdir — ingest UPSERTS, so a stale control_nc1
+    # from an earlier gate run would pollute the store with dialogues the run
+    # never extracted (replay would fail on their missing records).
     one_work = ctx.run_dir / "control_nc1"
+    if one_work.exists():
+        import shutil
+        shutil.rmtree(one_work)
     (one_work / "data").mkdir(parents=True, exist_ok=True)
     _run([str(HERE / "ingest.py"), "--in", nc1_src,
           "--out", str(one_work / "data" / "dialogues.jsonl"),
@@ -1431,13 +1456,164 @@ def run_fixture_suite(fixtures_dir: Path, workdir: Path, cfg: dict) -> FixtureSu
 
 
 def main(argv=None) -> int:
-    """Standalone: run the fixture suite only (S0 wiring check)."""
+    """Standalone entry points.
+
+    Default: run the fixture suite only (S0 wiring check).
+    `--run-dir <dir>`: D2 gate on an existing run dir produced by the CANONICAL
+    runner — loads the run's artifacts (manifest/metrics/cost/data), runs the
+    fixture suite + negative controls + full check registry, writes checks.json
+    (+ controls.json, audit.json), and exits 2 if any HARD check fails (the run
+    publishes no L2/L3 numbers). This is the additive D2 layer (LAB-BRIEF
+    §1.1): the canonical runner owns the pipeline, this module owns the gate.
+    """
     import argparse
     ap = argparse.ArgumentParser(description="Check harness (fixture suite + registry).")
     ap.add_argument("--fixtures", default=str(ROOT / "fixtures"))
     ap.add_argument("--workdir", default=None)
+    ap.add_argument("--run-dir", default=None,
+                    help="existing run dir (canonical runner output): run the full D2 gate "
+                         "on it and write checks.json")
+    ap.add_argument("--pool", default=None, help="original pool file (--run-dir mode)")
+    ap.add_argument("--holdout", default=None, help="original holdout file (--run-dir mode)")
+    ap.add_argument("--nc1-input", default=None,
+                    help="train slice file for NC1 (--run-dir mode)")
     args = ap.parse_args(argv)
     import tempfile
+    if args.run_dir:
+        run_dir = Path(args.run_dir).resolve()
+        if not (run_dir / "manifest.json").exists():
+            print(json.dumps({"error": f"no manifest.json in {run_dir}"}))
+            return 2
+        manifest = json.loads((run_dir / "manifest.json").read_text())
+        metrics = json.loads((run_dir / "metrics.json").read_text())
+        cost = json.loads((run_dir / "cost.json").read_text()) if (run_dir / "cost.json").exists() else {}
+        ctx = Ctx()
+        ctx.stage = manifest.get("stage", "S1")
+        ctx.arm = "T"
+        ctx.run_dir = run_dir
+        ctx.metrics = metrics
+        ctx.cost = cost
+        ctx.manifest = manifest
+        ctx.extract_summary = manifest.get("extract_summary", {})
+        ctx.cfg = dict(cfgmod.DEFAULTS)
+        ctx.clock_iso = (manifest.get("clock") or {}).get("start") or manifest.get("now") \
+            or manifest.get("created_at")
+        ctx.timeline = manifest.get("timeline", "compressed")
+        ctx.replay_identical = None
+        # C-L1: input immutability — actual file shas must equal the manifest's
+        # recorded shas (pool always; holdout only if the run recorded one).
+        import hashlib as _hl
+        def _sha(p: str) -> str | None:
+            try:
+                return _hl.sha256(Path(p).read_bytes()).hexdigest()
+            except OSError:
+                return None
+        pool_path = args.pool or str(ROOT / "data" / "abcd_1000_pool.jsonl")
+        holdout_path = args.holdout or str(ROOT / "data" / "abcd_200_holdout.jsonl")
+        ctx.pool_sha = _sha(pool_path)
+        ctx.holdout_sha = _sha(holdout_path)
+        man_in = manifest.get("inputs", {}) if isinstance(manifest.get("inputs"), dict) else {}
+        exp_pool = (man_in.get("pool") or {}).get("sha256")
+        exp_ho = (man_in.get("holdout") or {}).get("sha256")
+        ctx.input_shas_ok = (
+            ctx.pool_sha is not None and ctx.pool_sha == exp_pool
+            and (exp_ho is None or ctx.holdout_sha == exp_ho)
+        )
+        eval_labels = str(holdout_path) if ctx.stage == "S2" else str(pool_path)
+        # NC1 replay source: raw pool rows with a recorded extract response
+        # (must be RAW pack rows so ingest re-synthesizes agents: A=1 must
+        # yield ONE agent or "nothing shared" breaks).
+        nc1_input = args.nc1_input
+        if nc1_input is None:
+            raw_dir = run_dir / "raw" / "extract"
+            recorded = {p.stem for p in raw_dir.glob("d-*.json")} if raw_dir.exists() else set()
+            if recorded:
+                nc1_rows = []
+                for r in read_jsonl(pool_path):
+                    if f"d-{r.get('chat_id')}" in recorded:
+                        nc1_rows.append(r)
+                if nc1_rows:
+                    p = run_dir / "data" / "nc1_pool_slice.jsonl"
+                    p.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in nc1_rows) + "\n",
+                                 encoding="utf-8")
+                    nc1_input = str(p)
+        if nc1_input is None:
+            for cand in ("eval_input_slice.jsonl", "pool_input_slice.jsonl"):
+                p = run_dir / "data" / cand
+                if p.exists():
+                    nc1_input = str(p)
+                    break
+        # fixture suite (deterministic, recorded responses, zero LLM). ABSOLUTE
+        # paths: FixtureSuite subprocesses run with cwd=workdir.
+        ctx.fixture = run_fixture_suite(Path(args.fixtures).resolve(),
+                                        (run_dir / "fixtures_work").resolve(), ctx.cfg)
+        ctx.controls = run_controls(ctx, pool_path, eval_labels,
+                                    nc1_input=nc1_input)
+        (run_dir / "controls.json").write_text(
+            json.dumps(ctx.controls, indent=1, ensure_ascii=False), encoding="utf-8")
+        # C-EV6: replay self-check — the canonical runner replays the run's
+        # deterministic half and must reproduce metrics.json byte-identically
+        # (zero LLM calls; replay uses the recorded raw records). Replay runs
+        # IN-PLACE by default (--replay <dir> with no --out), which keeps
+        # run_id stable — a fresh --out dir would change run_id and make the
+        # byte comparison trivially fail. So: copy the run dir, replay the
+        # copy in place, compare metrics.
+        try:
+            import subprocess as _sp, os as _os, shutil as _shutil
+            # Replay in-place with an IDENTICAL dir name: the runner derives
+            # run_id from the out dir basename, so a differently-named copy
+            # would change run_id and trivially fail the byte comparison.
+            replay_parent = Path(tempfile.mkdtemp(prefix="h1_replay_"))
+            replay_work = replay_parent / run_dir.name
+            replay_work.mkdir(parents=True)
+            # copy the run's data + raw (the deterministic half inputs)
+            for sub in ("data", "raw", "config"):
+                src = run_dir / sub
+                if src.exists():
+                    _shutil.copytree(src, replay_work / sub)
+            for f in ("manifest.json", "metrics.json", "per_dialogue.jsonl", "cost.json"):
+                if (run_dir / f).exists():
+                    _shutil.copy2(run_dir / f, replay_work / f)
+            env = dict(_os.environ)
+            env.setdefault("H1_API_KEY", _os.environ.get("H1_API_KEY", ""))
+            p = _sp.run([sys.executable, str(HERE / "run_experiment.py"),
+                         "--replay", str(replay_work)],
+                        capture_output=True, text=True, timeout=300, env=env)
+            if p.returncode == 0 and (replay_work / "metrics.json").exists():
+                def _fsha(path: Path) -> str:
+                    return _hl.sha256(path.read_bytes()).hexdigest()
+                orig_sha = _fsha(run_dir / "metrics.json")
+                replay_sha = _fsha(replay_work / "metrics.json")
+                ctx.replay_identical = (orig_sha == replay_sha)
+                if ctx.replay_identical:
+                    ctx.replay_metrics_sha = replay_sha
+                else:
+                    print(f"WARN: replay metrics differ {orig_sha} vs {replay_sha}", file=sys.stderr)
+            else:
+                print(f"WARN: replay run failed rc={p.returncode}: {p.stderr[-200:]}", file=sys.stderr)
+        except Exception as e:
+            print(f"WARN: replay self-check error: {e}", file=sys.stderr)
+        # audit A1-A5 (S1+; A2/A3/A4 need the run's cards + dialogues)
+        if (run_dir / "data" / "cards.jsonl").exists():
+            try:
+                ctx.audit = run_audit_gate(run_dir, pool_path, holdout_path, ctx)
+            except Exception as e:
+                ctx.audit = {"error": str(e)}
+        check_rows = build_checks(ctx)
+        (run_dir / "checks.json").write_text(
+            json.dumps(check_rows, indent=1, ensure_ascii=False), encoding="utf-8")
+        hard_failed = [c for c in check_rows if c["hard"] and not c["passed"]]
+        soft_warn = [c for c in check_rows if not c["hard"] and not c["passed"]]
+        summary = {
+            "run_id": run_dir.name,
+            "stage": ctx.stage,
+            "hard_passed": sum(1 for c in check_rows if c["hard"] and c["passed"]),
+            "hard_total": sum(1 for c in check_rows if c["hard"]),
+            "soft_warnings": len(soft_warn),
+            "hard_failures": [c["check_id"] for c in hard_failed],
+        }
+        print(json.dumps(summary, indent=1, ensure_ascii=False))
+        return 2 if hard_failed else 0
     workdir = Path(args.workdir) if args.workdir else Path(tempfile.mkdtemp(prefix="h1_fixture_"))
     cfg = cfgmod.DEFAULTS
     suite = run_fixture_suite(Path(args.fixtures), workdir, cfg)
@@ -1445,6 +1621,32 @@ def main(argv=None) -> int:
                       for k, v in suite.results.items()},
                      default=str, indent=1)[:4000])
     return 0
+
+
+def run_audit_gate(run_dir: Path, pool_path: str, holdout_path: str, ctx) -> dict:
+    """Recompute the A1-A5 audit against a run dir via canonical audit.py.
+
+    Deterministic, zero LLM. audit.py reads the ORIGINAL pack files for labels
+    and the run's stripped dialogues/cards for the arithmetic.
+    """
+    import subprocess
+    fixture_file = run_dir / "fixtures_work" / "results.json"
+    safe = {k: v for k, v in (ctx.fixture.results if ctx.fixture else {}).items()
+            if isinstance(v, (dict, list, str, int, float, bool)) or v is None}
+    fixture_file.write_text(json.dumps(safe, default=str), encoding="utf-8")
+    out = run_dir / "audit.json"
+    p = subprocess.run(
+        [sys.executable, str(HERE / "audit.py"),
+         "--pool", str(Path(pool_path).resolve()),
+         "--holdout", str(Path(holdout_path).resolve()),
+         "--dialogues", str(run_dir / "data" / "dialogues.jsonl"),
+         "--cards", str(run_dir / "data" / "cards.jsonl"),
+         "--fixture-results", str(fixture_file),
+         "--out", str(out)],
+        capture_output=True, text=True)
+    if p.returncode != 0:
+        return {"error": p.stderr[-400:]}
+    return json.loads(out.read_text())
 
 
 if __name__ == "__main__":
