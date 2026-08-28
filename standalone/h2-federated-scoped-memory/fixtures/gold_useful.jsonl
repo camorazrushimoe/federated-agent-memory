@@ -1,0 +1,9 @@
+{"query_id": "d-002", "useful_dialogue_ids": ["d-001"], "notes": "same reset + jwt"}
+{"query_id": "d-011", "useful_dialogue_ids": ["d-001", "d-002"], "notes": "same basket"}
+{"query_id": "d-012", "useful_dialogue_ids": ["d-001", "d-002"], "notes": "same basket"}
+{"query_id": "d-013", "useful_dialogue_ids": ["d-001", "d-002"], "notes": "same basket"}
+{"query_id": "d-003", "useful_dialogue_ids": [], "notes": "no prior refund session in the pack"}
+{"query_id": "d-004", "useful_dialogue_ids": ["d-001"], "notes": "same problem, cache trick still relevant even if this chat ended unresolved"}
+{"query_id": "d-005", "useful_dialogue_ids": [], "notes": "pii chat, nothing useful prior"}
+{"query_id": "d-014", "useful_dialogue_ids": ["d-001", "d-002"], "notes": "other tenant, same tags; tenant must not hide these"}
+{"query_id": "d-007", "useful_dialogue_ids": ["d-001", "d-002"], "notes": "late query; 011/012/013 are similar but not marked useful so a full packet can still be wrong if it drops 001 and 002"}

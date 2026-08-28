@@ -1,0 +1,13 @@
+{
+  "dialogue_id": "d-007",
+  "tenant_id": "shop-acme",
+  "vertical": "retail-support",
+  "agent_id": "agent-a",
+  "channel": "web",
+  "closed_at": "2026-08-01T12:00:00Z",
+  "turns": [
+    {"role": "customer", "text": "I just reset the password and login fails again"},
+    {"role": "agent", "text": "Checking session cache."},
+    {"role": "customer", "text": "Please fix it the way you did last time"}
+  ]
+}

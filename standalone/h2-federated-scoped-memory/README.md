@@ -5,6 +5,10 @@
 Контракт шагов — [`SPEC.md`](./SPEC.md).
 Все строки модели и пакет агента — [`PROMPTS.md`](./PROMPTS.md).
 Как меряем — [`EVAL-PLAN.md`](./EVAL-PLAN.md).
+Проводку шагов — [`CHECKS.md`](./CHECKS.md).
+Как гонять прогон — [`RUN-PROTOCOL.md`](./RUN-PROTOCOL.md).
+Бриф для лабы — [`LAB-BRIEF.md`](./LAB-BRIEF.md).
+S0-фикстуры — [`fixtures/`](./fixtures/).
 
 ## Идея в одном абзаце
 

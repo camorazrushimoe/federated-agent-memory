@@ -1,0 +1,10 @@
+{"dialogue_id": "d-001", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "resolved"}}
+{"dialogue_id": "d-002", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "resolved"}}
+{"dialogue_id": "d-011", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "resolved"}}
+{"dialogue_id": "d-012", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "resolved"}}
+{"dialogue_id": "d-013", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "resolved"}}
+{"dialogue_id": "d-003", "tags": {"problem_shape": "refund for damaged item", "constraint": "restocking fee policy", "ending": "resolved"}}
+{"dialogue_id": "d-004", "tags": {"problem_shape": "login fails after password reset", "constraint": "none", "ending": "unresolved"}}
+{"dialogue_id": "d-005", "tags": {"problem_shape": "replacement shipment", "constraint": "none", "ending": "resolved"}}
+{"dialogue_id": "d-014", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "resolved"}}
+{"dialogue_id": "d-007", "tags": {"problem_shape": "login fails after password reset", "constraint": "stale jwt cache", "ending": "unknown"}}
