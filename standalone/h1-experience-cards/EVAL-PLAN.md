@@ -311,6 +311,51 @@ lexical similarity. Clustering on the source dialogue's **customer turns**
 `SPEC.md` §5 and therefore out of scope here: record it as follow-up **F5** and
 do not implement it inside this pass.
 
+### 7.2 F5 — pre-authorised, conditional, single round (decided 2026-08-28, BEFORE the sweep result)
+
+This is authorised **now, in advance**, precisely so that it cannot be mistaken
+for rescuing the hypothesis after a bad number.
+
+**Trigger — the only one.** The §7.1 sweep completes, is committed, and **no**
+threshold satisfies `cluster_purity >= 0.70` **and** `serve_rate_ceiling >= 0.30`
+→ the verdict **NOT FIT for lexical card-text clustering** is published first,
+with its curve. Only then does F5 open. If a threshold *is* found, F5 stays
+closed and is not run.
+
+**Why it exists.** A bare NOT FIT is ambiguous in a way that matters: it cannot
+distinguish
+
+- *"experience cards carry no reusable signal"* (the hypothesis is wrong), from
+- *"a ~36-word LLM paraphrase is a poor similarity key"* (the **key** is wrong,
+  the hypothesis untested).
+
+One extra run separates them. Without it we would carry an unfalsifiable
+conclusion out of the experiment.
+
+**What F5 changes — exactly one thing.** The cluster key becomes the source
+dialogue's **customer turns** (lowercased, concatenated) instead of
+`problem_shape + constraint + unlock`. Everything else is untouched: same cards,
+same extraction, same scopes, same `K_INDEPENDENT`, same serve path, same
+metrics, same scoring code, same hold-out discipline.
+
+**Rules it inherits, unchanged:**
+
+- The same sweep over the same range, and **the same pre-registered selection
+  rule** from §7.1. No new rule, no relaxed gates.
+- One round. If F5 also fails the rule, that is the end of this line and the
+  finding is stronger, not weaker.
+- Results are reported as a **separate row/section** in `RESULTS.md`
+  ("alternative cluster key: customer turns"). It does **not** overwrite or
+  soften the primary verdict, and `MODEL-MATRIX.md` still refers to the primary
+  configuration.
+- `SPEC.md` is **not** edited. F5 is a run-time switch
+  (`--cluster-key card-text|customer-turns`, default `card-text`) so the
+  committed contract stays the one we measured first.
+
+**Reporting duty.** `RESULTS.md` must state both curves side by side and answer
+in one line: *did the signal live in the cards, in the raw text, or nowhere?*
+That sentence is the deliverable of F5.
+
 ---
 
 ## 8. Model matrix
