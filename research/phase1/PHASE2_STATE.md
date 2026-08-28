@@ -187,8 +187,9 @@ review the gold set on landing, post the closure line, close BON-41.
 
 ## Round 1 (M1) — CLOSED 2026-08-28 (main @72e344b) · counter at **2/6**
 
-**Status: R1 CLOSED — number three-way confirmed. R2 (M2) PRE-REGISTERED and assigned.
-BON-41 Done. Round counter 2/6.**
+**Status: R1 CLOSED — number three-way confirmed. R2 (M2) PRE-REGISTERED and in flight
+(engineer: brief delivered 06:2xZ via door; `phase2/m2-sample` branch visible on origin by
+06:45Z — sample tasking underway). BON-41 Done. Round counter 2/6.**
 
 R1 final state (source of truth: GH #6 comments 5448920977 (lead verification + closure +
 findings) and **5449115746** (R1 formal closure + R2 pre-registration + taskings)):
@@ -225,6 +226,16 @@ findings) and **5449115746** (R1 formal closure + R2 pre-registration + taskings
   correct, but the landing bypassed "review posted, then merge." Rule re-affirmed, no
   size exceptions: every `research/**` / `docs/**` landing via PR with posted lead review.
   No round burned.
+- **PR #20 MERGED → main @c81a48a** (display-only fix-forwards from the PR reviews —
+  `agreement_report.md` 0.124→0.1235; `score_m1.py` writer + `m1_report.md`
+  disagreement leads with the exact fraction `21/170` at 4 dp; table header
+  `recall_amb`/`recall_snm` → `ambiguous`/`should-not-match` matching the
+  `m1_results.json` `recall_by_band` keys). Lead review posted pre-merge
+  (PR #20 comment 5449378116, D17) and lead-verified: gold jsonl byte-frozen
+  (`792df7d24fc0609a`), `m1_results.json` byte-identical (`02e87faff7b6ffe6`), every R1
+  figure unchanged. Pre-existing `selftest_stage_b.py` `KeyError: 'flow_a'` (synthetic
+  gold missing F2 fields) confirmed identical on base+head → filed as a separate
+  non-blocking follow-up.
 
 **R2 (M2 — extraction) — PRE-REGISTERED 2026-08-28 (frozen before sample draw; full text
 on GH #6 5449115746 §3):** unit = {problem_shape, constraint, unlock, what_worked,
