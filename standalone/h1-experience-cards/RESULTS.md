@@ -1,10 +1,12 @@
 # H1 Experience Cards — Results
 
-> Status: **D3 gate fired — verdict published, no S2 run** (the §7.1 sweep and
-> the §7.2 F5 fallback both returned NOT FIT under the pre-registered rule; per
-> the rule no S2 treatment arm was run and no gate was lowered). Numbers below
-> come from run dirs (`metrics.json` / `cost.json`), `audit.json` or
-> `compare.py` — never hand-typed.
+> Status: **D3 gate fired — verdict published, no S2 treatment run** (the §7.1
+> sweep and the §7.2 F5 fallback both returned NOT FIT under the
+> pre-registered rule; per the rule no S2 treatment arm was run and no gate was
+> lowered). The gate does not block the LLM-free baselines: the final round
+> (2026-08-28) measured **B1 and B2 on the real 200-dialogue hold-out** (§3);
+> B0 and T remain unrun. Numbers below come from run dirs (`metrics.json` /
+> `cost.json`), `audit.json` or `compare.py` — never hand-typed.
 
 ## 1. Hypothesis
 
@@ -32,12 +34,26 @@ serves.**
 
 ## 3. Primary table (T next to every baseline)
 
+Measured 2026-08-28 in the final round on the real 200-dialogue hold-out
+(`runs/2026-08-28_S2_B1`, `runs/2026-08-28_S2_B2`). B1 and B2 are LLM-free by
+construction (cost.json: extract.calls=0, usd_total=0.0); B2 = 1.0 confirms the
+scoring code (C-EV4). B0 and T were **not run** (D3 gate): B1/B2 are the only
+arms the gate does not block, and no T number is fabricated from the sweep.
+
 | arm | unlock_hit_label | wrong | abstain | serve_rate | USD/1k |
 |--|--|--|--|--|--|
-| B0 no memory | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
-| B1 raw retrieval, no cards | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
-| **T card pipeline** | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| B2 oracle | _pending_ | _pending_ | _pending_ | _pending_ | 0 |
+| B0 no memory | not run (D3 gate) | not run (D3 gate) | not run (D3 gate) | not run (D3 gate) | 0 |
+| B1 raw retrieval, no cards | **0.735** | 0.26 | 0.005 | 0.995 | 0 |
+| **T card pipeline** | not run (D3 gate) | not run (D3 gate) | not run (D3 gate) | not run (D3 gate) | — |
+| B2 oracle | **1.0** | 0.0 | 0.0 | 1.0 | 0 |
+
+> **T ≤ B1 — resolved by measurement: YES (B1 wins).** B1 = **0.735**
+> (147/200) on the real hold-out; T was not run, so the comparison uses T's
+> own measured serving ceiling from the pre-registered §7.1/F5 sweeps —
+> `serve_rate_ceiling` peaks at **0.175** (customer-turns) / 0.15 (card-text),
+> and a hit requires a served packet, so T ≤ 0.175 < 0.735 = B1. The card
+> pipeline cannot beat plain raw retrieval on this data, even before its
+> extraction cost is counted.
 
 ## 4. What the audit found (A1–A5)
 
