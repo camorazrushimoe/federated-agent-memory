@@ -300,16 +300,36 @@ B2 units now.
 
 **Linear (lead-moved 2026-08-28):** BON-42 → **In Progress** (R2 kickoff). BON-41 Done
 (result line 05:48Z, D21). BON-43/44 Todo. **BON-45 ANOMALY — resolved
-2026-08-28 (D21-BREACH forensics, verified by timing + content, never by
-actor name — all crew + oversight share the owner's single API key, so every
-Linear action reads the owner's name):** the 05:10:51Z Todo→In
-Progress→Done movement (10 s) coincided with the lead's own PR #19 merge at
-05:10:46Z; no crew script in this workspace mutates BON-45 (only BON-41 at
-05:48Z) — mechanism not fully identified, flagged to the founder; the
-founder's ruling stands: **contracts, protocols, runbooks, scripts,
+2026-08-28 (D21-BREACH forensics on GH #6; corrected twice, same round each
+time — my earlier "founder-side change" attribution was WRONG and is
+retracted; a second correction follows after my 08:45Z post):** the
+05:10:51Z Todo→In Progress→Done movement (10 s) was triggered by the lead's
+own PR #19 merge at 05:10:46Z. **Mechanism (verified by timing + content,
+never by actor — all crew + oversight share the owner's single API key, so
+every action reads the owner's name; DECIDED rule: verify by timing and
+content, never by actor — and never a stale ref; every read timestamped):**
+a Linear–GitHub automation moves a ticket to Done when a PR **merged to
+`main` names the ticket ID in its title** (+1–6 s signature; #16 proves the
+body alone does NOT fire — ID was body-only → no fire; the rule body itself
+is unread — automation introspection HTTP 400). Fires: #9→BON-37 (+3 s,
+Phase-0 era, benign), #15→BON-40 (+6 s, benign), #19→BON-45 (+5 s, phantom;
+oversight reverted to Todo 07:21:49Z), #23→BON-42 (+5 s, phantom; oversight
+reverted 08:07:33Z), #24→BON-42 (+1–2 s, phantom; lead reverted 08:43Z,
+read-back verified — the 08:28:07Z Done was this fire, NOT a no-merge
+"re-assertion" as first misread from a stale local `origin/main`; corrected
+on GH #6 same round). Controls #13 explainable (ticket created 5 min AFTER
+its merge), #8/#11/#14 not fully resolved (issue state at merge time not
+retrievable with my API access) — flagged, not hand-waved. The founder's
+D21 ruling stands verbatim: **contracts, protocols, runbooks, scripts,
 skeletons and pre-registrations are INPUTS — a round ticket moves to Done
-only when the artifact it names exists WITH NUMBERS IN IT.** The oversight
-revert to Todo (07:21:49Z) is correct and left in place; **BON-45 stays
-Todo until R2, R3 and R4 have posted their numbers; no touch on BON-45
-before then.** Counter 2/6.
+only when the artifact it names exists WITH NUMBERS IN IT.** **DECIDED
+guard (lead, 2026-08-28; verbatim wording on GH #6 08:45Z + correction):**
+no PR title, commit subject, or branch name that names a ticket ID may be
+merged to `main` while that ticket is not Done by a posted result line —
+the ID goes in the PR body only; after any work-titled merge the lead
+re-reads ticket state the same round. A further BON-42 fire will be
+reported, not flapped — root fix is title hygiene + oversight/founder
+disabling the rule (ask posted on GH #6). **BON-45 stays Todo until R2,
+R3 and R4 have posted their numbers; no touch on BON-45 before then.**
+Counter 2/6.
 
