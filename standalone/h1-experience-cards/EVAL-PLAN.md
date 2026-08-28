@@ -266,16 +266,25 @@ thresholds. One run dir per model.
 
 | slot | model | role in the comparison | status |
 |--|--|--|--|
-| `cheap` | _TBD — founder will name it_ | can a small/cheap model carry extraction? | **awaiting founder** |
-| `mid` | `deepseek-v4-flash` | the factory default after the 2026-08-28 switch | ready |
-| `strong` | _TBD — optional ceiling_ | how much is left on the table? | **awaiting founder** |
-| `judge` | must differ from the extract model of the run it judges | L3 only | assign per run |
+| `extract` | **`deepseek-v4-flash`** | the measured arm — founder decision, 2026-08-28 | **decided, pass 1** |
+| `judge` | **`deepseek-v4-pro`** | L3 only; differs from the extract model as §5 requires, same API key | **decided** |
+| `cheap` | _not assigned_ | can a smaller model carry extraction? | deferred |
+| `strong` | _not assigned_ | how much is left on the table? | deferred |
 
-Deliverable: `MODEL-MATRIX.md`, one row per model, columns =
+**Pass 1 is single-arm.** Extraction runs on `deepseek-v4-flash` only, so
+`MODEL-MATRIX.md` is a one-row table and D7 in `LAB-BRIEF.md` collapses to that
+single row. Do **not** invent a second model to fill the matrix — the comparison
+opens only when the founder names one, and the harness already takes `--model`,
+so adding an arm later costs one run and no code.
+
+Deliverable: `MODEL-MATRIX.md`, one row per extract model, columns =
 `unlock_hit_label`, `wrong`, `abstain`, `serve_rate`, `cluster_purity`,
 `reject_rate`, judge `faithful`, USD/1000 dialogues, p50 latency, verdict.
 
-The comparison question is deliberately **not** "which model wins" but:
+With one arm, that table is still worth writing: it is the record a second arm
+is later compared against, and building it now means the comparison costs
+nothing but a run. When a second model arrives, the question is deliberately
+**not** "which model wins" but:
 
 > Does the cheap model lose enough quality to matter, given that it is the only
 > component that costs money per dialogue?

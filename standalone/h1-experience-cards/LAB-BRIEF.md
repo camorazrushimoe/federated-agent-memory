@@ -60,13 +60,15 @@ model).
 
 | slot | model | status |
 |--|--|--|
-| `cheap` | **the founder will name it** — do not pick one yourself | awaiting founder |
-| `mid` | `deepseek-v4-flash` (factory default since 2026-08-28) | ready |
-| `strong` | **the founder may name one** as a ceiling reference | awaiting founder |
-| `judge` | must differ from the extract model of the run it judges | assign per run |
+| `extract` | **`deepseek-v4-flash`** | **decided by the founder, 2026-08-28** — the only measured arm in pass 1 |
+| `judge` | **`deepseek-v4-pro`** | **decided** — differs from the extract model as L3 requires, same API key, same base URL |
+| `cheap` / `strong` | not assigned | deferred; a second arm opens only on a founder decision |
 
-Start D1–D4 now with `mid`. Do not wait for the model list — the harness is
-model-agnostic by construction, and `--model` is a flag.
+Pass 1 is **single-arm**: `MODEL-MATRIX.md` is a one-row table and D7 is that
+one row. Do not add a second model to make the table look fuller — an unnamed
+arm is not a comparison. The provider is `https://api.deepseek.com/v1` and the
+key is already in place factory-wide; if a call 401s, stop and tell oversight
+rather than swapping in another provider.
 
 ---
 
