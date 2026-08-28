@@ -1,0 +1,46 @@
+# Audit — F5 threshold sweep, cluster key = customer-turns (EVAL-PLAN §7.2)
+
+- Method: pool-only sweep over 200 extracted cards; hold-out frozen; canonical cluster.py/match.py at each threshold.
+- Cluster key: customer-turns clustering (source dialogue's customer turns, lowercased, concatenated)
+- Tail slice: 40 pool-tail dialogues as hold-out-shaped queries (never the real hold-out).
+- Selection rule (pre-registered, not re-opened): largest threshold with cluster_purity >= 0.70 AND serve_rate_ceiling >= 0.30 (ties -> larger)
+
+| threshold | pairs_same_merged | pairs_diff_merged | cluster_purity | shared_rate | serve_rate_ceiling |
+|---|--:|--:|--:|--:|--:|
+| 0.05 | 0.9842 | 0.1428 | 0.0909 | 1.0000 | 0.0000 |
+| 0.06 | 0.9842 | 0.1428 | 0.0909 | 1.0000 | 0.0000 |
+| 0.07 | 0.9816 | 0.1416 | 0.2308 | 0.8462 | 0.0000 |
+| 0.08 | 0.9816 | 0.1416 | 0.2308 | 0.8462 | 0.0000 |
+| 0.09 | 0.9816 | 0.1406 | 0.1538 | 1.0000 | 0.0000 |
+| 0.10 | 0.9605 | 0.1369 | 0.2667 | 0.8667 | 0.0000 |
+| 0.11 | 0.9420 | 0.1331 | 0.3333 | 0.7778 | 0.0000 |
+| 0.12 | 0.9328 | 0.1311 | 0.4000 | 0.7000 | 0.0000 |
+| 0.13 | 0.9130 | 0.1270 | 0.3810 | 0.7619 | 0.0000 |
+| 0.14 | 0.8419 | 0.1175 | 0.4815 | 0.5926 | 0.0000 |
+| 0.15 | 0.7286 | 0.0996 | 0.4688 | 0.5625 | 0.0000 |
+| 0.16 | 0.5942 | 0.0749 | 0.4571 | 0.6571 | 0.0500 |
+| 0.17 | 0.5033 | 0.0584 | 0.5333 | 0.5111 | 0.0250 |
+| 0.18 | 0.4480 | 0.0487 | 0.4314 | 0.6275 | 0.0500 |
+| 0.19 | 0.3491 | 0.0365 | 0.4821 | 0.5893 | 0.0000 |
+| 0.20 | 0.2951 | 0.0294 | 0.5373 | 0.5075 | 0.0000 |
+| 0.21 | 0.2029 | 0.0223 | 0.5753 | 0.4795 | 0.0500 |
+| 0.22 | 0.1739 | 0.0180 | 0.6471 | 0.3882 | 0.0500 |
+| 0.23 | 0.1225 | 0.0121 | 0.6848 | 0.4022 | 0.0750 |
+| 0.24 | 0.0856 | 0.0084 | 0.6471 | 0.3922 | 0.1250 |
+| 0.25 | 0.0843 | 0.0071 | 0.7000 | 0.3727 | 0.1250 |
+| 0.26 | 0.0830 | 0.0055 | 0.7815 | 0.3277 | 0.1750 |
+| 0.27 | 0.0711 | 0.0039 | 0.8281 | 0.2969 | 0.1750 |
+| 0.28 | 0.0685 | 0.0030 | 0.8456 | 0.2647 | 0.1750 |
+| 0.29 | 0.0619 | 0.0025 | 0.8904 | 0.1986 | 0.0750 |
+| 0.30 | 0.0514 | 0.0021 | 0.9067 | 0.1933 | 0.0750 |
+| 0.31 | 0.0487 | 0.0017 | 0.9150 | 0.1765 | 0.1500 |
+| 0.32 | 0.0501 | 0.0019 | 0.9211 | 0.1776 | 0.0750 |
+| 0.33 | 0.0408 | 0.0019 | 0.9363 | 0.1529 | 0.0500 |
+| 0.34 | 0.0382 | 0.0013 | 0.9571 | 0.1166 | 0.0250 |
+| 0.35 | 0.0356 | 0.0011 | 0.9515 | 0.1152 | 0.0250 |
+
+## Verdict
+
+**NOT FIT for customer-turns clustering on this data — no threshold in 0.05..0.35 satisfies both gates; do not lower the gates, do not run a full S2 treatment arm**
+
+One round per EVAL-PLAN §7.2 (pre-authorized before the §7.1 sweep result); any later change requires a new pre-registered rule.
