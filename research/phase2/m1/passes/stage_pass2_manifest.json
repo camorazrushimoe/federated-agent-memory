@@ -1,0 +1,11 @@
+{
+  "purpose": "fresh-context pass-2 stage (protocol \u00a73(c))",
+  "staged": {
+    "PROTOCOL-m1-pairs.md": "38486db3943360dd5f121f763f8f2743ae6131a80a6bf4730650ef5b38c8befe",
+    "pass2_input.jsonl": "d68872312a33e9814a07c2874b75ba41d1d447b9b42367116434160ea1294983"
+  },
+  "n_pairs": 170,
+  "pre_existing_removed": [],
+  "label_out": "pass2_labels.jsonl",
+  "rule": "the fresh agent sees ONLY this directory + this prompt; no pass-1 file, no pass-1 summary, no prior labeling context"
+}
