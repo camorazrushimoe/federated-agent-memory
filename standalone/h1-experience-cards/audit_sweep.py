@@ -196,6 +196,11 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default=None, help="audit.json path (raw rows)")
     ap.add_argument("--md", default=None, help="audit_threshold_sweep.md path")
     ap.add_argument("--now", default="2026-08-28T12:00:00Z")
+    ap.add_argument("--cluster-key", choices=("card-text", "customer-turns"),
+                    default="card-text",
+                    help="cluster similarity key (F5 = customer-turns, "
+                         "EVAL-PLAN §7.2); default card-text reproduces the "
+                         "committed A4 sweep")
     args = ap.parse_args(argv)
 
     labels = load_labels(args.pool)
@@ -219,7 +224,8 @@ def main(argv=None) -> int:
                 cards_path, args.dialogues, force=True,
                 cursor_path=os.path.join(tmpdir, "cursor.json"),
                 pinned_now=args.now,
-                overrides={"CLUSTER_THRESHOLD": round(t, 4)})
+                overrides={"CLUSTER_THRESHOLD": round(t, 4)},
+                cluster_key=args.cluster_key)
             store = hio.read_jsonl(cards_path)
         finally:
             shutil.rmtree(tmpdir, ignore_errors=True)
@@ -250,19 +256,23 @@ def main(argv=None) -> int:
             "status": "DERIVED",
         }
     else:
+        key_label = ("card-text" if args.cluster_key == "card-text"
+                     else "customer-turns")
         verdict = {
             "selected_threshold": None,
             "rule": "largest threshold with cluster_purity >= 0.70 AND "
                     "serve_rate_ceiling >= 0.30 (ties -> larger)",
-            "status": "NOT FIT for lexical card-text clustering on this data — "
-                      "no threshold in 0.05..0.35 satisfies both gates; do not "
-                      "lower the gates, do not run a full S2 treatment arm",
+            "status": (f"NOT FIT for lexical {key_label} clustering on this "
+                       f"data — no threshold in 0.05..0.35 satisfies both "
+                       f"gates; do not lower the gates, do not run a full S2 "
+                       f"treatment arm"),
         }
 
     result = {
         "audit_id": "A4-sweep",
         "method": "EVAL-PLAN 7.1 threshold sweep on the pool only; "
                   "hold-out frozen; canonical cluster.py/match.py at each threshold",
+        "cluster_key": args.cluster_key,
         "pool_slice": os.path.basename(args.cards),
         "n_cards": len(base_cards),
         "tail_n": args.tail_n,
@@ -294,11 +304,14 @@ def main(argv=None) -> int:
 
 
 def write_md(path: str, result: dict) -> None:
+    key_label = result.get("cluster_key", "card-text")
     lines = [
         "# Audit — A4 threshold sweep (EVAL-PLAN §7.1)",
         "",
         f"- Method: pool-only sweep over {result['n_cards']} extracted cards; "
         f"hold-out frozen; canonical cluster.py/match.py at each threshold.",
+        f"- Cluster key: **{key_label}** "
+        f"({('SPEC §6.3, primary contract' if key_label == 'card-text' else 'F5, EVAL-PLAN §7.2 alternative')}).",
         f"- Tail slice: {result['tail_n']} pool-tail dialogues as hold-out-shaped "
         f"queries (never the real hold-out).",
         f"- Selection rule (pre-registered, not re-opened): {result['selection_rule']}",

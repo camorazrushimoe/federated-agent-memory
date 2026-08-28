@@ -158,6 +158,19 @@ def card_text(card):
     ])
 
 
+def customer_turns_key(dialogue):
+    """F5 alternative cluster key (EVAL-PLAN §7.2): the source dialogue's
+    customer turns, lowercased and concatenated. Same text as match.live_query
+    — hundreds of words of raw transcript instead of the ~36-word card
+    paraphrase. Used ONLY when cluster.py runs with --cluster-key
+    customer-turns; the serve path is untouched."""
+    if not dialogue:
+        return ""
+    return " ".join(t.get("text", "")
+                    for t in dialogue.get("turns", [])
+                    if t.get("role") == "customer").lower()
+
+
 def card_id_for(dialogue_id):
     """Deterministic card id: c- + first 12 hex of sha256(dialogue_id)."""
     return "c-" + hashlib.sha256(str(dialogue_id).encode("utf-8")).hexdigest()[:12]
