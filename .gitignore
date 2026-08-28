@@ -18,3 +18,7 @@ data/
 
 # Node
 node_modules/
+
+# H1 experiment test-data pack is committed on purpose (small, pinned, reproducible)
+!standalone/h1-experience-cards/data/
+!standalone/h1-experience-cards/data/**
