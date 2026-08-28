@@ -257,3 +257,71 @@ a pass, and the method doc's pre-registered branch (B1 passes ⇒ "problem shape
 is lexical on this data", B2 dropped) is the standing expectation, not a
 conclusion.
 
+
+## 8. Round 1 join + results (landed 2026-08-28, oversight re-derivation)
+
+**Inputs:** `b1_scores.jsonl` (this branch, sha256:16 `9fe3e4b3c0978e1f`) ×
+`gold/gold_m1_pairs_agentlabeled.jsonl` (PR #18 / evaluation, sha256:16
+`792df7d24fc0609a`, pinned here byte-identical to the PR #18 head). Join on
+`pair_id`: **170/170 matched, 0 only-onesided**; shared fields (band, conv_a,
+conv_b, sub_band) consistent across both files.
+
+**Re-run contract:**
+```bash
+# join + metrics + report (deterministic; byte-identical on re-run)
+python3 research/phase2/m1/score_m1.py --gold \
+    research/phase2/m1/gold/gold_m1_pairs_agentlabeled.jsonl
+# independent oversight re-derivation (plain Python, no sklearn, no score_m1 import)
+python3 research/phase2/m1/join_verify.py
+# pipeline check: recompute all 170 B1 scores from raw corpus, diff vs committed
+.venv/bin/python research/phase2/m1/recompute_b1.py
+```
+
+**Headline (full sweep + findings in `m1_report.md`; full curve in
+`m1_results.json` → `b1.curve`):**
+
+- **B1 PASSES the frozen bar.** At threshold 0.1965 (exact unique score
+  0.196495): **FFR 6.3% (4/63 gold-unrelated) at recall_sm 60.0% (51/85)**.
+  Bar: ≤10% FFR at ≥60% recall. 18 thresholds pass (0.171686 → 0.196495).
+- Best operating point (pre-registered argmax pairwise-F1 in the pass region):
+  t = 0.175964 → recall_sm 72.9%, FFR 9.5% (6/63), F1 0.721. Max-recall point
+  in the pass region: t = 0.171686 → recall_sm 74.1% (76.8% of gold
+  same-problem), FFR 9.5%.
+- B0 oracle (same subflow): recall_sm 100% at FFR 4.8% (3/63), F1 0.883.
+- Per §M1: B1 passing ⇒ **B2 DROPPED**, finding = *problem shape is lexical
+  on this data*.
+- **Honesty clause (attached to every 6.3%):** the gold set is
+  **agent-labeled**; inter-pass disagreement 21/170 = 0.1235 is a labeler
+  self-consistency floor under frozen rules, **not** human inter-rater
+  agreement.
+
+**Findings that go beyond the pass (detailed in the report):**
+
+1. **The false-friend danger is INSIDE the flow, not across it** — inverts the
+   method doc §5 expectation table. At t = 0.171686: same-flow FFR 13.3%
+   (2/15) > cross-flow FFR 11.1% (2/18); at t = 0.196495: 13.3% (2/15) vs
+   5.6% (1/18). The same two bad pairs (m1-0089, m1-0119, both
+   `subscription_inquiry` inter-subflow, shared bill vocabulary) drive both.
+   §M1 escape clause (cross-flow FFR >10% ⇒ scope constrained to vertical)
+   does NOT fire; but the measured danger is intra-flow/inter-subflow, so
+   sub-flow-level pooling carries the same false-friend cost — commission
+   §8.1 scope is not settled by this round.
+2. **Cross-flow "same problem" was never tested.** All 69 gold same-problem
+   pairs are same-flow (10 distinct flows); the gold set contains zero
+   cross-flow/cross-product same-problem pairs. Cross-vertical recall is
+   **untested, not zero** — a gold-set limitation, not evidence against
+   cross-vertical sharing.
+3. **The oracle label is not sufficient ground truth.** B0 pools m1-0010
+   (`manage`, B1 0.0812), m1-0038 (`manage_cancel`, B1 0.0970), m1-0061
+   (`manage_change_phone`, B1 0.0553) — all three labeled unrelated by both
+   passes; B1 correctly scores all three low. Intent match ≠ problem-shape
+   match (the method doc's own thesis). B0's FFR is the FFR of *subflow
+   identity*, not problem shape. 18/170 canonical labels contradict the
+   construction direction of their band (3 sm→unrelated, 12 amb→unrelated,
+   3 snm→related-but-different); 33/170 are off-center in total.
+
+**Verification:** `recompute_b1.py` recomputes all 170 B1 scores from the raw
+corpus with the pre-registered config — **170/170 exact at 6 dp** vs the
+committed `b1_scores.jsonl` (PR #17), so the join rests on re-derived scores,
+not on trust in the committed file. `join_verify.py` (plain Python, no
+sklearn, no score_m1 import) reproduces every headline number above.
