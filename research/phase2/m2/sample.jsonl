@@ -1,0 +1,80 @@
+{"convo_id":116,"flow":"subscription_inquiry","subflow":"status_questions","product_names":[],"n_action_turns":3,"n_tokens_b0":417,"seed":42,"in_exclusion_set":false}
+{"convo_id":274,"flow":"order_issue","subflow":"status_delivery_date","product_names":["michael_kors shirt"],"n_action_turns":3,"n_tokens_b0":253,"seed":42,"in_exclusion_set":false}
+{"convo_id":345,"flow":"single_item_query","subflow":"boots_other_3","product_names":["michael_kors boots"],"n_action_turns":3,"n_tokens_b0":207,"seed":42,"in_exclusion_set":false}
+{"convo_id":374,"flow":"manage_account","subflow":"manage_change_name","product_names":["calvin_klein jacket"],"n_action_turns":5,"n_tokens_b0":285,"seed":42,"in_exclusion_set":false}
+{"convo_id":429,"flow":"shipping_issue","subflow":"cost","product_names":["guess boots","guess jeans","michael_kors boots"],"n_action_turns":4,"n_tokens_b0":206,"seed":42,"in_exclusion_set":false}
+{"convo_id":455,"flow":"order_issue","subflow":"status_delivery_time","product_names":["calvin_klein shirt"],"n_action_turns":4,"n_tokens_b0":242,"seed":42,"in_exclusion_set":false}
+{"convo_id":581,"flow":"manage_account","subflow":"manage_payment_method","product_names":["guess jacket"],"n_action_turns":8,"n_tokens_b0":267,"seed":42,"in_exclusion_set":false}
+{"convo_id":605,"flow":"shipping_issue","subflow":"status","product_names":["tommy_hilfiger jacket","michael_kors shirt","tommy_hilfiger jacket"],"n_action_turns":6,"n_tokens_b0":269,"seed":42,"in_exclusion_set":false}
+{"convo_id":678,"flow":"purchase_dispute","subflow":"mistimed_billing_never_bought","product_names":["guess jeans"],"n_action_turns":4,"n_tokens_b0":197,"seed":42,"in_exclusion_set":false}
+{"convo_id":755,"flow":"storewide_query","subflow":"policy_3","product_names":[],"n_action_turns":2,"n_tokens_b0":94,"seed":42,"in_exclusion_set":false}
+{"convo_id":778,"flow":"product_defect","subflow":"refund_initiate","product_names":["michael_kors shirt"],"n_action_turns":5,"n_tokens_b0":232,"seed":42,"in_exclusion_set":false}
+{"convo_id":921,"flow":"manage_account","subflow":"manage_change_phone","product_names":["calvin_klein jacket"],"n_action_turns":3,"n_tokens_b0":194,"seed":42,"in_exclusion_set":false}
+{"convo_id":1224,"flow":"single_item_query","subflow":"boots_how_1","product_names":["michael_kors boots"],"n_action_turns":6,"n_tokens_b0":350,"seed":42,"in_exclusion_set":false}
+{"convo_id":1328,"flow":"troubleshoot_site","subflow":"credit_card","product_names":["guess jacket"],"n_action_turns":6,"n_tokens_b0":259,"seed":42,"in_exclusion_set":false}
+{"convo_id":2154,"flow":"purchase_dispute","subflow":"promo_code_invalid","product_names":["michael_kors jeans"],"n_action_turns":3,"n_tokens_b0":177,"seed":42,"in_exclusion_set":false}
+{"convo_id":2212,"flow":"subscription_inquiry","subflow":"manage_dispute_bill","product_names":["calvin_klein shirt"],"n_action_turns":4,"n_tokens_b0":157,"seed":42,"in_exclusion_set":false}
+{"convo_id":2410,"flow":"manage_account","subflow":"status_credit_missing","product_names":["calvin_klein jeans"],"n_action_turns":4,"n_tokens_b0":187,"seed":42,"in_exclusion_set":false}
+{"convo_id":2639,"flow":"subscription_inquiry","subflow":"manage_dispute_bill","product_names":["guess jacket"],"n_action_turns":3,"n_tokens_b0":188,"seed":42,"in_exclusion_set":false}
+{"convo_id":2695,"flow":"subscription_inquiry","subflow":"status_due_date","product_names":[],"n_action_turns":4,"n_tokens_b0":186,"seed":42,"in_exclusion_set":false}
+{"convo_id":2782,"flow":"shipping_issue","subflow":"manage","product_names":["michael_kors jacket"],"n_action_turns":4,"n_tokens_b0":179,"seed":42,"in_exclusion_set":false}
+{"convo_id":2856,"flow":"product_defect","subflow":"refund_initiate","product_names":["guess shirt"],"n_action_turns":4,"n_tokens_b0":186,"seed":42,"in_exclusion_set":false}
+{"convo_id":2969,"flow":"troubleshoot_site","subflow":"slow_speed","product_names":["calvin_klein jacket"],"n_action_turns":4,"n_tokens_b0":230,"seed":42,"in_exclusion_set":false}
+{"convo_id":3092,"flow":"storewide_query","subflow":"policy_1","product_names":[],"n_action_turns":3,"n_tokens_b0":216,"seed":42,"in_exclusion_set":false}
+{"convo_id":3161,"flow":"manage_account","subflow":"manage_change_address","product_names":["tommy_hilfiger jeans"],"n_action_turns":7,"n_tokens_b0":398,"seed":42,"in_exclusion_set":false}
+{"convo_id":3167,"flow":"troubleshoot_site","subflow":"slow_speed","product_names":["tommy_hilfiger jacket"],"n_action_turns":2,"n_tokens_b0":173,"seed":42,"in_exclusion_set":false}
+{"convo_id":3411,"flow":"purchase_dispute","subflow":"mistimed_billing_already_returned","product_names":["calvin_klein jeans"],"n_action_turns":3,"n_tokens_b0":245,"seed":42,"in_exclusion_set":false}
+{"convo_id":3539,"flow":"product_defect","subflow":"return_color","product_names":["michael_kors boots"],"n_action_turns":5,"n_tokens_b0":268,"seed":42,"in_exclusion_set":false}
+{"convo_id":3650,"flow":"storewide_query","subflow":"membership_1","product_names":[],"n_action_turns":2,"n_tokens_b0":181,"seed":42,"in_exclusion_set":false}
+{"convo_id":3658,"flow":"troubleshoot_site","subflow":"shopping_cart","product_names":["calvin_klein jeans"],"n_action_turns":2,"n_tokens_b0":111,"seed":42,"in_exclusion_set":false}
+{"convo_id":4158,"flow":"manage_account","subflow":"status_service_added","product_names":["tommy_hilfiger boots"],"n_action_turns":3,"n_tokens_b0":160,"seed":42,"in_exclusion_set":false}
+{"convo_id":4265,"flow":"shipping_issue","subflow":"missing","product_names":["michael_kors boots","tommy_hilfiger boots","calvin_klein jacket"],"n_action_turns":5,"n_tokens_b0":235,"seed":42,"in_exclusion_set":false}
+{"convo_id":4332,"flow":"product_defect","subflow":"return_size","product_names":["guess shirt"],"n_action_turns":3,"n_tokens_b0":262,"seed":42,"in_exclusion_set":false}
+{"convo_id":4416,"flow":"storewide_query","subflow":"policy_2","product_names":[],"n_action_turns":2,"n_tokens_b0":139,"seed":42,"in_exclusion_set":false}
+{"convo_id":4697,"flow":"subscription_inquiry","subflow":"manage_extension","product_names":[],"n_action_turns":4,"n_tokens_b0":157,"seed":42,"in_exclusion_set":false}
+{"convo_id":4894,"flow":"troubleshoot_site","subflow":"search_results","product_names":["tommy_hilfiger shirt"],"n_action_turns":3,"n_tokens_b0":219,"seed":42,"in_exclusion_set":false}
+{"convo_id":5059,"flow":"troubleshoot_site","subflow":"search_results","product_names":["michael_kors shirt"],"n_action_turns":4,"n_tokens_b0":205,"seed":42,"in_exclusion_set":false}
+{"convo_id":5111,"flow":"storewide_query","subflow":"membership_2","product_names":[],"n_action_turns":5,"n_tokens_b0":139,"seed":42,"in_exclusion_set":false}
+{"convo_id":5157,"flow":"product_defect","subflow":"refund_status","product_names":["calvin_klein shirt"],"n_action_turns":2,"n_tokens_b0":120,"seed":42,"in_exclusion_set":false}
+{"convo_id":5365,"flow":"troubleshoot_site","subflow":"shopping_cart","product_names":["calvin_klein boots"],"n_action_turns":2,"n_tokens_b0":221,"seed":42,"in_exclusion_set":false}
+{"convo_id":5386,"flow":"account_access","subflow":"recover_password","product_names":[],"n_action_turns":4,"n_tokens_b0":169,"seed":42,"in_exclusion_set":false}
+{"convo_id":5424,"flow":"single_item_query","subflow":"boots_how_2","product_names":["tommy_hilfiger boots"],"n_action_turns":2,"n_tokens_b0":189,"seed":42,"in_exclusion_set":false}
+{"convo_id":5544,"flow":"account_access","subflow":"recover_username","product_names":[],"n_action_turns":2,"n_tokens_b0":119,"seed":42,"in_exclusion_set":false}
+{"convo_id":5640,"flow":"single_item_query","subflow":"boots_other_4","product_names":["calvin_klein boots"],"n_action_turns":3,"n_tokens_b0":166,"seed":42,"in_exclusion_set":false}
+{"convo_id":5687,"flow":"purchase_dispute","subflow":"bad_price_yesterday","product_names":["calvin_klein jacket"],"n_action_turns":3,"n_tokens_b0":199,"seed":42,"in_exclusion_set":false}
+{"convo_id":5716,"flow":"account_access","subflow":"recover_username","product_names":[],"n_action_turns":2,"n_tokens_b0":109,"seed":42,"in_exclusion_set":false}
+{"convo_id":5989,"flow":"order_issue","subflow":"manage_downgrade","product_names":["michael_kors jacket"],"n_action_turns":2,"n_tokens_b0":153,"seed":42,"in_exclusion_set":false}
+{"convo_id":6026,"flow":"order_issue","subflow":"status_payment_method","product_names":["michael_kors jeans"],"n_action_turns":4,"n_tokens_b0":211,"seed":42,"in_exclusion_set":false}
+{"convo_id":6028,"flow":"account_access","subflow":"recover_password","product_names":[],"n_action_turns":3,"n_tokens_b0":165,"seed":42,"in_exclusion_set":false}
+{"convo_id":6121,"flow":"storewide_query","subflow":"membership_4","product_names":[],"n_action_turns":3,"n_tokens_b0":116,"seed":42,"in_exclusion_set":false}
+{"convo_id":6517,"flow":"shipping_issue","subflow":"missing","product_names":["guess jeans"],"n_action_turns":5,"n_tokens_b0":222,"seed":42,"in_exclusion_set":false}
+{"convo_id":6629,"flow":"account_access","subflow":"reset_2fa","product_names":[],"n_action_turns":3,"n_tokens_b0":220,"seed":42,"in_exclusion_set":false}
+{"convo_id":6902,"flow":"shipping_issue","subflow":"manage","product_names":["tommy_hilfiger jacket"],"n_action_turns":4,"n_tokens_b0":249,"seed":42,"in_exclusion_set":false}
+{"convo_id":7053,"flow":"purchase_dispute","subflow":"promo_code_out_of_date","product_names":["michael_kors jeans"],"n_action_turns":5,"n_tokens_b0":221,"seed":42,"in_exclusion_set":false}
+{"convo_id":7061,"flow":"subscription_inquiry","subflow":"status_due_amount","product_names":[],"n_action_turns":5,"n_tokens_b0":207,"seed":42,"in_exclusion_set":false}
+{"convo_id":7079,"flow":"single_item_query","subflow":"boots_other_2","product_names":["michael_kors boots"],"n_action_turns":3,"n_tokens_b0":105,"seed":42,"in_exclusion_set":false}
+{"convo_id":7523,"flow":"order_issue","subflow":"manage_upgrade","product_names":["tommy_hilfiger jeans"],"n_action_turns":4,"n_tokens_b0":134,"seed":42,"in_exclusion_set":false}
+{"convo_id":7534,"flow":"product_defect","subflow":"refund_update","product_names":["tommy_hilfiger jacket"],"n_action_turns":1,"n_tokens_b0":65,"seed":42,"in_exclusion_set":false}
+{"convo_id":7608,"flow":"single_item_query","subflow":"boots_how_4","product_names":["michael_kors boots"],"n_action_turns":3,"n_tokens_b0":177,"seed":42,"in_exclusion_set":false}
+{"convo_id":7666,"flow":"manage_account","subflow":"status_shipping_question","product_names":["tommy_hilfiger jeans"],"n_action_turns":3,"n_tokens_b0":139,"seed":42,"in_exclusion_set":false}
+{"convo_id":7861,"flow":"account_access","subflow":"recover_password","product_names":[],"n_action_turns":3,"n_tokens_b0":176,"seed":42,"in_exclusion_set":false}
+{"convo_id":7933,"flow":"storewide_query","subflow":"membership_3","product_names":[],"n_action_turns":2,"n_tokens_b0":149,"seed":42,"in_exclusion_set":false}
+{"convo_id":7961,"flow":"order_issue","subflow":"manage_create","product_names":["calvin_klein jeans"],"n_action_turns":3,"n_tokens_b0":201,"seed":42,"in_exclusion_set":false}
+{"convo_id":8300,"flow":"manage_account","subflow":"status_service_removed","product_names":["calvin_klein shirt"],"n_action_turns":3,"n_tokens_b0":149,"seed":42,"in_exclusion_set":false}
+{"convo_id":8363,"flow":"account_access","subflow":"reset_2fa","product_names":[],"n_action_turns":3,"n_tokens_b0":165,"seed":42,"in_exclusion_set":false}
+{"convo_id":8538,"flow":"product_defect","subflow":"return_stain","product_names":["guess jacket"],"n_action_turns":5,"n_tokens_b0":206,"seed":42,"in_exclusion_set":false}
+{"convo_id":8725,"flow":"storewide_query","subflow":"policy_4","product_names":[],"n_action_turns":3,"n_tokens_b0":144,"seed":42,"in_exclusion_set":false}
+{"convo_id":8806,"flow":"product_defect","subflow":"refund_status","product_names":["tommy_hilfiger jeans"],"n_action_turns":2,"n_tokens_b0":97,"seed":42,"in_exclusion_set":false}
+{"convo_id":8890,"flow":"purchase_dispute","subflow":"out_of_stock_general","product_names":["guess shirt","calvin_klein shirt","michael_kors shirt"],"n_action_turns":3,"n_tokens_b0":247,"seed":42,"in_exclusion_set":false}
+{"convo_id":8974,"flow":"purchase_dispute","subflow":"out_of_stock_one_item","product_names":["tommy_hilfiger jacket"],"n_action_turns":3,"n_tokens_b0":140,"seed":42,"in_exclusion_set":false}
+{"convo_id":9142,"flow":"subscription_inquiry","subflow":"manage_pay_bill","product_names":[],"n_action_turns":5,"n_tokens_b0":134,"seed":42,"in_exclusion_set":false}
+{"convo_id":9321,"flow":"single_item_query","subflow":"boots_how_3","product_names":["tommy_hilfiger boots"],"n_action_turns":3,"n_tokens_b0":174,"seed":42,"in_exclusion_set":false}
+{"convo_id":9451,"flow":"purchase_dispute","subflow":"bad_price_competitor","product_names":["michael_kors boots"],"n_action_turns":3,"n_tokens_b0":164,"seed":42,"in_exclusion_set":false}
+{"convo_id":9468,"flow":"account_access","subflow":"recover_username","product_names":[],"n_action_turns":2,"n_tokens_b0":86,"seed":42,"in_exclusion_set":false}
+{"convo_id":9472,"flow":"order_issue","subflow":"manage_cancel","product_names":["tommy_hilfiger jacket","michael_kors jacket"],"n_action_turns":6,"n_tokens_b0":187,"seed":42,"in_exclusion_set":false}
+{"convo_id":9707,"flow":"single_item_query","subflow":"boots_other_1","product_names":["michael_kors boots"],"n_action_turns":3,"n_tokens_b0":102,"seed":42,"in_exclusion_set":false}
+{"convo_id":9816,"flow":"order_issue","subflow":"status_mystery_fee","product_names":["tommy_hilfiger jeans"],"n_action_turns":5,"n_tokens_b0":196,"seed":42,"in_exclusion_set":false}
+{"convo_id":9847,"flow":"troubleshoot_site","subflow":"credit_card","product_names":["guess shirt"],"n_action_turns":3,"n_tokens_b0":190,"seed":42,"in_exclusion_set":false}
+{"convo_id":9953,"flow":"shipping_issue","subflow":"cost","product_names":["guess jeans","michael_kors shirt","calvin_klein jacket"],"n_action_turns":4,"n_tokens_b0":254,"seed":42,"in_exclusion_set":false}
+{"convo_id":9968,"flow":"shipping_issue","subflow":"status","product_names":["guess jeans"],"n_action_turns":4,"n_tokens_b0":156,"seed":42,"in_exclusion_set":false}
+{"convo_id":10059,"flow":"subscription_inquiry","subflow":"manage_extension","product_names":[],"n_action_turns":5,"n_tokens_b0":277,"seed":42,"in_exclusion_set":false}
