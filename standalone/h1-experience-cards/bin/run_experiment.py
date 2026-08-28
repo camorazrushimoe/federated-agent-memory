@@ -968,7 +968,10 @@ def main(argv=None):
         os.environ["H1_API_KEY"] = api_key
     extract_replay_dir = replay_dir
     extract_summary = None
-    if stage != "S0":            # S0: eval drives extraction via its 80/20 split
+    # extract is arm-T only: baseline-only runs (--baseline B0/B1/B2) never
+    # call the LLM and never build a card store (RUN-PROTOCOL §1, D8 comment
+    # above). Gate on needs_llm, not on stage, so S1/S2 baseline runs skip it.
+    if stage != "S0" and needs_llm:   # S0: eval drives extraction via its 80/20 split
         extract_summary = run_script("extract.py", [
             "--in", dialogues_path, "--out", cards_path, "--model", args.model,
             "--raw-dir", raw_dir, "--now", pinned_now] +
@@ -977,9 +980,11 @@ def main(argv=None):
             (["--set"] + args.set if args.set else []))
 
     # ---- cluster passes (S1/S2: natural 100-chat cursor, n//100 passes) ----
+    # arm-T only, same reason as extract: baseline-only runs have no card
+    # store to cluster (RUN-PROTOCOL §1 --baseline semantics).
     cluster_passes_fired = 0
     cluster_independence = None
-    if stage in ("S1", "S2"):
+    if stage in ("S1", "S2") and needs_llm:
         n_dlg = hio.row_count(dialogues_path)
         passes = n_dlg // cfg_obj.CLUSTER_EVERY_N_CHATS
         for i in range(passes):
@@ -993,7 +998,7 @@ def main(argv=None):
             cluster_passes_fired += 1
             if csum.get("independence"):
                 cluster_independence = csum["independence"]
-    elif stage == "S0":
+    elif stage == "S0" and needs_llm:
         cluster_passes_fired = 1   # the single forced pass inside eval
 
     # ---- eval arm T + baselines -------------------------------------------
@@ -1064,8 +1069,8 @@ def main(argv=None):
     # ---- access log, manifest, cost, report -------------------------------
     hio.write_jsonl(os.path.join(data_dir, "access_log.jsonl"), access_log)
 
-    extract_count = n_pool if stage != "S0" else 16
-    if stage == "S0":
+    extract_count = n_pool if (stage != "S0" and needs_llm) else 0
+    if stage == "S0" and needs_llm:
         extract_count = int((eval_summary.get("extract") or {}).get(
             "extracted", 0) or 0)
     cost = compute_cost(out_dir, run_id, args.model, stage, now_dt, serve_ms,
