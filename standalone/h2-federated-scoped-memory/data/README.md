@@ -30,4 +30,6 @@ sha256 исходного H1-пака — в `standalone/h1-experience-cards/dat
 Подставлять их в `gold_tags` / `gold_useful` нельзя: это метка H1.
 
 Настоящие `gold_tags.jsonl` и `gold_useful.jsonl` появляются только после D0
-(человек, срез из DATA-AUDIT §6). Пока их нет — L2 по пользе не публиковать.
+(агентная разметка `deepseek-v4-pro` по решению основателя 2026-08-28 —
+**NOT human gold**, срез из DATA-AUDIT §6; контракт: `ROUND-0-PLAN.md`).
+Пока их нет — L2 по пользе не публиковать.

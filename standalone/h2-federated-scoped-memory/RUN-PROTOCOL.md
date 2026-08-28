@@ -58,7 +58,9 @@ python bin/replay.py \
 
 ### 2.3 Золото H2
 
-Пишут люди. Скрипты только читают.
+`gold_tags` пишут люди. `gold_useful` на корпусе — агентная разметка `deepseek-v4-pro`
+по решению основателя 2026-08-28 (**NOT human gold**, контракт:
+[`ROUND-0-PLAN.md`](./ROUND-0-PLAN.md)); файл несёт `#`-заголовок с кавером. Скрипты только читают.
 
 - `gold_tags.jsonl` — теги без `channel` / `vertical`.
 - `gold_useful.jsonl` — `query_id` + `useful_dialogue_ids` строго из прошлого.
@@ -119,7 +121,14 @@ runs/<run_id>/
   "inputs": {
     "dialogues": {"path": "...", "sha256": "...", "rows": 0},
     "gold_tags": {"path": "...", "sha256": "...", "rows": 0},
-    "gold_useful": {"path": "...", "sha256": "...", "rows": 0},
+    "gold_useful": {
+      "path": "...",
+      "sha256": "...",
+      "rows": 0,
+      "agent_labeled": true,
+      "human_gold": false,
+      "labeler_model": "deepseek-v4-pro"
+    },
     "prompts": {"path": "PROMPTS.md", "sha256": "..."}
   },
   "outputs": {

@@ -124,6 +124,23 @@ HARD валит прогон.
 
 ---
 
+## D0 — золото пользы (Phase B, гейт: D2 зелёный)
+
+Не трогать hold-out и корпус, пока D2 не зелёный. Разметку делает агент
+`deepseek-v4-pro` по решению основателя 2026-08-28 — **NOT human gold**
+(контракт и срез — [`ROUND-0-PLAN.md`](./ROUND-0-PLAN.md), DATA-AUDIT §6).
+
+- [ ] `data/d0_slice.jsonl` — 60 hold-out query (34 FAQ how-to + 6 site-troubleshoot + 20 negatives), заморожен (sha)
+- [ ] `bin/label_gold_useful.py` закоммичен, зовёт `call_llm --model deepseek-v4-pro`; S2 `deepseek-v4-flash` не тронут
+- [ ] Промпт разметчика заморожен в PROMPTS.md; S2 §2–§3 байт-в-байт те же
+- [ ] `data/gold_useful.jsonl`: `#`-заголовок «AGENT-LABELED — NOT HUMAN GOLD», формат строк как у seed
+- [ ] QA: C-GD1..C-GD8 зелёные, включая анти-H1 коллинеарность C-GD7
+- [ ] Манифест D0: `labeler_model=deepseek-v4-pro`, кавер, sha, cost отдельно от S2 `cost.json`
+
+**D0 закрыт:** золото закоммичено одним PR (скрипт + промпт + чеки + срез + золото).
+
+---
+
 ## D3 — аудит пола и потолка
 
 Гейт: `audit.json` с A1–A6 есть **до** полного прогона.
