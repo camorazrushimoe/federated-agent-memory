@@ -1,6 +1,6 @@
 {
  "artifact": "research/phase2/m2/candidates.jsonl",
- "round": "R2 (M2 extraction) \u2014 candidates per GH #6 5449115746 \u00a74 item 2; sample frozen PR #21 (main @4d68187), D22 accepted as documented",
+ "round": "R2 (M2 extraction) \u2014 candidates per GH #6 5449115746 \u00a74 item 2; sample frozen PR #21 (main @4d68187), D22 accepted as documented. R2 fix-forward (GH #6 5450060638 \u00a71 item 1): the lead's 80-unit DRAFT (b2_draft sha 5063a85c4ab79465) is SLOTTED into b2_unit/b2 \u2014 final B2 render + final n_tokens_b2 on the lead's unit, frozen counter, default separators (interpretation #1 confirmed). SKELETON B0/B1 renders unchanged; only the B2 items change.",
  "created": "2026-08-28",
  "inputs": {
   "corpus": "data/abcd/abcd_v1.1.json",
@@ -9,7 +9,10 @@
   "sample": "research/phase2/m2/sample.jsonl",
   "sample_sha256_16": "f2195e7a6abe2221",
   "ontology": "data/abcd/ontology.json",
-  "ontology_sha256_16": "2e1c1d763518ba08"
+  "ontology_sha256_16": "2e1c1d763518ba08",
+  "b2_draft": "research/phase2/m2/b2_draft.jsonl",
+  "b2_draft_sha256_16": "5063a85c4ab79465",
+  "b2_draft_role": "the lead's 80-unit DRAFT (5449115746 \u00a74); slotted into b2_unit/b2 \u2014 final B2 render + final n_tokens_b2 on the lead's unit (frozen counter, default separators, interpretation #1)"
  },
  "canonical_vocab": {
   "definition": "union of the category keys of ontology.json['actions']: kb_query \u222a interaction \u222a faq_policy",
@@ -56,10 +59,10 @@
  "renders": {
   "b0": "all `original` turns as 'speaker: text', space-joined",
   "b1": "ordered targets[2] action names (D11), space-joined",
-  "b2": "JSON of the unit, schema key order, receipt included, default separators (', ', ': ') \u2014 see the RENDERING NOTE flagged for lead confirmation",
+  "b2": "JSON of the unit, schema key order, receipt included, default separators (', ', ': ') \u2014 interpretation #1 CONFIRMED (GH #6 5450060638 \u00a72)",
   "token_counter": "whitespace-split of the rendered candidate (frozen)"
  },
- "b2_skeleton": {
+ "b2_draft": {
   "schema": [
    "problem_shape",
    "constraint",
@@ -76,7 +79,7 @@
    "scope",
    "confidence"
   ],
-  "judgment_fields_null_until_lead_draft": [
+  "judgment_fields": [
    "problem_shape",
    "constraint",
    "unlock",
@@ -84,11 +87,12 @@
    "receipt.scope",
    "receipt.confidence"
   ],
+  "judgment_fields_state": "FILLED from the lead's 80-unit draft (problem_shape/constraint/event_span/scope/confidence non-null where drafted; unlock null allowed \u2014 53/80 null on this draft)",
   "mechanical_prefill": [
    "what_worked (ordered targets[2] sequence, D11 \u2014 pre-registration: 'the resolution action sequence from targets[2]'; the lead's 80-unit draft is authoritative at join time)",
    "receipt.corpus / receipt.convo_id / receipt.flow / receipt.subflow"
   ],
-  "note": "n_tokens_b2 (the `b2` field's token count) is PROVISIONAL \u2014 the final B2 token count is computed on the lead's unit at join time (5449115746 \u00a74 item 4); `b2_unit` carries the skeleton structure, `b2` its render",
+  "note": "n_tokens_b2 (the `b2` field's token count) is FINAL \u2014 computed on the lead's unit by the frozen counter (5450060638 \u00a71 item 1; interpretation #1). `b2_unit` carries the filled unit, `b2` its render; the draft's own b2_render/n_tokens_b2/n_tokens_b2_skeleton were cross-checked against this re-derivation and agree.",
   "what_failed": "OUT of the R2 unit (pending \u00a74/R3; collapse rule pre-registered)"
  },
  "token_stats": {
@@ -106,12 +110,12 @@
    "max": 8,
    "total": 286
   },
-  "b2_skeleton_provisional": {
-   "median": 25.0,
-   "p95_nearest_rank": 28,
-   "min": 23,
-   "max": 30,
-   "total": 2046
+  "b2_draft_final": {
+   "median": 45.0,
+   "p95_nearest_rank": 55,
+   "min": 37,
+   "max": 57,
+   "total": 3667
   }
  },
  "unmapped": {
@@ -124,5 +128,5 @@
  },
  "honesty_clause": "agent-judged from the first judge call; inter-pass disagreement is a self-consistency floor, NOT human inter-rater agreement (rides with every M2 number)",
  "determinism": "byte-identical on re-run: pinned input shas verified, convo_id-sorted rows, fixed key order, fixed date string",
- "candidates_sha256_16": "dd1869a2d72c6b2b"
+ "candidates_sha256_16": "a54f52a557ce38b5"
 }

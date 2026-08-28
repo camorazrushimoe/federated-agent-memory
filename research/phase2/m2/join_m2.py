@@ -11,15 +11,20 @@ per the FROZEN contract (GH #6 comment 5449115746 section 4 item 4):
     README re-run contract (research/phase2/m2/README.md).
 
 Pinned inputs (verified by sha256:16 on every run, gates 1-3):
-    candidates.jsonl  dd1869a2d72c6b2b   (PR #22, main @601c310)
+    candidates.jsonl  a54f52a557ce38b5   (R2 fix-forward, 5450060638 — FILLED;
+                                          the lead's 80-unit draft slotted into
+                                          b2_unit/b2, supersedes PR #22 @601c310)
     b2_draft.jsonl    5063a85c4ab79465   (PR #23, main @d8a8f33)
 Judge inputs (pinned by the join itself via recorded shas, gate 4):
     blind pass1 / pass2 answers (240 items each, PROTOCOL-m2-blind.md)
-    scoring answers (80 rows, PROTOCOL-m2-scoring.md)
+    reference answers (80 rows — scoring Call 1, PROTOCOL-m2-scoring.md)
+    scoring answers (80 rows — scoring Call 2, PROTOCOL-m2-scoring.md)
 
 At join time n_tokens_b2 is RECOMPUTED on the draft unit with the frozen
 counter (whitespace-split of json.dumps(unit), default separators) and must
-equal b2_draft's n_tokens_b2 on all 80 rows (gate 5); otherwise the join
+equal b2_draft's n_tokens_b2 on all 80 rows (gate 5); the committed
+candidates' b2_unit must equal the pinned draft's unit on all 80 rows
+(gate 2, FILLED mode — slot, never mutate); otherwise the join
 aborts — the join is a pure function of the judge outputs.
 
 Usage (the one command, once the judge's numbers land):
@@ -27,6 +32,7 @@ Usage (the one command, once the judge's numbers land):
         --m2 research/phase2/m2 \
         --pass1 <path>/pass1_answers.jsonl \
         --pass2 <path>/pass2_answers.jsonl \
+        --reference <path>/reference_answers.jsonl \
         --scoring <path>/scoring_answers.jsonl
     --out-dir <dir>          (default: the m2 dir)
     --results / --report     (output paths, default m2_results.json / m2_report.md)
@@ -49,7 +55,7 @@ import statistics
 import sys
 
 # ----------------------------- frozen inputs -------------------------------
-CANDIDATES_SHA = "dd1869a2d72c6b2b"   # candidates.jsonl  (PR #22, main @601c310)
+CANDIDATES_SHA = "a54f52a557ce38b5"   # candidates.jsonl  (R2 fix-forward, 5450060638 — FILLED: draft slotted; supersedes PR #22 @601c310)
 DRAFT_SHA = "5063a85c4ab79465"        # b2_draft.jsonl    (PR #23, main @d8a8f33)
 SAMPLE_SHA = "f2195e7a6abe2221"       # sample.jsonl      (PR #21, main @4d68187)
 B2_SCHEMA = ["problem_shape", "constraint", "unlock", "what_worked", "receipt"]
@@ -66,11 +72,13 @@ BAR = {
     "token_counter": "whitespace-split tokens of the rendered candidate; B2 = canonical JSON of the unit, schema key order, default separators (', ', ': ')",
     "falsification": "B1 (action trace) scored identically; if B1 alone reconstructs >= 80% of B0's value, the unit collapses to trace + label (pre-registered collapse)",
 }
-HONESTY = ("All M2 numbers are AGENT-JUDGED (blind answering passes 1+2 + one scoring "
-           "pass, frozen protocols). The two-pass agreement is a judge self-consistency "
-           "floor under frozen rules, NOT human inter-rater agreement, and is never cited "
-           "as 'human agreement'. The B2 units are AGENT-DRAFTED (lead); the falsification "
-           "is the independent blind judge.")
+HONESTY = ("All M2 numbers are AGENT-JUDGED (blind answering passes 1+2 + the scoring "
+           "pass in the frozen two-call structure — reference call, then scoring call "
+           "against the committed reference; frozen protocols). The two-pass agreement "
+           "is a judge self-consistency floor under frozen rules, NOT human "
+           "inter-rater agreement, and is never cited as 'human agreement'. The B2 "
+           "units are AGENT-DRAFTED (lead); the falsification is the independent "
+           "blind judge.")
 
 DATE = "2026-08-28"
 
@@ -118,7 +126,7 @@ def gate(cond, msg):
 
 
 # ------------------------------ main pipeline -------------------------------
-def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
+def run(m2, pass1_path, pass2_path, reference_path, scoring_path, out_dir,
         results_path, report_path, dry_run):
     # ---------- Gate 1: pinned frozen inputs ----------
     cand_path, draft_path = f"{m2}/candidates.jsonl", f"{m2}/b2_draft.jsonl"
@@ -141,6 +149,11 @@ def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
         u = d["b2_unit"]
         gate(list(u.keys()) == B2_SCHEMA, f"{r['convo_id']}: draft unit key order {list(u.keys())} != frozen {B2_SCHEMA}")
         gate(list(u["receipt"].keys()) == RECEIPT_SCHEMA, f"{r['convo_id']}: receipt key order {list(u['receipt'].keys())} != frozen")
+        # FILLED mode (5450060638 s1 item 1): the committed candidates' b2_unit
+        # must EQUAL the pinned draft's unit on every row — the join slots the
+        # lead's unit, never mutates it (the validator's F6, mirrored here).
+        gate(r["b2_unit"] == u,
+             f"{r['convo_id']}: committed b2_unit != the pinned draft's unit (slot, never mutate)")
         gate(isinstance(u["what_worked"], list) and all(isinstance(x, str) for x in u["what_worked"]),
              f"{r['convo_id']}: what_worked not a list of str")
         # what_worked == the B1 trace (machine check, 80/80 expected)
@@ -187,7 +200,14 @@ def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
             key = f"{r['item_id']}|{i['codename']}"
             gate(key in cand_map, f"unknown blind item {key}")
 
-    # ---------- Gate 4: scoring answers vs scoring layer ----------
+    # ---------- Gate 4: scoring answers vs scoring layer (frozen 2-call
+    # structure, 5450060638 s2 — overrides the combined single call) ----------
+    # Call 1 (reference): transcript ONLY -> R1-R3, committed answer file.
+    # Call 2 (scoring): transcript + 3 candidates + the committed reference
+    #   -> scores, committed answer file. The committed scoring layer is
+    #   reference_input.jsonl (Call 1, candidate-free) + scoring_base.jsonl
+    #   (Call 2, transcript + candidates; the scoring input is built at stage
+    #   time from the committed reference and is NOT committed).
     conv_map_file = json.load(open(f"{m2}/judge/scoring/convo_mapping.json"))
     flat = conv_map_file["candidate_codename -> {convo_id, candidate}"]   # 240 slots
     code_to_cid = conv_map_file["convo_codename -> convo_id"]             # 80 codes
@@ -197,24 +217,42 @@ def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
     gate(len(pairs) == 240, "candidate slots must be unique per (convo, candidate)")
     gate(all(code_to_cid[c.split("|", 1)[0]] == v["convo_id"] for c, v in flat.items()),
          "convo_codename <-> candidate slot mapping inconsistent")
-    scoring_input = load_lines(f"{m2}/judge/scoring/scoring_input.jsonl")
-    gate(len(scoring_input) == 80, "expected 80 scoring items")
-    gate({it["convo_codename"] for it in scoring_input} == set(code_to_cid),
-         "scoring input convo_codename set != the committed mapping set")
-    for it in scoring_input:
+    ref_input = load_lines(f"{m2}/judge/scoring/reference_input.jsonl")   # Call 1 (committed)
+    base_input = load_lines(f"{m2}/judge/scoring/scoring_base.jsonl")     # Call 2 base (committed)
+    gate(len(ref_input) == 80 and len(base_input) == 80,
+         "expected 80 items in reference_input and scoring_base")
+    ref_order = [it["convo_codename"] for it in ref_input]
+    gate(ref_order == [it["convo_codename"] for it in base_input],
+         "reference_input and scoring_base must present the convos in the same order")
+    gate(set(ref_order) == set(code_to_cid),
+         "scoring layer convo_codename set != the committed mapping set")
+    for it in ref_input:
+        gate(set(it.keys()) == {"convo_codename", "transcript"},
+             f"{it['convo_codename']}: reference input must be candidate-free {sorted(it.keys())}")
+    for it in base_input:
         row_cands = {c["codename"] for c in it["candidates"]}
         map_cands = {c.split("|", 1)[1] for c in flat if c.startswith(it["convo_codename"] + "|")}
-        gate(row_cands == map_cands, f"{it['convo_codename']}: input candidate codenames != mapping")
+        gate(row_cands == map_cands, f"{it['convo_codename']}: base candidate codenames != mapping")
+
+    # Call 1 answers (reference_answers.jsonl): R1-R3, in reference-input order
+    reference = load_lines(reference_path)
+    gate([r["convo_codename"] for r in reference] == ref_order,
+         "reference answers: convo_codename order != the committed reference input order")
+    ref_by_code = {}
+    for r in reference:
+        gate(set(r.keys()) == {"convo_codename", "r1", "r2", "r3"}, f"reference: fields {sorted(r.keys())}")
+        for k in ("r1", "r2", "r3"):
+            gate(isinstance(r[k], str) and r[k].strip(), f"reference {r['convo_codename']}: empty {k}")
+        ref_by_code[r["convo_codename"]] = r
+
+    # Call 2 answers (scoring_answers.jsonl): scores only, in base order
     scoring = load_lines(scoring_path)
-    gate([r["convo_codename"] for r in scoring] == [it["convo_codename"] for it in scoring_input],
-         "scoring answers: convo_codename order != input order")
+    gate([r["convo_codename"] for r in scoring] == [it["convo_codename"] for it in base_input],
+         "scoring answers: convo_codename order != the committed scoring base order")
     sc_by_code = {}
     for r in scoring:
-        gate(set(r.keys()) == {"convo_codename", "r1", "r2", "r3", "scores"}, f"scoring: fields {sorted(r.keys())}")
-        for k in ("r1", "r2", "r3"):
-            gate(isinstance(r[k], str) and r[k].strip(), f"scoring {r['convo_codename']}: empty {k}")
-        row_cands = {c["codename"] for c in next(it for it in scoring_input
-                                                 if it["convo_codename"] == r["convo_codename"])["candidates"]}
+        gate(set(r.keys()) == {"convo_codename", "scores"}, f"scoring: fields {sorted(r.keys())} (frozen 2-call contract: references live in the Call-1 file)")
+        row_cands = {c.split("|", 1)[1] for c in flat if c.startswith(r["convo_codename"] + "|")}
         gate(set(r["scores"].keys()) == row_cands and len(r["scores"]) == 3,
              f"scoring {r['convo_codename']}: must score exactly the 3 candidate codenames of the row")
         for cname, sc in r["scores"].items():
@@ -222,6 +260,8 @@ def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
             gate(sc["s1"] in (0, 0.5, 1) and sc["s2"] in (0, 0.5, 1) and sc["s3"] in (0, 0.25, 0.5, 1),
                  f"scoring {r['convo_codename']} {cname}: non-frozen score values {sc}")
         sc_by_code[r["convo_codename"]] = r
+    # the two committed files must cover exactly the same 80 convos
+    gate(set(ref_by_code) == set(sc_by_code), "reference and scoring answer sets must match")
 
     # sample.jsonl cross-check (cheap, pinned)
     sample_raw = open(f"{m2}/sample.jsonl", "rb").read()
@@ -430,15 +470,19 @@ def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
         "created": DATE,
         "dry_run": dry_run,
         "frozen_inputs": {
-            "candidates": {"path": "research/phase2/m2/candidates.jsonl", "sha256_16": CANDIDATES_SHA, "main": "d8a8f33 (via PR #22 @601c310)"},
+            "candidates": {"path": "research/phase2/m2/candidates.jsonl", "sha256_16": CANDIDATES_SHA, "main": "R2 fix-forward (5450060638) — FILLED, supersedes PR #22 @601c310"},
             "b2_draft": {"path": "research/phase2/m2/b2_draft.jsonl", "sha256_16": DRAFT_SHA, "main": "d8a8f33 (PR #23)"},
             "sample": {"path": "research/phase2/m2/sample.jsonl", "sha256_16": SAMPLE_SHA, "main": "4d68187 (PR #21, D22)"},
         },
         "judge_inputs": {
             "pass1": {"path": pass1_path, "sha256_16": sha16(open(pass1_path, "rb").read()), "items": 240},
             "pass2": {"path": pass2_path, "sha256_16": sha16(open(pass2_path, "rb").read()), "items": 240},
+            "reference": {"path": reference_path, "sha256_16": sha16(open(reference_path, "rb").read()), "items": 80},
             "scoring": {"path": scoring_path, "sha256_16": sha16(open(scoring_path, "rb").read()), "items": 80},
             "protocols": ["research/phase2/m2/judge/binding/PROTOCOL-m2-blind.md", "research/phase2/m2/judge/scoring/PROTOCOL-m2-scoring.md"],
+            "structure": ("frozen 2-call scoring (5450060638 s2): reference (Call 1, transcript only) "
+                          "and scoring (Call 2, transcript + candidates + committed reference) are "
+                          "separate committed answer files"),
             "note": "judge files are evaluation's output; pinned here by sha so the join is a pure function of them (re-runnable, auditable)",
         },
         "frozen_bar": BAR,
@@ -483,16 +527,18 @@ def run(m2, pass1_path, pass2_path, scoring_path, out_dir,
     ap("")
     ap("| input | sha256:16 | state |")
     ap("|---|---|---|")
-    ap(f"| `candidates.jsonl` (B0/B1 renders + frozen token counts) | `{CANDIDATES_SHA}` | PR #22, main @601c310 |")
+    ap(f"| `candidates.jsonl` (B0/B1 renders + FILLED B2 unit + frozen token counts) | `{CANDIDATES_SHA}` | R2 fix-forward (5450060638), supersedes PR #22 @601c310 |")
     ap(f"| `b2_draft.jsonl` (the 80 B2 units) | `{DRAFT_SHA}` | PR #23, main @d8a8f33 |")
     ap(f"| `sample.jsonl` (frozen 80-convo sample) | `{SAMPLE_SHA}` | PR #21 (D22) |")
     ap(f"| blind pass1 answers | `{results['judge_inputs']['pass1']['sha256_16']}` | evaluation, 240 items |")
     ap(f"| blind pass2 answers | `{results['judge_inputs']['pass2']['sha256_16']}` | evaluation, 240 items |")
-    ap(f"| scoring answers | `{results['judge_inputs']['scoring']['sha256_16']}` | evaluation, 80 rows |")
+    ap(f"| reference answers (scoring Call 1) | `{results['judge_inputs']['reference']['sha256_16']}` | evaluation, 80 rows |")
+    ap(f"| scoring answers (scoring Call 2) | `{results['judge_inputs']['scoring']['sha256_16']}` | evaluation, 80 rows |")
     ap("")
     ap("`n_tokens_b2` was recomputed on each draft unit with the frozen counter")
     ap("(whitespace-split of `json.dumps(unit)`, default separators) — 80/80 equal to the draft's")
-    ap("stored value (gate 5 of the join).")
+    ap("stored value (gate 5 of the join); the committed `b2_unit` equals the pinned draft's")
+    ap("unit on all 80 rows (gate 2, FILLED mode — slot, never mutate).")
     ap("")
     ap("## 2. The frozen bar (never tuned — D18)")
     ap("")
@@ -614,7 +660,9 @@ def main():
     ap.add_argument("--m2", default="research/phase2/m2")
     ap.add_argument("--pass1", required=True, help="blind pass-1 answers jsonl")
     ap.add_argument("--pass2", required=True, help="blind pass-2 answers jsonl")
-    ap.add_argument("--scoring", required=True, help="scoring answers jsonl")
+    ap.add_argument("--reference", required=True,
+                    help="scoring Call-1 (reference) answers jsonl: convo_codename + r1/r2/r3")
+    ap.add_argument("--scoring", required=True, help="scoring Call-2 answers jsonl: convo_codename + scores")
     ap.add_argument("--out-dir", default=None, help="default: the m2 dir")
     ap.add_argument("--results", default="m2_results.json")
     ap.add_argument("--report", default="m2_report.md")
@@ -623,7 +671,7 @@ def main():
     a = ap.parse_args()
     out_dir = a.out_dir or a.m2
     try:
-        run(a.m2, a.pass1, a.pass2, a.scoring, out_dir,
+        run(a.m2, a.pass1, a.pass2, a.reference, a.scoring, out_dir,
             f"{out_dir}/{a.results}", f"{out_dir}/{a.report}", a.dry_run)
     except Fail as e:
         print(f"JOIN GATE FAILED: {e}", file=sys.stderr)

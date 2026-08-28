@@ -186,47 +186,69 @@ out-of-vocab / non-str names. The R1-era "10 unmapped" gap was vs
 vocab — against the canonical vocab the measured value is 0/30 unmapped.
 0 is the number; the guard is the guard.
 
-### 6.3 Interpretations flagged for lead confirmation (both non-blocking)
+### 6.3 Interpretations (R2 status; #3 ADJUDICATED by the lead, 5450060638 §2)
 
-1. **B2 render separators.** The pre-registered "canonical JSON (schema
-   key order)" does not fix separators, and the frozen counter is
-   whitespace-split. With compact (JCS-style) separators the render has
-   NO whitespace → every B2 unit tokenizes to exactly 1 token → the
-   pre-registered token bar (tokens(B2) ≤ tokens(B0)/10) passes
-   trivially, self-defeating the M2 question. Default JSON separators
-   are the only reading under which the counter measures the unit's
-   actual cost; they are used here. (Skeleton cost under this reading:
-   23–30 tokens; the final number waits for the lead's unit.)
-2. **"No flow/band hints" scope.** Read as a constraint on the
-   PRESENTATION (no item metadata — convo id, candidate type,
-   construction band — accompanies a render). In-unit content such as
-   the B2 receipt's `flow`/`subflow` fields is part of the candidate
-   being tested and is answered as-is (documented in
-   `PROTOCOL-m2-blind.md` §1 scope note).
-3. **Scoring call count.** The pre-registration budgets 160 calls for
-   this half (80 reference + 80 scoring) and describes the procedure as
-   one sequence per convo ("the judge first writes its OWN reference
-   answers, then scores each candidate"). The scoring pass implements
-   ONE combined call per convo (references + scores, in that order) —
-   80 calls, within the frozen bound, no extra calls.
+1. **B2 render separators — CONFIRMED (default).** The pre-registered
+   "canonical JSON (schema key order)" does not fix separators, and the
+   frozen counter is whitespace-split. With compact (JCS-style) separators
+   the render has NO whitespace → every B2 unit tokenizes to exactly 1
+   token → the pre-registered token bar (tokens(B2) ≤ tokens(B0)/10) passes
+   trivially, self-defeating the M2 question. Default JSON separators are
+   the only reading under which the counter measures the unit's actual cost;
+   they are used here and are confirmed. (Skeleton cost under this reading:
+   23–30 tokens; the FINAL number is on the lead's unit — total 3,667.)
+2. **"No flow/band hints" scope — CONFIRMED (presentation).** Read as a
+   constraint on the PRESENTATION (no item metadata — convo id, candidate
+   type, construction band — accompanies a render). In-unit content such as
+   the B2 receipt's `flow`/`subflow` fields is part of the candidate being
+   tested and is answered as-is (documented in `PROTOCOL-m2-blind.md` §1
+   scope note).
+3. **Scoring call count — ADJUDICATED: the frozen TWO-CALL structure is
+   restored (5450060638 §2; the earlier "combined single call" confirmation
+   in 5449907074 §2.3 is overridden).** The pre-registration budgets 160
+   calls for this half (80 reference + 80 scoring) as a TWO-call structure
+   per convo: (a) a **reference** call — transcript ONLY → the judge's
+   R1–R3, the anchor formed in a context that has NOT seen the candidates;
+   and (b) a **scoring** call — transcript + the 3 anonymized candidates +
+   the committed reference → scores. The combined single call (80) was
+   confirmed in error and is overridden: with the candidates in the same
+   context the reference is no longer formed independently of the candidates
+   it anchors. Cost: 480 blind + 80 reference + 80 scoring = **640 — exactly
+   the frozen ceiling**. The scoring pass implements the two calls as two
+   separate fresh contexts (`stage-reference` then `stage-scoring`); the
+   scoring input is built at stage time from the committed reference.
 
 ### 6.4 Re-run contract
 
 ```bash
 # generator (deterministic, byte-identical; stdlib only)
+# SKELETON mode (PR #22 artifact; byte-reproduces dd1869a2d72c6b2b):
 python3 research/phase2/m2/extract.py \
     --corpus data/abcd/abcd_v1.1.json \
     --sample research/phase2/m2/sample.jsonl \
     --ontology data/abcd/ontology.json \
     --out research/phase2/m2/candidates.jsonl
+# FILLED mode (R2 fix-forward, 5450060638 §1 item 1): slot the lead's
+# 80-unit draft (b2_draft sha 5063a85c4ab79465) into b2_unit/b2 → the
+# committed artifact (sha a54f52a557ce38b5; final B2 render + n_tokens_b2):
+python3 research/phase2/m2/extract.py \
+    --corpus data/abcd/abcd_v1.1.json \
+    --sample research/phase2/m2/sample.jsonl \
+    --ontology data/abcd/ontology.json \
+    --out research/phase2/m2/candidates.jsonl \
+    --draft research/phase2/m2/b2_draft.jsonl
 python3 research/phase2/m2/extract.py --selftest   # flag path on synthetic names
 
 # independent verification gate (re-renders everything from the raw corpus)
+# FILLED mode (--draft enables the filled-unit F-checks: F2' non-null where
+# drafted, unlock null allowed, F6 unit == draft unit) → PASS 29/29:
 python3 research/phase2/m2/validate_candidates.py \
     --corpus data/abcd/abcd_v1.1.json \
     --sample research/phase2/m2/sample.jsonl \
     --ontology data/abcd/ontology.json \
-    --candidates research/phase2/m2/candidates.jsonl
+    --candidates research/phase2/m2/candidates.jsonl \
+    --draft research/phase2/m2/b2_draft.jsonl
+# (omit --draft to validate the SKELETON artifact → 26/26)
 
 # judge harness (blind answering passes)
 python3 research/phase2/m2/stage_blind_pass.py bind \
@@ -239,37 +261,86 @@ python3 research/phase2/m2/stage_blind_pass.py stage \
 # hand each <dirN>/passN_prompt.md to a FRESH agent session; check with
 # <dirN>/passN_check.py; join via judge/binding/candidate_mapping.json
 
-# judge harness (scoring pass)
+# judge harness (scoring pass — frozen 2-call structure, 5450060638 §2)
 python3 research/phase2/m2/stage_scoring_pass.py bind \
     --candidates research/phase2/m2/candidates.jsonl \
     --out research/phase2/m2/judge/scoring
-python3 research/phase2/m2/stage_scoring_pass.py stage \
+# Call 1 — reference (transcript ONLY, candidate-free context) → R1-R3:
+python3 research/phase2/m2/stage_scoring_pass.py stage-reference \
     --bind research/phase2/m2/judge/scoring --stage-dir <dir3>
-# hand <dir3>/scoring_prompt.md to a FRESH agent session; check with
-# <dir3>/scoring_check.py; join via judge/scoring/convo_mapping.json
+# hand <dir3>/reference_prompt.md to a FRESH agent session → 
+# <dir3>/reference_answers.jsonl (check with <dir3>/reference_check.py)
+# Call 2 — scoring (transcript + 3 candidates + the committed reference):
+python3 research/phase2/m2/stage_scoring_pass.py stage-scoring \
+    --bind research/phase2/m2/judge/scoring --stage-dir <dir4> \
+    --reference <dir3>/reference_answers.jsonl
+# hand <dir4>/scoring_prompt.md to a FRESH agent session; check with
+# <dir4>/scoring_check.py; join via judge/scoring/convo_mapping.json
 ```
 
-### 6.5 Verification evidence (2026-08-28, pre-handoff)
+### 6.5 Verification evidence (2026-08-28, R2 fix-forward — the current committed state)
 
-- `validate_candidates.py` self-run: **VERDICT: PASS — 24/24 checks**,
-  including independent re-derivation of every render from the raw
-  corpus (B0 byte-identical; B1 re-derived `targets[2]` sequences; B2
-  skeleton schema + null judgment fields + mechanical prefill; frozen
-  counters on all three).
-- B0 tokens: **median 187.0, p95 (nearest-rank) 277, min 65, max 417**
-  — identical to the sample meta (the frozen counter is consistent
-  end-to-end).
-- B1: **286 action turns total** across the 80 sample convos (min 1 /
-  max 8 per convo); every name in the canonical 30-name vocab;
-  unmapped aggregate **0**.
-- B2 skeleton tokens (PROVISIONAL): min 23 / median 25.0 / max 30.
-- Judge harness: bind layers committed (240 items/pass blind, 80 items
-  scoring); pass inputs carry ONLY the frozen fields (asserted);
-  blind pass orders differ (seeds 20260901/20261001); per-convo
-  candidate order seeded (scoring seed 20261101); all 240/240+80
-  renders byte-identical to candidates.jsonl; codename spaces
-  collision-free; selftests green (`extract.py --selftest`,
-  `stage_blind_pass.py --selftest`, `stage_scoring_pass.py --selftest`).
-- Budget status: 480 blind answering calls + 80 combined scoring calls
-  (frozen ceiling 640) — all agent-judged; honesty clause rides with
-  every number from the first judge call.
+> The R2 fix-forward (GH #6 5450060638) replaced the PR #22 skeleton
+> candidates + combined-call scoring with the FILLED draft + frozen 2-call
+> scoring. This section reflects the CURRENT committed state; the PR #22
+> state (skeleton `dd1869a2d72c6b2b`, 24/24 as recorded then) is preserved
+> in git history and remains byte-reproducible via `extract.py` (skeleton
+> mode).
+
+- **Pinned inputs (checked before any work):** corpus `005d425e890b30a1`;
+  sample `f2195e7a6abe2221`; ontology `2e1c1d763518ba08`; **b2_draft
+  `5063a85c4ab79465`** (the lead's 80-unit draft, the join's authority on the
+  B2 unit).
+- **`candidates.jsonl` (FILLED) sha256:16 `a54f52a557ce38b5`** — the lead's
+  draft slotted into `b2_unit`/`b2`; B0/B1 renders byte-unchanged from the
+  skeleton artifact (verified 0/0 changed); B2 renders changed 80/80;
+  determinism re-run byte-identical. `extract.py --selftest` green (flag
+  path on synthetic names).
+- **`validate_candidates.py` (FILLED, `--draft`): VERDICT PASS 29/29**,
+  including independent re-derivation of every render from the raw corpus
+  (B0 byte-identical; B1 re-derived `targets[2]` sequences; B2 frozen schema
+  key order + judgment fields non-null where drafted — `problem_shape`/
+  `constraint`/`receipt.event_span`/`scope`/`confidence` non-null, `unlock`
+  null allowed (53/80) + mechanical prefill + `b2 == json.dumps(b2_unit)`
+  round-trip (default separators) + frozen counters; F6 committed unit == the
+  pinned draft's unit). SKELETON mode (omit `--draft`): **26/26**.
+  (Precision: the as-merged note recorded "24/24"; the validator mechanically
+  runs **26** checks in skeleton mode (A4 + B1 + C5 + D3 + E5 + F5 + G3) and
+  **29** in filled mode (A6 + B1 + C5 + D3 + E5 + F6 + G3 — adds A5 draft
+  sha, A6 draft count, F6 unit-equality; F2 → F2'). The as-merged "24" was a
+  write-time miscount of the lettered groups, corrected per D21.)
+- **B0 tokens:** median 187.0, p95 (nearest-rank) 277, min 65, max 417
+  (identical to the sample meta). **B1:** 286 action turns total (min 1 /
+  max 8); every name in the canonical 30-name vocab; unmapped aggregate **0**.
+- **B2 draft tokens (FINAL, on the lead's unit):** min 37 / median 45.0 /
+  max 57, **total 3,667** (aggregate ratio B2/B0 = 3,667/15,340 = 0.2390).
+  Skeleton floor (PROVISIONAL reference only): min 23 / median 25.0 /
+  max 30, total 2,046 (23–30/convo, not flat).
+- **Judge harness re-bound from the new candidates (new committed bind
+  layers):**
+  - **Blind:** 240 items/pass, orders differ (seeds 20260901/20261001),
+    anti-leak field set {item_id, codename, question, render}; only the B2
+    renders changed (80/80 per pass) — B0/B1 unchanged; `pass1_input`
+    sha256 `5ef2d7cc…`, `pass2_input` sha256 `17d701f9…`; all 240/240 renders
+    byte-identical to the new `candidates.jsonl`; `candidate_mapping.json`
+    unchanged (codenames are deterministic — only the renders changed).
+  - **Scoring (frozen 2-call structure):** `reference_input.jsonl` (transcript
+    ONLY — candidate-free context) sha256 `d3d6ef8a…`; `scoring_base.jsonl`
+    (transcript + 3 anonymized candidates, per-convo shuffled, seed 20261101)
+    sha256 `6a76e5e7…`; the scoring input is built at `stage-scoring` time
+    from the committed reference (not committed). B0/B1 candidate renders
+    unchanged vs the old combined input, B2 changed 80/80; codename space
+    320 distinct (80 convo + 240 candidate).
+- Selftests green: `extract.py --selftest`, `stage_blind_pass.py --selftest`,
+  `stage_scoring_pass.py --selftest` (reference candidate-free; scoring base
+  + committed reference; stage purity; reference validation rejects partial
+  input; deterministic).
+- **Budget (frozen ceiling 640):** 480 blind answering calls + 80 reference
+  calls + 80 scoring calls = **640 — exactly the frozen ceiling** (the frozen
+  2-call structure; 5449115746 §3). All agent-judged; the reference is
+  formed in a candidate-free context (the anchor is transcript-derived, not
+  corrupted by the candidates); honesty clause rides with every number from
+  the first judge call.
+- **Evaluation HOLD:** S1/S2/S3 held until the re-bound inputs are merged;
+  the blind pass runs exactly once, on the final renders. No judge call
+  before the re-bind.
