@@ -1,0 +1,39 @@
+{
+  "arm": "T",
+  "judge": null,
+  "n_holdout": 4,
+  "notes": [
+    "age-stale disabled by construction: timeline=compressed",
+    "independence=agent+dialogue",
+    "unlock_hit_smoke computed against the hold-out dialogue's unlock_guideline (SPEC §6.8 wording 'the hold-out card's unlock' resolved per brief §4)"
+  ],
+  "primary": {
+    "abstain": 1.0,
+    "unlock_hit_label": 0.0,
+    "wrong": 0.0
+  },
+  "run_id": "2026-08-28_S0_deepseek-v4-pro-portability",
+  "secondary": {
+    "cluster_purity": 1.0,
+    "cluster_rate": 0.875,
+    "duplicate_in_packet": 0,
+    "extract_yield": 1.0,
+    "independence": "agent+dialogue",
+    "packet_size_hist": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "reject_rate": 0.0,
+    "scope_leak": 0,
+    "serve_rate": 0.0,
+    "shared_rate": 0.142857,
+    "unlock_conflict": 0,
+    "unlock_hit_smoke": 0.0,
+    "votes_hist": {
+      "1": 12,
+      "2": 2,
+      "3+": 0
+    }
+  }
+}

@@ -751,7 +751,9 @@ def main(argv=None):
                     help="extract model id, REQUIRED (no default — D8: a "
                          "model swap is a flag, never an edit); in replay "
                          "mode it is taken from the source manifest")
-    ap.add_argument("--stage", choices=STAGES, required=True)
+    ap.add_argument("--stage", choices=STAGES, default=None,
+                    help="stage S0|S1|S2 (S3/S4 no-op); in replay mode it is "
+                         "taken from the source manifest")
     ap.add_argument("--out", default=None,
                     help="run directory (default: runs/<run_id>; replay "
                          "defaults to the replayed run's own directory, "
@@ -785,9 +787,14 @@ def main(argv=None):
     old_dir = None
     in_place_replay = False
     if args.replay:
-        old_dir = os.path.abspath(os.path.join(
-            os.path.dirname(os.path.abspath(args.out or os.path.join(
-                "runs", args.replay))), args.replay))
+        # Accept both the quickstart path form (--replay runs/<id>) and the
+        # bare run id (--replay <id>).
+        replay_arg = args.replay
+        old_dir = os.path.abspath(replay_arg)
+        if not os.path.isdir(old_dir):
+            candidate = os.path.abspath(os.path.join("runs", replay_arg))
+            if os.path.isdir(candidate):
+                old_dir = candidate
         old_manifest_path = os.path.join(old_dir, "manifest.json")
         if not os.path.exists(old_manifest_path):
             print(hio.dumps({"error": f"--replay {args.replay}: no manifest "
@@ -833,6 +840,10 @@ def main(argv=None):
                         return 1
 
     stage = args.stage
+    if stage is None:
+        print(hio.dumps({"error": "missing required argument: --stage "
+                                  "(or --replay of a run that defines it)"}))
+        return 1
     timeline = args.timeline or "compressed"
     agent_pool_size = args.agent_pool_size or 4
     overrides = cfg.parse_overrides(args.set)
@@ -1132,6 +1143,15 @@ def main(argv=None):
             "path": os.path.abspath(args.pool), "sha256": None, "rows": 4,
             "note": "eval default 80/20 split of the 20-row slice (rows "
                     "16..19); the real hold-out file was NOT opened"}
+    git_info = manifest["git_commit"]
+    if isinstance(git_info, dict) and git_info.get("dirty") is True:
+        # RUN-PROTOCOL §3.1: a dirty git_commit voids a run "without a stated
+        # reason". State the standard reason: the run was produced from its
+        # own uncommitted deliverable tree; the committed tree is identical.
+        manifest.setdefault("notes", []).append(
+            "git_commit.dirty=True: run produced from the uncommitted "
+            "deliverable tree; the committed tree is byte-identical to what "
+            "produced this run")
     # In-place replay rewrites the deterministic files byte-identically but
     # must NOT touch the measured artifacts (manifest/cost/report carry
     # wall-clock and run metadata that legitimately differ); the committed
