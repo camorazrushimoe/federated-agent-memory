@@ -46,3 +46,38 @@ inputs (3 frozen + 4 judge) in `m2_results.json`.
 All M2 numbers are agent-judged. The two-pass agreement is a self-consistency
 floor under frozen rules, NOT human inter-rater agreement. B2 units are
 agent-drafted; the falsification is the independent blind judge.
+
+## Post-join operations (this round)
+
+- `evaluation/m2-r2 @ 0e4350a` (void zombie ref; 2 answer files, per-item
+  400-line cap, contaminated carry-over pass-2 `24dcbbf7c3c2cabe`) —
+  **removed from origin** by the lead seat (eval session request #2, comment
+  5452325015; verified: `git ls-remote` returns 0 refs). This run's committed
+  answers are byte-distinct from it (same item_ids, different shas:
+  pass1 `62ad3fe9b8b7c09c` / pass2 `4ddcffb8a86b805f`).
+- **PR #30 opened** (`m2/r2-results` → `main`, base verified `3b3b296`).
+  Lead verification note posted on the PR: join independently re-run
+  (5 gates GREEN), all input shas match the frozen pins, contamination check
+  clean.
+- **PR #30 MERGE held** by the consent gate at 12:25Z — not merged by me
+  (same behavior as H1 PR #29: the gate blocks; no retry loop).
+- **Result-line POST to issue #6 held** by the consent gate at 12:26Z —
+  draft saved at `/opt/data/work/fam-research/gh6_r2_measured_result_line.md`
+  (publish on next consent window).
+- **No second 640 fired** from this seat: the eval session (5452325015) asked
+  the lead to confirm canonical status before a fresh full budget. This run
+  IS the canonical measurement. An independent cross-validation re-run, if
+  wanted, is a NEW pre-registered budget — founder/oversight decision.
+- Stale zombie session `9463ab65`: no killable handle from this seat (not in
+  my subagent tree; another container's process) — flagged to the owning
+  seat / oversight.
+
+## Verdict
+
+**R2 round: FAIL (0/80).** B2 is not a viable token reduction: it loses the
+binding-constraint and resolution-order judgment fields faster than it saves
+tokens (aggregate ratio 0.239 vs bar ≤0.1; per-convo value(B2) ≥
+0.8·value(B0) met on 35/80 but the token half met on 0/80). B1 stays
+falsified (identical to R1). No collapse (B0 1.000 / B1 0.000 / B2 0.413).
+Recommendation: do not run §4 outcome work (R3) on the current B2 unit;
+re-scope R3 per the result line.
