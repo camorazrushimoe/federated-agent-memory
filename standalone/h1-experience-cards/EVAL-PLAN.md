@@ -252,6 +252,31 @@ already have.
 cluster passes. Note the count in the report; do not switch to per-scope
 counting silently (SPEC §5).
 
+### A4 prerequisite — TF-IDF recipe fix (recorded 2026-08-28, D1, before any measurement)
+
+The audit's A4 premise — "the within-label card cosine median vs
+`CLUSTER_THRESHOLD`" — is only meaningful if the cosine recipe is well-behaved
+on near-duplicate cards. It was not: the initial recipe used unsmoothed
+`idf = log(N/df)`, which assigns **idf = 0 to every term appearing in every
+document of the fit corpus**. On a scope whose cards are mostly the same story
+(which is exactly the §10.2 clustering case, and exactly what A4 measures), a
+term like `exchange` has df == N -> idf = 0 -> the whole vector is zero ->
+cosine = 0.0 **even for two identical card-texts**.
+
+Measured consequence on the §10.2 pattern (ten same-story cards): the old
+recipe produced `clusters_formed=10, merged=0, promoted=0` — clustering could
+never merge, nothing would ever become `shared`, and A4 would have
+"confirmed" a within-label median near 0.0, triggering a threshold
+re-derivation from a **broken cosine**, not from the data. That is the tuned
+knob the brief forbids.
+
+Fix (in `bin/tfidf.py`, applied before any run): add-one smoothed IDF,
+`idf = log((1+N)/(1+df)) + 1`. Verified after the fix: identical docs -> 1.0,
+one-word-diff -> 0.8998, unrelated -> 0.0, and the ten-dupe cluster now yields
+1 canonical / 9 merged / promoted=1 / `shared`. **No threshold changed**; the
+0.35 bar now means what it says. If A4 or C-CL10 misbehaves on real data, that
+is a data finding, not a recipe artifact.
+
 ---
 
 ## 8. Model matrix

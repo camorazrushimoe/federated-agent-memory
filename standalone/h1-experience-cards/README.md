@@ -7,6 +7,35 @@ not the M1–M3 lab code under `research/`.
 Issue: [#28](https://github.com/camorazrushimoe/federated-agent-memory/issues/28)
 PR: [#29](https://github.com/camorazrushimoe/federated-agent-memory/pull/29)
 
+## Quickstart (verified in a fresh clone at D8)
+
+```bash
+git clone https://github.com/camorazrushimoe/federated-agent-memory
+cd federated-agent-memory/standalone/h1-experience-cards
+
+export H1_API_KEY=<your key>
+export H1_BASE_URL=https://api.deepseek.com/v1     # any OpenAI-compatible endpoint
+
+# 1. reproduce our numbers without spending a token
+python bin/run_experiment.py --replay runs/<reference_run_id>
+
+# 2. smoke the wiring on fixtures + 20 dialogues (a few LLM calls)
+python bin/run_experiment.py --stage S0 --model deepseek-v4-flash --out runs/my-s0
+
+# 3. the full measured run
+python bin/run_experiment.py --stage S2 --model deepseek-v4-flash --out runs/my-s2
+```
+
+Requirements: Python 3.11+, stdlib only except one HTTP client. No Docker, no
+database, no service, no repo-wide install.
+
+Per-command cost (call count, tokens, USD at the stated rate, wall-clock) is
+filled in from the committed reference run — see `runs/REFERENCE.md` and
+`RESULTS.md`. The numbers are measured, never guessed; `--replay` costs 0 LLM
+calls, step 2 costs ~20 extract calls, step 3 costs ~1000 extract calls on the
+extract model (plus the deterministic half, which is free). Tokens and latency
+per call are recorded in every run's `cost.json`.
+
 ## What you implement
 
 A handful of scripts that turn finished customer chats into short cards,

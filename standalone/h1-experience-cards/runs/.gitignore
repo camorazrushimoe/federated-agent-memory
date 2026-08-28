@@ -1,0 +1,28 @@
+# H1 run dirs — commit the small decisive artifacts, keep the heavy local.
+# RUN-PROTOCOL §6: commit manifest/metrics/checks/audit/cost/report/per_dialogue;
+# keep raw/, cards.jsonl, chunks and packet stores local unless a reviewer asks
+# (their sha256 is in the manifest either way).
+#
+# DELIVERABLE-PACKAGE §4 overrides for the REFERENCE run only: it is committed
+# in full INCLUDING raw/ (the replay fuel). When the reference run lands,
+# add an exception for runs/<reference_run_id>/raw/ in this file.
+
+*/
+!*/
+*/manifest.json
+*/metrics.json
+*/metrics_B0.json
+*/metrics_B1.json
+*/metrics_B2.json
+*/checks.json
+*/audit.json
+*/cost.json
+*/report.md
+*/per_dialogue.jsonl
+*/controls.json
+*/data/
+*/raw/
+*/replay_verify/
+*/fixtures_work/
+*/packets/
+*/data/*
