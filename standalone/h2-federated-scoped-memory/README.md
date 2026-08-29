@@ -9,6 +9,7 @@
 Как гонять прогон — [`RUN-PROTOCOL.md`](./RUN-PROTOCOL.md).
 Бриф для лабы — [`LAB-BRIEF.md`](./LAB-BRIEF.md).
 Рабочий чек-лист сдачи D1–D7 — [`CHECKLIST.md`](./CHECKLIST.md).
+План раунда (обновлён решением основателя 2026-08-28: D0-золото агентное) — [`ROUND-0-PLAN.md`](./ROUND-0-PLAN.md).
 S0-фикстуры — [`fixtures/`](./fixtures/).
 Корпус ABCD — [`data/`](./data/). Аудит глазами — [`DATA-AUDIT.md`](./DATA-AUDIT.md).
 
