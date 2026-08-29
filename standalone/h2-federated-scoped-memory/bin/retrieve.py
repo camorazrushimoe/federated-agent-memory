@@ -97,12 +97,18 @@ def main() -> int:
     self_ids = {common.session_id_of(query_id), query_id}
     candidates = []
     self_excluded = []
+    q_problem_shape = str(query_tags.get("problem_shape", "")).strip()
     for s in pool:
         sid = s["session_id"]
         src = s.get("source_dialogue_id")
         if sid in self_ids or src == query_id:
             self_excluded.append(sid)
             continue
+        if config.S3_REQUIRE_PROBLEM_SHAPE:
+            # R4 step 2: no problem_shape match -> not a candidate.
+            if str((s.get("tags") or {}).get("problem_shape", "")).strip() \
+                    != q_problem_shape:
+                continue
         if overlap_count(query_tags, s.get("tags") or {}) >= config.TAG_FIELDS_MIN:
             candidates.append(s)
 

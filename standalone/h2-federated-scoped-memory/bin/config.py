@@ -28,6 +28,12 @@ TAG_FIELDS = ["problem_shape", "constraint", "ending", "channel", "vertical"]
 # rating key (TAG_KEY_FIELDS) are unchanged.
 S3_MATCH_FIELDS = ["problem_shape", "constraint", "ending"]
 
+# Round 4 step 2 (founder dispatch; applied only if step 1 alone still leaves
+# whole-pool candidates): a session is a candidate ONLY when its problem_shape
+# equals the query's. tag.py rejects empty problem_shape (C-TG9), so this is a
+# hard filter, not a blank-match.
+S3_REQUIRE_PROBLEM_SHAPE = True
+
 # Round 3 (lead dispatch 2026-08-29 13:34Z): the S4/S7 RATING key is coarse —
 # problem_shape|ending only. S3 matching still uses TAG_FIELDS above; only the
 # rating key coarsens, so queries in the same shape/ending bucket share rating
