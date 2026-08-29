@@ -1,10 +1,13 @@
 # H2 Phase C — slice run report (n=60)
 
 ## 1. Run identity
-- run dir: `2026-08-29_PhaseC_slice_R3_tagkey_deepseek-v4-flash` (RUN-PROTOCOL §3)
+- run dir: `2026-08-29_PhaseC2_tagkey_shape-ending` (RUN-PROTOCOL §3)
 - stage: S2 (slice) · arm: T/B0/B1/B2/B3 · tag model: deepseek-v4-flash, temp 0
 - gold: `data/gold_useful.jsonl` canonical (main @ 03121f2, sign-off #60) — agent-labeled gold (deepseek-v4-pro) — NOT human gold
 - audit: A1 = 0.7667, A4 proxy = 1.0, A5 pairs = 60 rows / 46 non-empty / 393 pairs, A6 = 720
+
+## 1b. A3 recheck (Round 3 coarse tag_key, lead dispatch 13:34Z)
+- pool sessions: 380, unique tag_keys: 340, median bucket size: 1 (success criterion: median > 1)
 
 ## 2. Checks
 - HARD 10 passed / 0 failed / 0 deferred; SOFT 1 / 0
@@ -44,9 +47,9 @@ S2 ran (deepseek-v4-flash, temp 0) as part of the measured loop; tag-vs-gold agr
 - burn-in = 0; n=60 slice — rotation gates are suggestive, not conclusive (full-length rotation belongs to the 1000+200 run).
 
 ## 7. Cost
-- `tag_calls` = 380
-- `tag_tokens_in` = 221591
-- `tag_tokens_out` = 91293
+- `tag_calls` = 0
+- `tag_tokens_in` = 0
+- `tag_tokens_out` = 0
 - `tag_usd_per_1000` = None
 - `tag_latency_p50` = None
 - `tag_latency_p95` = None
@@ -57,7 +60,7 @@ S2 ran (deepseek-v4-flash, temp 0) as part of the measured loop; tag-vs-gold agr
 - `implied_agent_usd_per_1000` = None
 - `serve_latency_p50` = 156.0
 - `serve_latency_p95` = 167.0
-- `token_method` = tag tokens from provider usage in raw/tag; packet tokens len(text)//4 fallback (EVAL-PLAN §4.6)
+- `token_method` = recompute-from-frozen-tags: zero new S2 calls; tag usage re-derived from frozen raw/tag records in replay_of=runs/2026-08-29_PhaseC_slice_deepseek-v4-flash
 - `price_source` = None
 
 ## 8. Verdict

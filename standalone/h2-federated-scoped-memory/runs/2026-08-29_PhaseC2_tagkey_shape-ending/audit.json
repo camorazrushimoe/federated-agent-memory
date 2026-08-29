@@ -1,6 +1,6 @@
 {
-  "run_id": "2026-08-29_PhaseC_slice_R3_tagkey_deepseek-v4-flash",
-  "created_at": "2026-08-29T14:44:21Z",
+  "run_id": "2026-08-29_PhaseC2_tagkey_shape-ending",
+  "created_at": "2026-08-29T15:21:47Z",
   "computed_on": {
     "gold": "data/gold_useful.jsonl (canonical, main @ 03121f2, sign-off #60)",
     "gold_rows": 60,

@@ -1,8 +1,8 @@
 {
-  "run_id": "2026-08-29_PhaseC_slice_R3_tagkey_deepseek-v4-flash",
+  "run_id": "2026-08-29_PhaseC2_tagkey_shape-ending",
   "created_at": "2026-08-29T14:10:00Z",
   "stage": "S2",
-  "git_commit": "29c3708",
+  "git_commit": "1775094",
   "tag_model": "deepseek-v4-flash",
   "base_url": "https://api.deepseek.com/v1",
   "temperature": 0,
@@ -45,8 +45,8 @@
     }
   },
   "outputs": {
-    "sessions.jsonl": "/opt/data/fam/standalone/h2-federated-scoped-memory/runs/2026-08-29_PhaseC_slice_R3_tagkey_deepseek-v4-flash/data/sessions.jsonl",
-    "per_query_state.jsonl": "/opt/data/fam/standalone/h2-federated-scoped-memory/runs/2026-08-29_PhaseC_slice_R3_tagkey_deepseek-v4-flash/data/per_query_state.jsonl"
+    "sessions.jsonl": "/opt/data/fam/standalone/h2-federated-scoped-memory/runs/2026-08-29_PhaseC2_tagkey_shape-ending/data/sessions.jsonl",
+    "per_query_state.jsonl": "/opt/data/fam/standalone/h2-federated-scoped-memory/runs/2026-08-29_PhaseC2_tagkey_shape-ending/data/per_query_state.jsonl"
   },
   "replay_of": "runs/2026-08-29_PhaseC_slice_deepseek-v4-flash"
 }
