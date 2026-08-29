@@ -1,0 +1,101 @@
+[
+  {
+    "check_id": "C-EV1",
+    "step": "eval",
+    "hard": true,
+    "passed": true,
+    "observed": "sums: {'B0': 1.0, 'B1': 1.0, 'B2': 1.0, 'B3': 1.0, 'T': 1.0}",
+    "expected": "hit+wrong+abstain == 1.0 per arm on n=60",
+    "note": "single classify_packet() used for all 5 arms (C-EV3)"
+  },
+  {
+    "check_id": "C-EV2",
+    "step": "eval",
+    "hard": true,
+    "passed": true,
+    "observed": "B0 hit=0.0 abstain=1.0",
+    "expected": "B0.hit == 0, B0.abstain == 1",
+    "note": ""
+  },
+  {
+    "check_id": "C-EV3",
+    "step": "eval",
+    "hard": true,
+    "passed": true,
+    "observed": "def classify_packet count = 1",
+    "expected": "exactly one class-counting function; all arms call it",
+    "note": ""
+  },
+  {
+    "check_id": "C-EV4",
+    "step": "eval",
+    "hard": true,
+    "passed": true,
+    "observed": "B1 same-seed ids equal on 60 queries",
+    "expected": "B1 fixed --seed -> same ids on re-run",
+    "note": ""
+  },
+  {
+    "check_id": "C-EV5",
+    "step": "eval",
+    "hard": true,
+    "passed": true,
+    "observed": "per-query rows per arm == metrics n",
+    "expected": "per_query.jsonl sums match metrics.json (one row per query)",
+    "note": ""
+  },
+  {
+    "check_id": "C-EV6",
+    "step": "eval",
+    "hard": true,
+    "passed": true,
+    "observed": "audit.json exists with A1-A6: True",
+    "expected": "audit.json answers A1-A6 before S2 full",
+    "note": ""
+  },
+  {
+    "check_id": "C-EV7",
+    "step": "eval",
+    "hard": false,
+    "passed": true,
+    "observed": "token_method=True price_source=None",
+    "expected": "cost.json records token method; usd=null when no price",
+    "note": ""
+  },
+  {
+    "check_id": "C-REPLAY",
+    "step": "replay",
+    "hard": true,
+    "passed": true,
+    "observed": "live sha256=d386837e3b87b44fad7e98ad2709c10a0c0293e629151d1bff38865998b4dce9 replay sha256=d386837e3b87b44fad7e98ad2709c10a0c0293e629151d1bff38865998b4dce9",
+    "expected": "metrics.json byte-identical without LLM",
+    "note": ""
+  },
+  {
+    "check_id": "C-FUTURE",
+    "step": "replay",
+    "hard": true,
+    "passed": true,
+    "observed": "future candidates: 0",
+    "expected": "no session with closed_at >= query in candidates",
+    "note": ""
+  },
+  {
+    "check_id": "C-SELF",
+    "step": "replay",
+    "hard": true,
+    "passed": true,
+    "observed": "self in candidates: 0",
+    "expected": "query never in its own candidates",
+    "note": ""
+  },
+  {
+    "check_id": "C-SIZE",
+    "step": "mix",
+    "hard": true,
+    "passed": true,
+    "observed": "packets > MAX_PACKET: 0",
+    "expected": "len(packet) <= MAX_PACKET",
+    "note": ""
+  }
+]
