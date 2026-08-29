@@ -1,0 +1,45 @@
+{
+  "n_queries": 60,
+  "arms": {
+    "T": {
+      "hit": 2,
+      "wrong": 58,
+      "abstain": 0
+    },
+    "B0": {
+      "hit": 0,
+      "wrong": 0,
+      "abstain": 60
+    },
+    "B1": {
+      "hit": 5,
+      "wrong": 55,
+      "abstain": 0
+    },
+    "B2": {
+      "hit": 2,
+      "wrong": 58,
+      "abstain": 0
+    },
+    "B3": {
+      "hit": 46,
+      "wrong": 0,
+      "abstain": 14
+    }
+  },
+  "retrieve": {
+    "recall": 1.0,
+    "empty": 0.0,
+    "n_with_useful_in_pool": 46
+  },
+  "rotation": {
+    "burn_in": 0,
+    "unique_served": 3,
+    "top1_share": 0.3333333333333333,
+    "top3_share": 1.0,
+    "explore_fill": null,
+    "explore_promote": 0,
+    "decay_fired": 0,
+    "note": "slice-sized; long-replay rotation is the full-corpus run"
+  }
+}
