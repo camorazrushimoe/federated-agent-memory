@@ -111,8 +111,14 @@ def session_id_of(dialogue_id: str) -> str:
 
 
 def make_tag_key(tags: dict) -> str:
-    """tag_key = problem_shape|constraint|ending|channel|vertical, no edge spaces."""
-    return "|".join(str(tags.get(f, "")).strip() for f in config.TAG_FIELDS)
+    """tag_key = problem_shape|ending (Round 3 coarse rating key), no edge spaces.
+
+    S4/S7 key ratings on (session_id, tag_key); a coarse key lets sessions in
+    the same shape/ending bucket share rating cells so scores transfer between
+    queries (R1's 5-field key was unique per session — ratings never moved).
+    S3 matching is unaffected (it uses config.TAG_FIELDS, not tag_key).
+    """
+    return "|".join(str(tags.get(f, "")).strip() for f in config.TAG_KEY_FIELDS)
 
 
 # ---------------------------------------------------------------------------
@@ -189,8 +195,9 @@ def read_jsonl(path: str | Path) -> list[dict]:
     rows = []
     for line in p.read_text(encoding="utf-8").splitlines():
         line = line.strip()
-        if line:
-            rows.append(json.loads(line))
+        if not line or line.startswith("#"):
+            continue  # C-GD1: consumers MUST skip `#` header lines (gold)
+        rows.append(json.loads(line))
     return rows
 
 

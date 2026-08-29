@@ -70,12 +70,15 @@ def _parse_tags(content: str) -> dict | None:
 
 
 def tag_dialogue(dialogue: dict, *, model: str, base_url: str | None,
-                 raw_dir: str | Path) -> tuple[dict | None, dict]:
+                 raw_dir: str | Path, replay_dir: str | Path | None = None,
+                 ) -> tuple[dict | None, dict]:
     """Tag one raw dialogue. Returns (session_row|None, call_stats).
 
     call_stats: {"tag_calls": int, "unparseable": int, "rejected": bool}.
     Raw request/response is logged to raw_dir/<dialogue_id>.json per call
-    (C-TG10).
+    (C-TG10). With replay_dir set (C-REPLAY), the stored record under
+    replay_dir/<dialogue_id>.json is replayed instead of calling the LLM —
+    zero network calls; usage is taken from the stored record.
     """
     dialogue_id = dialogue["dialogue_id"]
     raw_dir = Path(raw_dir)
@@ -95,15 +98,22 @@ def tag_dialogue(dialogue: dict, *, model: str, base_url: str | None,
     stats = {"tag_calls": 0, "unparseable": 0, "rejected": False, "pii": pii_turns}
     tags = None
     for attempt in (1, 2):  # PROMPTS.md §4: one retry, then reject
-        result = common.call_llm(prompts.TAG_SYSTEM, user, model=model,
-                                 base_url=base_url)
-        stats["tag_calls"] += 1
-        common.write_json(raw_dir / f"{dialogue_id}.json", {
-            "request": {"model": model, "system": prompts.TAG_SYSTEM, "user": user},
-            "response": result["raw"],
-            "model": model,
-            "usage": result["usage"],
-        })
+        if replay_dir is not None:
+            rec = common.read_json(Path(replay_dir) / f"{dialogue_id}.json")
+            content = rec["response"]["choices"][0]["message"]["content"]
+            result = {"content": content, "raw": rec["response"],
+                      "usage": rec.get("usage") or {}, "model": model}
+            stats["tag_calls"] += 1
+        else:
+            result = common.call_llm(prompts.TAG_SYSTEM, user, model=model,
+                                     base_url=base_url)
+            stats["tag_calls"] += 1
+            common.write_json(raw_dir / f"{dialogue_id}.json", {
+                "request": {"model": model, "system": prompts.TAG_SYSTEM, "user": user},
+                "response": result["raw"],
+                "model": model,
+                "usage": result["usage"],
+            })
         tags = _parse_tags(result["content"])
         if tags is not None:
             break
@@ -177,7 +187,7 @@ def _upsert_ratings(ratings: list[dict], wanted: list[tuple[str, str]]) -> list[
 
 
 def process_rows(rows: list[dict], *, sessions_path, ratings_path, raw_dir,
-                 model, base_url) -> dict:
+                 model, base_url, replay_dir: str | Path | None = None) -> dict:
     """Tag/upsert all input rows. Returns a stats dict (see main())."""
     pool = common.read_jsonl(sessions_path)
     ratings = common.read_jsonl(ratings_path)
@@ -206,7 +216,8 @@ def process_rows(rows: list[dict], *, sessions_path, ratings_path, raw_dir,
                 pii = bool(session.get("contains_pii"))
             else:
                 session, call_stats = tag_dialogue(
-                    row, model=model, base_url=base_url, raw_dir=raw_dir)
+                    row, model=model, base_url=base_url, raw_dir=raw_dir,
+                    replay_dir=replay_dir)
                 stats["tag_calls"] += call_stats["tag_calls"]
                 stats["unparseable"] += call_stats["unparseable"]
                 if session is None:
@@ -237,12 +248,15 @@ def main() -> int:
     ap.add_argument("--raw-dir", default=config.DEFAULT_PATHS["raw_tag"])
     ap.add_argument("--model", default=config.DEFAULT_MODEL)
     ap.add_argument("--base-url", default=None, help="default: H2_BASE_URL env")
+    ap.add_argument("--replay-dir", default=None,
+                    help="C-REPLAY: read saved raw/tag records instead of the LLM "
+                         "(zero network calls)")
     args = ap.parse_args()
 
     rows = common.read_jsonl(args.inp)
     stats = process_rows(rows, sessions_path=args.out, ratings_path=args.ratings_out,
                          raw_dir=args.raw_dir, model=args.model,
-                         base_url=args.base_url)
+                         base_url=args.base_url, replay_dir=args.replay_dir)
     common.print_summary({
         "ok": True,
         "step": "S2",

@@ -29,7 +29,7 @@ def overlap_count(query_tags: dict, session_tags: dict) -> int:
 
 
 def resolve_query(query: dict, pool: list[dict], *, tag_out, ratings_out,
-                  raw_dir, model, base_url) -> tuple[str, dict, dict]:
+                  raw_dir, model, base_url, replay_dir=None) -> tuple[str, dict, dict]:
     """Return (query_id, query_tags, query_meta). Delegates to tag.py if needed."""
     if isinstance(query.get("tags"), dict) and query.get("tag_key"):
         query_id = query.get("source_dialogue_id") or query["dialogue_id"]
@@ -47,7 +47,8 @@ def resolve_query(query: dict, pool: list[dict], *, tag_out, ratings_out,
     import tag
     stats = tag.process_rows([query], sessions_path=tag_out,
                              ratings_path=ratings_out, raw_dir=raw_dir,
-                             model=model, base_url=base_url)
+                             model=model, base_url=base_url,
+                             replay_dir=replay_dir)
     tagged = common.read_jsonl(tag_out)
     session = next((s for s in tagged
                     if s["source_dialogue_id"] == dialogue_id), None)
@@ -72,6 +73,8 @@ def main() -> int:
     ap.add_argument("--raw-dir", default=config.DEFAULT_PATHS["raw_tag"])
     ap.add_argument("--model", default=config.DEFAULT_MODEL)
     ap.add_argument("--base-url", default=None)
+    ap.add_argument("--replay-dir", default=None,
+                    help="C-REPLAY: pass through to delegated S2 (zero LLM)")
     args = ap.parse_args()
 
     query = common.read_json(args.query)
@@ -79,7 +82,8 @@ def main() -> int:
 
     query_id, query_tags, meta = resolve_query(
         query, pool, tag_out=args.tag_out, ratings_out=args.ratings_out,
-        raw_dir=args.raw_dir, model=args.model, base_url=args.base_url)
+        raw_dir=args.raw_dir, model=args.model, base_url=args.base_url,
+        replay_dir=args.replay_dir)
 
     self_ids = {common.session_id_of(query_id), query_id}
     candidates = []

@@ -1,0 +1,17 @@
+{
+  "tag_calls": 0,
+  "tag_tokens_in": 0,
+  "tag_tokens_out": 0,
+  "tag_usd_per_1000": null,
+  "tag_latency_p50": null,
+  "tag_latency_p95": null,
+  "packet_tokens_p50": 1069,
+  "packet_tokens_p95": 1069,
+  "packet_tokens_max": 1069,
+  "packet_tokens_per_query_mean": 1063.7,
+  "implied_agent_usd_per_1000": null,
+  "serve_latency_p50": 156.0,
+  "serve_latency_p95": 167.0,
+  "token_method": "recompute-from-frozen-tags: zero new S2 calls; tag usage re-derived from frozen raw/tag records in replay_of=runs/2026-08-29_PhaseC_slice_deepseek-v4-flash",
+  "price_source": null
+}
