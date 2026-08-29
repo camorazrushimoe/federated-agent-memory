@@ -1,0 +1,67 @@
+{
+  "run_id": "2026-08-29_PhaseC_slice_R3_tagkey_deepseek-v4-flash",
+  "created_at": "2026-08-29T14:44:21Z",
+  "computed_on": {
+    "gold": "data/gold_useful.jsonl (canonical, main @ 03121f2, sign-off #60)",
+    "gold_rows": 60,
+    "gold_non_empty": 46,
+    "gold_pairs": 393
+  },
+  "A1": {
+    "question": "share of slice queries with >=1 useful session strictly earlier (oracle ceiling B3)",
+    "value": 0.7667,
+    "n": "46/60",
+    "gate": ">= 0.30 for hit to be about the ranker",
+    "verdict": "OK"
+  },
+  "A2": {
+    "question": "share of gold pairs splitting < TAG_FIELDS_MIN under gold tags",
+    "value": "N/A (gold_tags not authorized — ROUND-0-PLAN §8)",
+    "proxy_unlock_universe": {
+      "useful_pairs": 393,
+      "useful_ids_outside_same_unlock_scope": 0
+    }
+  },
+  "A3": {
+    "question": "unique tag_key count + median bucket size on gold_tags",
+    "value": "N/A (gold_tags not authorized)",
+    "proxy_raw_unlock": {
+      "unique_unlock_buckets": 30,
+      "median_bucket": 2
+    }
+  },
+  "A4": {
+    "question": "share of slice queries with > MAX_PACKET candidates (gold tags)",
+    "value": "N/A (gold_tags not authorized); proxy below on the unlock-universe",
+    "proxy_unlock_universe": 1.0,
+    "n": "60/60",
+    "note": "tag-based candidate counts land in metrics.json.retrieve from the run; explore_fill gate is about tag candidates"
+  },
+  "A5": {
+    "question": "gold coverage (rows / non-empty / pairs)",
+    "value": "60 rows / 46 non-empty / 393 pairs",
+    "publishable_l2": true,
+    "gate": ">= 40 pairs to publish L2 usefulness",
+    "verdict": "OK"
+  },
+  "A6": {
+    "question": "median transcript tokens x MAX_PACKET (honest packet_tokens_p50 ceiling)",
+    "method": "len(text)//4 on pool-union transcripts (fallback per EVAL-PLAN §4.6)",
+    "median_transcript_tokens": 240,
+    "max_packet": 3,
+    "value": 720,
+    "flag_1500": false
+  },
+  "ROTATION_BURN_IN": {
+    "question": "first query index after which share of queries with >= MAX_PACKET candidates is stably > 0",
+    "value": 0,
+    "basis": "unlock-universe candidate scope (no tag model needed)"
+  },
+  "pool_union": 320,
+  "slice": {
+    "n": 60,
+    "howto": 34,
+    "site": 6,
+    "negative": 20
+  }
+}
