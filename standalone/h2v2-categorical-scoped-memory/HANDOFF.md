@@ -17,7 +17,7 @@ bash bin/sync_h1_data.sh    # ABCD 1000+200
 
 ## Раунд 0 закрыт (2026-08-29)
 
-См. [`REPORT.md`](./REPORT.md). PR: #<<66>> на ветке `h2v2-round0-live-d4`.
+См. [`REPORT.md`](./REPORT.md). PR #66, ветка `h2v2-round0-live-d4`.
 
 - D4 на живом S2 (`deepseek-v4-flash`): **FIT** (recall 0.81, медиана 10).
 - T vs B1: **NOT FIT** (38 = 38).
