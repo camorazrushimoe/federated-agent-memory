@@ -28,6 +28,22 @@ python bin/replay.py \
 
 Пока runner не написан, шаги гоняются по одному. Контракт шага от этого не меняется.
 
+### 1.1 Харнесс чеков (D2)
+
+Одна команда гоняет весь S0-блок `CHECKS.md` по фикстурам — детерминированно,
+без LLM (S2 проигрывает запечённый выход из `fixtures/`):
+
+```
+python bin/checks.py \
+    --fixtures fixtures \
+    --workdir runs/<run_id>_checks
+```
+
+Пишет `checks.json` (все id из CHECKS.md, HARD/SOFT) и `report.md` в `--workdir`.
+Любой HARD из блока «Что прогонять на S0» не зелёный → exit 1, прогон воид.
+`C-REPLAY` / `C-EV*` / `C-NC2..C-NC5` в checks.json помечены `passed=null`
+(закрываются runner'ом и eval.py на D4/D5) и S0 не валят.
+
 ---
 
 ## 2. Данные

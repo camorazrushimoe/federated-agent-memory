@@ -1,0 +1,10 @@
+{
+  "tag_calls": 10,
+  "unparseable": 0,
+  "rejected": 0,
+  "pii_sessions": 1,
+  "model": "deepseek-v4-flash",
+  "temperature": 0,
+  "baked_at": "2026-08-29",
+  "note": "output of one real S2 run over fixtures; checks.py replays it"
+}

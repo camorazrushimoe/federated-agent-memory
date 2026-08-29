@@ -1,0 +1,53 @@
+{
+  "request": {
+    "model": "deepseek-v4-flash",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: retail-support\n\nTranscript:\ncustomer: The shoes arrived ripped. I want a refund not a gift card\nagent: Refunds after delivery take a restocking fee. I can still start it.\ncustomer: Fine, start the refund"
+  },
+  "response": {
+    "id": "dbfb9485-46bb-4395-8ed1-3034628c165e",
+    "object": "chat.completion",
+    "created": 1787971938,
+    "model": "deepseek-v4-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"problem_shape\":\"shoes arrived ripped wants refund not gift card\",\"constraint\":\"restocking fee policy\",\"ending\":\"resolved\"}",
+          "reasoning_content": "We need answer JSON only. Need analyze transcript. Need produce problem_shape, constraint, ending.\n\nWe have customer says shoes arrived ripped, wants refund not gift card. Agent says refunds after delivery take restocking fee, can start it. Customer says fine start refund.\n\nNeed classify. Problem_shape: \"shoes arrived ripped, wants refund not gift card\" ≤12 words lowercase. Could be \"refund for ripped shoes instead of gift card\" but prefer customer wording. Maybe \"shoes arrived ripped, wants refund not gift card\" exactly 8 words? \"shoes arrived ripped want refund not gift card\" Need punctuation? lowercase.\n\nConstraint: what blocked progress? Agent mentioned restocking fee. It didn't stall, but constraint is policy: restocking fee. \"restocking fee policy\" or \"return policy requires restocking fee\". ≤12 words. Ending: resolved? The customer said fine start refund. The request was handled in chat? Agent started refund. It seems resolved. Need not include \"escalated\". So ending \"resolved\".\n\nNeed ensure no extra keys, no markdown. JSON object.\n\nNeed maybe \"constraint\": \"restocking fee policy\" or \"return policy restocking fee\". It blocked? It didn't block, it modified. The definition: \"constraint is the policy, missing data, or system limit that stalled the chat. Use 'none' if nothing blocked it.\" There is a policy about restocking fee, but it didn't stall progress; customer accepted. But it was a constraint to the request: refund after delivery takes restocking fee. Could be considered \"restocking fee policy\". Use \"restocking fee policy\" (3 words). Is that too short? Fine.\n\nNeed \"problem_shape\": \"ripped shoes refund not gift card\" maybe. Let's craft.\n\nFinal JSON:\n{\n  \"problem_shape\": \"shoes arrived ripped wants refund not gift card\",\n  \"constraint\": \"restocking fee policy\",\n  \"ending\": \"resolved\"\n}\n\nNeed ensure lowercase. \"shoes arrived ripped wants refund not gift card\" no punctuation. Good."
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 377,
+      "completion_tokens": 459,
+      "total_tokens": 836,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 431
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 121
+    },
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+  },
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 377,
+    "completion_tokens": 459,
+    "total_tokens": 836,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 431
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 121
+  }
+}

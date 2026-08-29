@@ -1,0 +1,53 @@
+{
+  "request": {
+    "model": "deepseek-v4-flash",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: retail-support\n\nTranscript:\ncustomer: I just reset the password and login fails again\nagent: Checking session cache.\ncustomer: Please fix it the way you did last time"
+  },
+  "response": {
+    "id": "f375f6ba-c21e-422c-8d5b-abef6ad86702",
+    "object": "chat.completion",
+    "created": 1787971952,
+    "model": "deepseek-v4-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"problem_shape\": \"login fails after password reset\", \"constraint\": \"none\", \"ending\": \"unknown\"}",
+          "reasoning_content": "We need answer JSON only. Need analyze. Need comply. Need infer kind request: password reset/login fails. constraint? Perhaps session cache? Agent checking session cache. No resolution shown. Ending? Transcript thin. Customer asks fix like last time. Agent only checking. No clear resolution, escalation. Likely unresolved? Need choose. Problem shape ≤12 words lowercase. \"password reset but login still fails\" maybe. Constraint: \"none\" or \"session cache\" blocked? The agent was checking session cache, but no statement of blocking. Transcript too thin ending unknown? Need consider rules. \"ending unknown = transcript too thin to tell.\" This is thin: agent says checking session cache, no final. So ending unknown. Constraint maybe \"none\" because no policy/missing data/system limit stated. But session cache could be system limit? Not confirmed. Prefer \"none\" if nothing blocked. Problem shape: \"login fails after password reset\" (5 words). Need no identifiers. Output JSON only."
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 365,
+      "completion_tokens": 229,
+      "total_tokens": 594,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 204
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 109
+    },
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+  },
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 365,
+    "completion_tokens": 229,
+    "total_tokens": 594,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 204
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 109
+  }
+}
