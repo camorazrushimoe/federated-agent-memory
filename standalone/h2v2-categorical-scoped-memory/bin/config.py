@@ -1,8 +1,7 @@
 """H2v2 — pipeline configuration (SPEC §6).
 
-Same knobs as H2 v1 except the tag / retrieve axis: problem_shape is a
-closed category, S3 matches on that category only, rating key is the
-category (+ ending).
+problem_shape is a closed PROCEDURE id (not a ticket type).
+S3 and the rating key use that id only.
 """
 from __future__ import annotations
 
@@ -19,24 +18,36 @@ UNCLEAR_DELTA = 0.0
 TAG_FIELDS = ["problem_shape", "constraint", "ending", "channel", "vertical"]
 
 PROBLEM_SHAPES = [
-    "account_login",
-    "account_password",
-    "account_profile",
-    "order_status",
-    "order_cancel",
-    "shipping_delivery",
-    "return_refund",
-    "exchange_size_fit",
-    "product_howto",
-    "product_defect",
-    "product_availability",
-    "pricing_promo",
-    "billing_payment",
-    "cart_checkout",
-    "site_technical",
-    "complaint_policy",
-    "subscription_membership",
-    "gift_card",
+    "stain_paint",
+    "stain_gum",
+    "stain_wine",
+    "stain_grass",
+    "stain_food",
+    "wash_low_heat",
+    "wash_color_guard",
+    "wash_frequency",
+    "break_in",
+    "fit_width",
+    "fit_sleeve",
+    "fit_inseam",
+    "fit_collar",
+    "tailoring",
+    "product_spec",
+    "product_info",
+    "cart_not_updating",
+    "site_slow",
+    "search_broken",
+    "price_competitor",
+    "price_changed",
+    "promo_expired",
+    "promo_invalid",
+    "refund_process",
+    "change_phone",
+    "change_address",
+    "change_name",
+    "cancel_order",
+    "dispute_bill",
+    "subscription_change",
     "other",
 ]
 
@@ -60,7 +71,7 @@ ENDINGS = [
 
 S3_MATCH_FIELDS = ["problem_shape"]
 S3_REQUIRE_PROBLEM_SHAPE = True
-TAG_KEY_FIELDS = ["problem_shape", "ending"]
+TAG_KEY_FIELDS = ["problem_shape"]
 
 DEFAULT_MODEL = "deepseek-v4-flash"
 TEMPERATURE = 0
