@@ -3,6 +3,7 @@
 Контракт для `standalone/h2v2-categorical-scoped-memory/`.
 Шаги S1–S7 те же, что в v1. Здесь только отличия.
 Замер: [`FINDINGS.md`](./FINDINGS.md). Словарь: [`CATEGORIES.md`](./CATEGORIES.md).
+Карта unlock→id (не вход S2): [`MAP.md`](./MAP.md).
 
 `tags.problem_shape` MUST быть ровно одним id из словаря. Clamp неизвестного → `other`.
 `constraint` и `ending` — аудит, не S3 и не `tag_key`.
@@ -15,7 +16,7 @@ TAG_KEY_FIELDS  = [problem_shape]
 TAG_FIELDS_MIN  = 1
 ```
 
-Гейт после S2 на 60+320, до T vs B1: id 12–28; other<10%; top-1<20%;
+Гейт после S2 на 60+320, до T vs B1: id 24–32; other<10%; top-1<20%;
 медиана кандидатов 8–20; пустых query<15%; recall≥0.70.
 Красный = NOT FIT. Корпус не открывать. Словарь не расширять после D3.
-После copy-from-v1.sh поправить checks.py (в v1 ending-enum и 5-польный tag_key).
+copy-from-v1.sh копирует harness и сам патчит checks.py (`bin/patch_v1_checks.py`).
