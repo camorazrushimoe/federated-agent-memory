@@ -22,6 +22,7 @@
 | S6 | `outcome.py` | нет в gold / rule | §6 только при `--source llm` | лейбл `good/bad/unclear` |
 | S7 | `update.py` | нет | — | дельты рейтинга |
 | — | `replay.py` | нет своего | только вызывает шаги | |
+| D0 | `label_gold_useful.py` | **да, 1 раз на query среза** | §10 | gold-useful разметка (НЕ S2; `deepseek-v4-pro`, founder decision #51) | |
 
 Итого обязательный LLM в лабораторном прогоне — **один**: разметка на S2.
 Пакет на S5 собирается шаблоном.
@@ -258,3 +259,65 @@ call_llm(system: str, user: str) -> str
 - Промпта «перепиши пакет красиво». В v1 в текст агента уходят сырые прошлые диалоги.
 - Системного промпта живого агента. Эксперимент v1 измеряет пакет и исход, а не политику агента.
 - Фолбэк-разметки правилами. Если модель на S2 сломалась — сессия `reject`, не угадываем теги.
+
+---
+
+## 10. D0 — gold-useful labeler (заморожен, founder decision #51)
+
+Промпт измерения D0 (`bin/label_gold_useful.py`), заморожен на Phase B open.
+Это **НЕ S2-промпт**: §2–§3 выше (S2 Tag) остаются байт-в-байт нетронутыми
+(C-PROMPT проверяет только их). Модель — `deepseek-v4-pro` (флаг,
+founder decision #51), temperature 0, thinking выключено. Ключ — тот же
+factory key (`H2_*` env / config.yaml), нового секрета нет.
+
+### 10.1 system
+
+```
+You are labeling which PAST customer-support chats would be a useful hint for a NEW chat.
+
+Context: an experiment gives an agent the WHOLE transcript of similar past chats as hints. A past chat is a USEFUL hint only when it contains a concrete TRANSFERABLE MOVE — a procedure, workaround, or step sequence — that the new chat could reuse, and that the new chat's short problem label does not already contain. The label names the problem; it does not contain the how-to.
+
+For the given new chat (QUERY) and the list of PAST chats (CANDIDATES), decide for EACH candidate whether it is useful.
+
+What counts as a transferable move (positive examples):
+- A multi-step cleaning procedure for "paint stain on boots" (brush -> flake -> soapy water -> scrape -> nail polish remover): the move is the steps, not the topic name.
+- "Close extra tabs, log out and back in, report the slowness" for a "site is slow" query: the move is the step sequence.
+- "Refresh the cart, then log out and log back in" for a "cart not updating" query: the move is the sequence, not the fact that both chats are about carts.
+
+What does NOT count (negative examples):
+- A candidate that shares the topic or guideline name but shows a DIFFERENT procedure (e.g., a boot-width chat for a paint-stain query, or an ISP-diagnosis chat for a site-slowness query): wrong hint.
+- A candidate whose only content is identifiers (names, account/order ids, card numbers), one-time promo codes, and one-off exceptions: the rule transfers, not the chat. Do NOT include these.
+- A candidate that only restates the problem or refuses with policy, with no reusable step sequence.
+
+Rules:
+- Useful = the candidate transcript shows a specific, reusable step sequence that fits the query's problem and is not visible in the query itself. Short but concrete sequences count.
+- Do NOT mark a candidate useful just because it looks similar or because its label matches.
+- Empty list is valid and often correct (especially for chats whose content is identifiers and one-time exceptions).
+
+Return ONLY a JSON object, no markdown, no commentary:
+{"useful_dialogue_ids": ["d-xxx", ...], "notes": "<=40 words: the transferable move(s), or why the list is empty"}
+```
+
+### 10.2 user (шаблон)
+
+```
+QUERY {query_id}:
+{query_transcript}
+
+CANDIDATES (past chats):
+{candidates}
+
+Return ONLY the JSON object with useful_dialogue_ids (subset of the candidate ids above, or []) and notes (<=40 words).
+```
+
+Контракт прогона (ROUND-0-PLAN §5):
+
+- Кандидаты: только сессии с `closed_at < query` (C-FUTURE) и тем же raw
+  unlock (retrieval hypothesis, DATA-AUDIT §6). `unlock` / `unlock_guideline`
+  в промпт не попадают и в выводе не появляются (анти-H1, C-GD7).
+- Разбор: строгий JSON; один ретрай тем же промптом; второй сбой → строка
+  `label_error` в манифесте D0 — без выдуманных меток.
+- Каждый вызов логируется в `raw_gold_useful/<query_id>.json` (D0 реплеится
+  без новых LLM-вызовов через `--replay-dir`).
+- Каждая строка золота и каждая строка отчёта несёт маркер
+  `agent-labeled (deepseek-v4-pro), not human gold` (founder decision #51).

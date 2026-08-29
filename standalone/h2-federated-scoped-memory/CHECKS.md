@@ -169,10 +169,29 @@
 
 ---
 
+## D0 — золото пользы (Phase B, ROUND-0-PLAN §7)
+
+Гоняются на артефактах D0-прогона: `data/gold_useful.jsonl` +
+`data/d0_slice.jsonl` + `data/raw_gold_useful/` (лежат локально, PII-guard).
+Пока артефактов нет — строки в `checks.json` идут deferred (S0 не валят).
+
+| id | hard | правило |
+|---|---|---|
+| `C-GD1` | HARD | `gold_useful.jsonl` начинается с `#`-заголовка «AGENT-LABELED GOLD — NOT HUMAN GOLD» (labeler=…, prompt_sha, corpus_sha, slice_sha, created_at). Потребители пропускают `#`-строки. |
+| `C-GD2` | HARD | Каждый `useful_dialogue_id` имеет `closed_at` строго раньше query (нет future-leak). |
+| `C-GD3` | HARD | В золоте нет PII (`notes`, id): email / телефон / ≥10 цифр подряд / iban / ssn / cvv-паттерн. |
+| `C-GD4` | HARD | Строк == строк среза (60); `query_id` уникальны и ⊆ `d0_slice.jsonl`. |
+| `C-GD5` | HARD | `data/raw_gold_useful/` — один файл на строку золота; count == rows. |
+| `C-GD6` | SOFT | Согласие с seed: на 6 seed-строках направление списков (пустой/непустой) не противоречит seed. Противоречие → разобрать, в отчёт. |
+| `C-GD7` | HARD | Анти-H1 коллинеарность (rule 3): useful-множества строго уже корзин `unlock_guideline`. Строк, где useful == все прошлые same-guideline сессии (H1-сигнатура), ≤ 20% непустых строк; каждая how-to строка исключает ≥1 same-guideline сессию, если такая есть. Провал ⇒ labeler переоткрыл H1 ⇒ новый run id. |
+| `C-GD8` | HARD | Манифест D0: `labeler_model == deepseek-v4-pro`; модель S2-петли не тронута (`deepseek-v4-flash`). |
+
+---
+
 ## Что прогонять на S0
 
 Минимум, без корпуса и без золота корпуса:
 
 `C-ISO*`, `C-IN*`, `C-PROMPT`, `C-TG1`–`C-TG11`, `C-PII`, `C-SELF`, `C-RT1`–`C-RT5`, `C-RK1`–`C-RK5`, `C-SIZE`, `C-MX*`, `C-OC1`–`C-OC4`, `C-DELTA`, `C-UP1`–`C-UP5`, `C-FUTURE`, `C-RP1`–`C-RP2`, `C-NC1`.
 
-`C-REPLAY` и `C-EV*` закрываются, когда появляется runner. До этого шаги гоняются по одному на [`fixtures/`](./fixtures/).
+`C-REPLAY` и `C-EV*` закрываются, когда появляется runner. `C-GD*` закрываются на D0-прогоне (Phase B). До этого шаги гоняются по одному на [`fixtures/`](./fixtures/).

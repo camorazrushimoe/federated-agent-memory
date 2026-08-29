@@ -98,10 +98,15 @@ REGISTRY: list[tuple[str, str, bool]] = [
     ("C-NC1", "control", True), ("C-NC2", "control", True),
     ("C-NC3", "control", True), ("C-NC4", "control", True),
     ("C-NC5", "control", False),
+    # D0 gold-useful (Phase B; deferred until the D0 artifacts exist)
+    ("C-GD1", "D0", True), ("C-GD2", "D0", True), ("C-GD3", "D0", True),
+    ("C-GD4", "D0", True), ("C-GD5", "D0", True), ("C-GD6", "D0", False),
+    ("C-GD7", "D0", True), ("C-GD8", "D0", True),
 ]
 
 ALL_IDS = [cid for cid, _, _ in REGISTRY]
 HARD_IDS = {cid for cid, _, h in REGISTRY if h}
+GD_IDS = {"C-GD1", "C-GD2", "C-GD3", "C-GD4", "C-GD5", "C-GD6", "C-GD7", "C-GD8"}
 
 # Checks whose full contract needs the runner / eval.py / corpus gold. They are
 # part of the registry (present in checks.json) but deferred at S0.
@@ -119,6 +124,14 @@ DEFERRED_S0 = {
     "C-NC3": "gold_useful empty control needs eval.py T arm on corpus (D4/S1)",
     "C-NC4": "TAG_FIELDS_MIN=5 control needs corpus pairs (S1)",
     "C-NC5": "EXPLORE_SLOTS=0 vs B2 needs eval.py (D4)",
+    "C-GD1": "needs D0 gold artifacts (data/gold_useful.jsonl header)",
+    "C-GD2": "needs D0 gold + raw corpus closed_at (Phase B run)",
+    "C-GD3": "needs D0 gold notes (Phase B run)",
+    "C-GD4": "needs D0 gold + data/d0_slice.jsonl (Phase B run)",
+    "C-GD5": "needs data/raw_gold_useful/ from a D0 run",
+    "C-GD6": "needs D0 gold vs data/gold_useful.seed.jsonl (Phase B run)",
+    "C-GD7": "needs D0 gold vs raw unlock_guideline buckets (Phase B run)",
+    "C-GD8": "needs data/gold_useful.manifest.json + S2 model pin (Phase B run)",
 }
 
 
@@ -1167,6 +1180,13 @@ def build_checks(ctx: dict) -> list[dict]:
            and nc1["header_only"],
            _j(nc1), "an empty pool/early dialogues yield a valid empty packet — not an error")
 
+    # ---------------- D0 gold-useful (Phase B) ----------------
+    # When the D0 artifacts exist, real C-GD1..8 rows replace the deferred
+    # placeholders; otherwise the ids stay deferred (S0 unaffected).
+    if run_d0_checks(rows, ctx):
+        for cid in GD_IDS:
+            DEFERRED_S0.pop(cid, None)
+
     # ---------------- deferred ----------------
     for cid, step, hard in REGISTRY:
         if cid in DEFERRED_S0:
@@ -1189,6 +1209,166 @@ def build_checks(ctx: dict) -> list[dict]:
            "every CHECKS.md id appears in checks.json exactly once (missing id = fail)")
 
     return rows
+
+
+# ---------------------------------------------------------------------------
+# D0 gold-useful QA (C-GD1..C-GD8, ROUND-0-PLAN §7) — runs on the Phase B
+# artifacts when they exist; otherwise the ids stay deferred at S0.
+# ---------------------------------------------------------------------------
+
+PII_RE = [
+    ("email", re.compile(r"[\w.+-]+@[\w-]+(\.[\w-]+)+")),
+    ("digits10+", re.compile(r"\d{10,}")),
+    ("ssn", re.compile(r"\d{3}-\d{2}-\d{4}")),
+    ("iban", re.compile(r"[A-Z]{2}\d{2}[A-Z0-9]{10,30}")),
+    ("phone", re.compile(r"\+?\d{1,3}[\s().-]?\d{3}[\s().-]?\d{3}[\s().-]?\d{2,4}")),
+]
+
+
+def _read_gold(path: Path) -> list[dict]:
+    """Read a gold-format jsonl, skipping the mandatory `#` header lines."""
+    rows = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        rows.append(json.loads(s))
+    return rows
+
+
+def run_d0_checks(rows: list[dict], ctx: dict) -> bool:
+    """Emit C-GD1..8 against data/{gold_useful,d0_slice,raw_gold_useful,...}.
+
+    Returns True when the artifacts existed (real rows emitted, deferred
+    placeholders must be dropped by the caller).
+    """
+    h2 = Path(__file__).resolve().parent.parent
+    gold_path = h2 / "data" / "gold_useful.jsonl"
+    slice_path = h2 / "data" / "d0_slice.jsonl"
+    if not (gold_path.exists() and slice_path.exists()):
+        return False
+
+    import label_gold_useful as lg  # deferred: only when D0 artifacts exist
+
+    gold = _read_gold(gold_path)
+    slice_rows = _read_gold(slice_path)
+    by_q = {r["query_id"]: r for r in slice_rows}
+    manifest_path = h2 / "data" / "gold_useful.manifest.json"
+    manifest = (json.loads(manifest_path.read_text(encoding="utf-8"))
+                if manifest_path.exists() else {})
+    raw_dir = h2 / "data" / "raw_gold_useful"
+
+    # corpus maps on the same synthetic clock as the labeler
+    pool = lg.load_raw(h2 / "data" / "abcd_1000_pool.jsonl")
+    holdout = lg.load_raw(h2 / "data" / "abcd_200_holdout.jsonl")
+    for i, r in enumerate(pool, start=1):
+        r["_index"] = i
+    for i, r in enumerate(holdout, start=len(pool) + 1):
+        r["_index"] = i
+    pool_closed = {lg.dialogue_id(r): lg.synthetic_closed_at(r["_index"]) for r in pool}
+    pool_guideline = {lg.dialogue_id(r): r.get("unlock_guideline", "") for r in pool}
+    hold_guideline = {lg.dialogue_id(r): r.get("unlock_guideline", "") for r in holdout}
+
+    # C-GD1 — mandatory `#` header
+    head = gold_path.read_text(encoding="utf-8").splitlines()[:2]
+    hdr_ok = (len(head) >= 2
+              and head[0].startswith("#")
+              and "NOT HUMAN GOLD" in head[0].upper()
+              and "AGENT-LABELED" in head[0].upper()
+              and all(tok in head[1] for tok in ("prompt_sha=", "corpus_sha=",
+                                                 "slice_sha=", "created_at=")))
+    expect(rows, "C-GD1", "D0", True, hdr_ok, " | ".join(head[:2]),
+           "# header marking agent-labeled / NOT human gold + sha/created line")
+
+    # C-GD2 — no future leak
+    leak = []
+    for r in gold:
+        qc = by_q.get(r["query_id"], {}).get("closed_at", "")
+        for uid in r.get("useful_dialogue_ids", []):
+            pc = pool_closed.get(uid)
+            if pc is None or pc >= qc:
+                leak.append(f"{r['query_id']}->{uid}")
+    expect(rows, "C-GD2", "D0", True, not leak,
+           f"future/unknown refs: {leak[:5]}",
+           "every useful id has closed_at strictly earlier than the query's")
+
+    # C-GD3 — no PII in the gold output (notes + ids)
+    pii_hits = []
+    for r in gold:
+        text = (r.get("notes") or "") + " " + " ".join(r.get("useful_dialogue_ids", []))
+        for name, rx in PII_RE:
+            m = rx.search(text)
+            if m and (name != "phone"
+                      or len(re.sub(r"[^\d]", "", m.group(0))) >= 10):
+                pii_hits.append(f"{r['query_id']}:{name}:{m.group(0)[:20]}")
+    expect(rows, "C-GD3", "D0", True, not pii_hits,
+           f"hits: {pii_hits[:6]}",
+           "no email / phone / >=10 digits / cvv / iban / ssn in gold output")
+
+    # C-GD4 — rows == slice, ids unique and within the slice
+    gold_ids = [r["query_id"] for r in gold]
+    slice_ids = [r["query_id"] for r in slice_rows]
+    gd4_ok = (len(gold) == len(slice_rows)
+              and len(set(gold_ids)) == len(gold_ids)
+              and set(gold_ids) == set(slice_ids))
+    expect(rows, "C-GD4", "D0", True, gd4_ok,
+           f"gold rows {len(gold)} vs slice {len(slice_rows)}; "
+           f"unique {len(set(gold_ids))}; extra {sorted(set(gold_ids) - set(slice_ids))[:5]}",
+           "rows == 60 slice rows; query_id unique and ⊆ d0_slice.jsonl")
+
+    # C-GD5 — one raw record per row
+    raw_files = sorted(raw_dir.glob("*.json")) if raw_dir.is_dir() else []
+    raw_ids = {p.stem for p in raw_files}
+    expect(rows, "C-GD5", "D0", True,
+           len(raw_files) == len(gold) and set(gold_ids) <= raw_ids,
+           f"raw files {len(raw_files)} vs gold rows {len(gold)}; "
+           f"missing {sorted(set(gold_ids) - raw_ids)[:5]}",
+           "data/raw_gold_useful/ has one <query_id>.json per gold row")
+
+    # C-GD6 (SOFT) — seed direction agreement on the 6 seed rows
+    seed_path = h2 / "data" / "gold_useful.seed.jsonl"
+    seed_by = {}
+    if seed_path.exists():
+        seed_by = {r["query_id"]: bool(r.get("useful_dialogue_ids"))
+                   for r in _read_gold(seed_path)}
+    gold_by = {r["query_id"]: bool(r.get("useful_dialogue_ids")) for r in gold}
+    contrad = [qid for qid, sdir in seed_by.items()
+               if qid in gold_by and sdir != gold_by[qid]]
+    expect(rows, "C-GD6", "D0", False, not contrad,
+           f"seed queries with opposite direction: {contrad}",
+           "on the 6 seed rows the empty/non-empty direction matches the seed")
+
+    # C-GD7 — anti-H1 collinearity (useful sets strictly finer than guideline buckets)
+    non_empty = [r for r in gold if r.get("useful_dialogue_ids")]
+    h1_sig, howto_viol = [], []
+    for r in non_empty:
+        q = by_q.get(r["query_id"], {})
+        g = hold_guideline.get(r["query_id"], "")
+        qc = q.get("closed_at", "")
+        same_g = [did for did, pc in pool_closed.items()
+                  if pool_guideline.get(did) == g and pc < qc]
+        n_useful = len(r["useful_dialogue_ids"])
+        if same_g and n_useful == len(same_g):
+            h1_sig.append(r["query_id"])
+        if q.get("family") == "howto" and same_g and n_useful >= len(same_g):
+            howto_viol.append(r["query_id"])
+    gd7_ok = (len(h1_sig) <= 0.2 * max(len(non_empty), 1) and not howto_viol)
+    expect(rows, "C-GD7", "D0", True, gd7_ok,
+           f"H1-signature rows {len(h1_sig)}/{len(non_empty)} non-empty "
+           f"({h1_sig[:5]}); howto no-exclusion {howto_viol[:5]}",
+           "<=20% of non-empty rows equal the whole same-guideline bucket; "
+           "every FAQ how-to row excludes >=1 same-guideline session when one exists")
+
+    # C-GD8 — D0 manifest model + S2 loop model untouched
+    gd8_ok = (manifest.get("model") == "deepseek-v4-pro"
+              and lg.MODEL_DEFAULT == "deepseek-v4-pro"
+              and config.DEFAULT_MODEL == "deepseek-v4-flash")
+    expect(rows, "C-GD8", "D0", True, gd8_ok,
+           f"manifest model={manifest.get('model')} "
+           f"labeler_default={lg.MODEL_DEFAULT} S2_default={config.DEFAULT_MODEL}",
+           "labeler_model == deepseek-v4-pro; the S2 measured-loop model stays deepseek-v4-flash")
+
+    return True
 
 
 # ---------------------------------------------------------------------------
