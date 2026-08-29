@@ -575,6 +575,20 @@ def write_report(run_dir: Path, metrics: dict, cost: dict, audit: dict,
         "**Primary read:** T.hit = {t_hit} vs B1.hit = {b1_hit} on the same n=60"
         .format(t_hit=metrics['arms']['T']['hit'], b1_hit=metrics['arms']['B1']['hit']),
         "",
+        "**Round 3 re-test (lead dispatch 2026-08-29 13:34Z):** the S4/S7 RATING key was "
+        "coarsened from the 5-field tag_key (problem_shape|constraint|ending|channel|"
+        "vertical) to problem_shape|ending only (config.TAG_KEY_FIELDS), S3 matching "
+        "unchanged (5 TAG_FIELDS, TAG_FIELDS_MIN=2), re-run from the SAME frozen S2 raw "
+        "records (replay, zero new LLM). Result: metrics.json is byte-identical to the R1 "
+        "slice run (sha 6ac43ff0…), T packet ids 0/60 changed. The fix is applied (query "
+        "tag_keys in the run state are the coarse 2-field keys) but the 60 slice queries "
+        "have 58 unique problem_shape|ending buckets — rating cells still almost never "
+        "collide across queries, so S7 deltas have no second query to transfer to and the "
+        "ranker still degenerates to the same tie-break. The prerequisite for the coarse "
+        "rating key to do anything (repeated buckets across queries — audit A3's predicted "
+        "failure mode) is not met by the slice; a run where queries share shape/ending "
+        "buckets (full 1000+200 corpus) would exercise it.",
+        "",
         "**Diagnostic (why the numbers look like this):** `channel=web` and "
         "`vertical=customer-support` are constant across all 380 pool sessions, so "
         "with TAG_FIELDS_MIN=2 **every session is an S3 candidate for every query** "
