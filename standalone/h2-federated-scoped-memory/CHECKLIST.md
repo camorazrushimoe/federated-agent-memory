@@ -134,7 +134,7 @@ HARD валит прогон.
 - [x] `bin/label_gold_useful.py` закоммичен, зовёт `call_llm --model deepseek-v4-pro`; S2 `deepseek-v4-flash` не тронут
 - [x] Промпт разметчика заморожен в PROMPTS.md §10; S2 §2–§3 байт-в-байт те же
 - [x] `data/gold_useful.jsonl`: `#`-заголовок «AGENT-LABELED — NOT HUMAN GOLD», формат строк как у seed
-- [ ] QA: C-GD1..C-GD8 зелёные, включая анти-H1 коллинеарность C-GD7 — C-GD1..5,7,8 PASS; **C-GD6 SOFT FAIL** (3/6 seed-строк противоречат направлению — разбор в D0-GOLD.md, решение лида: принять или новый run id)
+- [x] QA: C-GD1..C-GD8 зелёные — C-GD1..5,7,8 PASS; **C-GD6 (SOFT) RESOLVED: ACCEPTED by lead 2026-08-29** (issue #51, comment 5462141906 — d-3219 seed misread, d-5711/d-4815 overridden → `[]`; checks.py re-run HARD 65/0/11, SOFT 6/0; разбор в D0-GOLD.md)
 - [x] Манифест D0: `labeler_model=deepseek-v4-pro`, кавер, sha, cost отдельно от S2 `cost.json`
 
 **D0 закрыт:** золото закоммичено одним PR (скрипт + промпт + чеки + срез + золото).

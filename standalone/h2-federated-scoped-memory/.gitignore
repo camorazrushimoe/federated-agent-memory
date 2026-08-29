@@ -16,6 +16,9 @@ data/raw_gold_useful/
 data/abcd_*.jsonl
 data/preview_10.jsonl
 data/replay/
+# Phase C run inputs (raw transcripts — PII domain, never committed)
+data/dialogues_pool.jsonl
+data/dialogues_slice.jsonl
 
 # Phase C run dir packets (regenerable from raw tags)
 runs/*/packets/
