@@ -12,12 +12,13 @@
   "holdout_sha": "e8f453e17c6c3aa115fb2bd1498a833da383cecdcc650667ac349f903343fe3c",
   "slice_sha": "56b5bfc0432f025f7b797e6f8824b3aaf6e86c9b9c814111349744f71bd33b81",
   "gold_out_sha": "f1fa1dcc1f7b2e9ce9e6c6686751539c6bc2dc6ad69341a2954cd46fc9405717",
+  "gold_out_source": "runs/2026-08-29_D0_gold_useful/gold_useful.jsonl",
   "rows": 60,
   "label_error_rows": 0,
   "calls": 60,
   "tokens_in": 209782,
-  "tokens_out": 5981,
+  "tokens_out": 5921,
   "usd": null,
   "caveat": "AGENT-LABELED GOLD — NOT HUMAN GOLD",
-  "created_at": "2026-08-29T09:28:52Z"
+  "created_at": "2026-08-29T09:36:03Z"
 }

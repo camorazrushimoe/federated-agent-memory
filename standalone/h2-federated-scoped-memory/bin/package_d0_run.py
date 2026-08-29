@@ -36,6 +36,11 @@ def main() -> int:
     run_id = "2026-08-29_D0_gold_useful"
     run_dir = H2 / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
+    # the run dir is the REPLICA RECORD: its gold_useful.jsonl (if present)
+    # is the labeler's raw output at run time — never overwrite it with a
+    # later-curated data/gold_useful.jsonl.
+    record_gold = run_dir / "gold_useful.jsonl"
+    gold_src = record_gold if record_gold.exists() else gold_path
     manifest = {
         "run_id": run_id,
         "kind": "gold_useful",
@@ -49,7 +54,8 @@ def main() -> int:
         "pool_sha": lm["inputs"]["pool"]["sha256"],
         "holdout_sha": lm["inputs"]["holdout"]["sha256"],
         "slice_sha": sha256_file(slice_path),
-        "gold_out_sha": sha256_file(gold_path),
+        "gold_out_sha": sha256_file(gold_src),
+        "gold_out_source": str(gold_src.relative_to(H2)),
         "rows": len(statuses),
         "label_error_rows": n_err,
         "calls": usage.get("calls"),
@@ -61,8 +67,6 @@ def main() -> int:
     }
     out = run_dir / "manifest.json"
     out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    # record-only copy of the gold (no raw transcripts — PII stays gitignored)
-    (run_dir / "gold_useful.jsonl").write_bytes(gold_path.read_bytes())
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
     return 0
 

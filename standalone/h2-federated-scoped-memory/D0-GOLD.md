@@ -3,25 +3,42 @@
 **STATUS: agent-labeled (deepseek-v4-pro), not human gold.**
 Prepared per founder decision (issue #51).
 
-## Run 2026-08-29_D0_gold_useful (Phase B, 60-query slice)
+## Canonical gold (on main, commit 30e6b83)
 
-- **Slice:** `data/d0_slice.jsonl` — 60 hold-out queries, frozen
-  (sha256 `56b5bfc0432f025f7b797e6f8824b3aaf6e86c9b9c814111349744f71bd33b81`):
-  34 FAQ how-to + 6 site-troubleshoot + 20 negatives (12 core dispute/promo
-  + first 8 `manage_*` by dialogue_id).
-- **Run:** `bin/label_gold_useful.py` — 60/60 labeled, 0 `label_error`,
-  0 rejected; `deepseek-v4-pro`, temperature 0, 60 calls,
-  209,782 prompt / 5,981 completion tokens.
-- **Output:** `data/gold_useful.jsonl` (header + 60 seed-format rows),
-  `data/gold_useful.manifest.json`, raw records in `data/raw_gold_useful/`
-  (gitignored, PII guard), run-dir manifest
-  `runs/2026-08-29_D0_gold_useful/manifest.json`.
-- **QA (C-GD1..8, in `bin/checks.py`):** C-GD1..5, C-GD7, C-GD8 HARD PASS;
-  **C-GD6 SOFT FAIL** — 3/6 seed rows contradict in direction. Investigation
-  below. C-GD7: 3/50 non-empty rows are whole-bucket (H1-signature),
-  6% ≤ 20% gate.
-- **Useful distribution:** 10 empty / 50 non-empty (sizes 1–11; the
-  same-raw-unlock candidate scope is homogeneous, so lists are large).
+The D0 gold on main is the **lead-curated** output of the labeler run
+(2026-08-29, slice = 60 queries):
+
+- `data/gold_useful.jsonl` — 60 rows + mandatory `#` header (C-GD1; header
+  added by the engineer on top of the lead's committed file, which the
+  pre-header labeler did not write).
+- `data/gold_useful.manifest.json` — run manifest (model `deepseek-v4-pro`,
+  temperature 0, prompt sha `14e5d5c7…`, 60 calls, 209,782 prompt / 5,981
+  completion tokens).
+- **Lead curation:** 2 list overrides (d-1789, d-5551 → empty, where the
+  model's own note said the query already contains the answer but its list
+  was non-empty — a labeler self-contradiction) and ~46 note rewrites for
+  clarity. Raw labeler output for these rows is preserved in
+  `runs/2026-08-29_D0_gold_useful/gold_useful.jsonl` (the replica run).
+
+## Reproducibility (independent replica run, engineer, 09:28Z)
+
+A second, fully independent run of `bin/label_gold_useful.py` (same prompt,
+same slice, temp 0) produced **60/60 identical useful lists and identical
+token counts** — the labeler is deterministic on this workload; the D0 gold
+is a reproducible measurement, not a one-off draw. Raw records
+(`data/raw_gold_useful/<query_id>.json`, gitignored) replay without new
+LLM calls (`--replay-dir`).
+
+## QA (C-GD1..8, in `bin/checks.py`)
+
+- C-GD1 (header), C-GD2 (no future leak), C-GD3 (no PII), C-GD4 (rows ==
+  slice), C-GD5 (raw per row), C-GD7 (anti-H1: 3/50 whole-bucket rows = 6%
+  ≤ 20% gate), C-GD8 (labeler `deepseek-v4-pro`, S2 `deepseek-v4-flash`
+  untouched): **HARD PASS**.
+- **C-GD6 SOFT FAIL** — 3/6 seed rows contradict in direction. The lead's
+  curation kept the labeler's direction on all 3 (d-3219 empty, d-5711 /
+  d-4815 non-empty), which is an implicit accept; **explicit sign-off still
+  requested** (accept as-is vs re-run with rubric emphasis, new run id).
 
 ### C-GD6 investigation (report item, per ROUND-0-PLAN §7)
 
