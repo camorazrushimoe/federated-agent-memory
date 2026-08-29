@@ -445,12 +445,6 @@ def run(args):
                              "detail": res.get("error") or res.get("response")})
         usage = USAGE.snapshot()
 
-    if not args.dry_run:
-        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-        with open(args.out, "w", encoding="utf-8") as fh:
-            for r in out_rows:
-                fh.write(json.dumps(r, ensure_ascii=False) + "\n")
-
     manifest = {
         "artifact": str(args.out),
         "labeler": LABELER,
@@ -481,6 +475,19 @@ def run(args):
         manifest["slice"]["families"][fam] = sum(
             1 for q in queries if q["family"] == fam)
     if not args.dry_run:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+        created = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        slice_sha = hashlib.sha256(
+            json.dumps(manifest["slice"]["queries"], ensure_ascii=False, sort_keys=True).encode()
+        ).hexdigest()
+        with open(args.out, "w", encoding="utf-8") as fh:
+            # C-GD1: the `#` header is mandatory (ROUND-0-PLAN §5.4) — consumers skip `#` lines.
+            fh.write(f"# AGENT-LABELED GOLD — NOT HUMAN GOLD — labeler={args.model}\n")
+            fh.write(f"# prompt_sha={manifest['prompt_sha256']} "
+                     f"corpus_sha={manifest['inputs']['pool']['sha256']} "
+                     f"slice_sha={slice_sha} created_at={created}\n")
+            for r in out_rows:
+                fh.write(json.dumps(r, ensure_ascii=False) + "\n")
         with open(args.manifest, "w", encoding="utf-8") as fh:
             json.dump(manifest, fh, ensure_ascii=False, indent=2)
         sys.stdout.write(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")

@@ -1,8 +1,41 @@
 # D0 — gold_useful, agent-labeled (deepseek-v4-pro)
 
 **STATUS: agent-labeled (deepseek-v4-pro), not human gold.**
-Prepared per founder decision (issue #51). Labeling does NOT run on the
-hold-out until the lead opens Phase B (after D2 green).
+Prepared per founder decision (issue #51).
+
+## Run 2026-08-29_D0_gold_useful (Phase B, 60-query slice)
+
+- **Slice:** `data/d0_slice.jsonl` — 60 hold-out queries, frozen
+  (sha256 `56b5bfc0432f025f7b797e6f8824b3aaf6e86c9b9c814111349744f71bd33b81`):
+  34 FAQ how-to + 6 site-troubleshoot + 20 negatives (12 core dispute/promo
+  + first 8 `manage_*` by dialogue_id).
+- **Run:** `bin/label_gold_useful.py` — 60/60 labeled, 0 `label_error`,
+  0 rejected; `deepseek-v4-pro`, temperature 0, 60 calls,
+  209,782 prompt / 5,981 completion tokens.
+- **Output:** `data/gold_useful.jsonl` (header + 60 seed-format rows),
+  `data/gold_useful.manifest.json`, raw records in `data/raw_gold_useful/`
+  (gitignored, PII guard), run-dir manifest
+  `runs/2026-08-29_D0_gold_useful/manifest.json`.
+- **QA (C-GD1..8, in `bin/checks.py`):** C-GD1..5, C-GD7, C-GD8 HARD PASS;
+  **C-GD6 SOFT FAIL** — 3/6 seed rows contradict in direction. Investigation
+  below. C-GD7: 3/50 non-empty rows are whole-bucket (H1-signature),
+  6% ≤ 20% gate.
+- **Useful distribution:** 10 empty / 50 non-empty (sizes 1–11; the
+  same-raw-unlock candidate scope is homogeneous, so lists are large).
+
+### C-GD6 investigation (report item, per ROUND-0-PLAN §7)
+
+| seed row | seed direction | labeler | analysis |
+|---|---|---|---|
+| d-3219 | non-empty (width) | empty | Query actually asks about **zipper material** (allergy); candidates are width chats. Seed annotation mismatches this transcript — labeler's empty list is defensible. |
+| d-5711 | empty | non-empty (9) | Labeler: "offer promo code to appease" is a transferable move. Seed: one-off exception must not transfer (empty is gold). Rubric-interpretation gap. |
+| d-4815 | empty | non-empty (6) | Labeler: refund step sequence (validate → method → record → issue) is transferable. Seed: identifier-heavy transcript is not a hint. Rubric-interpretation gap. |
+
+The labeler consistently treats "transcript contains the reusable step
+sequence" as useful even when the seed's negatives call for empty lists
+(identifiers + one-off exceptions). **Decision needed (lead): accept as-is
+with the SOFT flag documented, or re-run with rubric emphasis (new run id).**
+Prompt stays frozen either way — no silent edits (CHECKLIST stop rule).
 
 ## What this is
 

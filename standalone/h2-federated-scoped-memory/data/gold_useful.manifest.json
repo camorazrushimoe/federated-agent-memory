@@ -1,0 +1,1358 @@
+{
+  "artifact": "data/gold_useful.jsonl",
+  "labeler": "agent-labeled (deepseek-v4-pro), not human gold",
+  "model": "deepseek-v4-pro",
+  "temperature": 0,
+  "prompt_sha256": "14e5d5c792190aba9d67385020f4dbf1db6c5b8ca556b1245b3a30c0127421e8",
+  "inputs": {
+    "pool": {
+      "path": "data/abcd_1000_pool.jsonl",
+      "sha256": "28b77a32e58932bbf1502d73975972285ec071d03f30c6ac2b5d23cd90a5abbb",
+      "rows": 1000
+    },
+    "holdout": {
+      "path": "data/abcd_200_holdout.jsonl",
+      "sha256": "e8f453e17c6c3aa115fb2bd1498a833da383cecdcc650667ac349f903343fe3c",
+      "rows": 200
+    }
+  },
+  "slice": {
+    "rule": "hold-out FAQ how-to + site-troubleshoot + 20 negative dispute/promo (all core + first 8 manage_* by dialogue_id)",
+    "n": 60,
+    "families": {
+      "howto": 34,
+      "site": 6,
+      "negative": 12,
+      "negative_manage": 8
+    },
+    "queries": [
+      {
+        "query_id": "d-10403",
+        "family": "howto",
+        "unlock": "boots_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-10532",
+        "family": "howto",
+        "unlock": "shirt_how_2",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-1150",
+        "family": "howto",
+        "unlock": "shirt_how_2",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-1365",
+        "family": "howto",
+        "unlock": "jeans_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1449",
+        "family": "howto",
+        "unlock": "jacket_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1789",
+        "family": "howto",
+        "unlock": "jeans_how_4",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-2600",
+        "family": "howto",
+        "unlock": "shirt_how_3",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-2678",
+        "family": "howto",
+        "unlock": "jacket_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-2900",
+        "family": "howto",
+        "unlock": "jacket_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-3031",
+        "family": "howto",
+        "unlock": "jeans_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-3062",
+        "family": "howto",
+        "unlock": "boots_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-3096",
+        "family": "howto",
+        "unlock": "jacket_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-3219",
+        "family": "howto",
+        "unlock": "boots_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-3262",
+        "family": "howto",
+        "unlock": "boots_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-3686",
+        "family": "howto",
+        "unlock": "jeans_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-4002",
+        "family": "howto",
+        "unlock": "boots_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-4027",
+        "family": "howto",
+        "unlock": "boots_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-4940",
+        "family": "howto",
+        "unlock": "jeans_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-4941",
+        "family": "howto",
+        "unlock": "jacket_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-5551",
+        "family": "howto",
+        "unlock": "shirt_how_4",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-5690",
+        "family": "howto",
+        "unlock": "boots_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-5967",
+        "family": "howto",
+        "unlock": "shirt_how_1",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-5992",
+        "family": "howto",
+        "unlock": "jacket_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-6006",
+        "family": "howto",
+        "unlock": "jacket_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-7892",
+        "family": "howto",
+        "unlock": "boots_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-8298",
+        "family": "howto",
+        "unlock": "boots_how_4",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-8650",
+        "family": "howto",
+        "unlock": "jacket_how_4",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-867",
+        "family": "howto",
+        "unlock": "jeans_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-8711",
+        "family": "howto",
+        "unlock": "jeans_how_2",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-8954",
+        "family": "howto",
+        "unlock": "jacket_how_3",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-9062",
+        "family": "howto",
+        "unlock": "shirt_how_4",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-9190",
+        "family": "howto",
+        "unlock": "shirt_how_3",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-9394",
+        "family": "howto",
+        "unlock": "shirt_how_1",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-9553",
+        "family": "howto",
+        "unlock": "jeans_how_1",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1692",
+        "family": "site",
+        "unlock": "shopping_cart",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-4802",
+        "family": "site",
+        "unlock": "slow_speed",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-7731",
+        "family": "site",
+        "unlock": "slow_speed",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-7941",
+        "family": "site",
+        "unlock": "shopping_cart",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-8868",
+        "family": "site",
+        "unlock": "search_results",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-9066",
+        "family": "site",
+        "unlock": "search_results",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-2162",
+        "family": "negative",
+        "unlock": "refund_initiate",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-3036",
+        "family": "negative",
+        "unlock": "promo_code_out_of_date",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-3471",
+        "family": "negative",
+        "unlock": "bad_price_competitor",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-4032",
+        "family": "negative",
+        "unlock": "bad_price_yesterday",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-4815",
+        "family": "negative",
+        "unlock": "refund_initiate",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-5536",
+        "family": "negative",
+        "unlock": "promo_code_out_of_date",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-5711",
+        "family": "negative",
+        "unlock": "bad_price_competitor",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-6368",
+        "family": "negative",
+        "unlock": "bad_price_yesterday",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-8618",
+        "family": "negative",
+        "unlock": "promo_code_invalid",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-8988",
+        "family": "negative",
+        "unlock": "bad_price_yesterday",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-9095",
+        "family": "negative",
+        "unlock": "promo_code_invalid",
+        "n_candidates": 10
+      },
+      {
+        "query_id": "d-9565",
+        "family": "negative",
+        "unlock": "bad_price_competitor",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1147",
+        "family": "negative_manage",
+        "unlock": "manage_cancel",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1151",
+        "family": "negative_manage",
+        "unlock": "manage_change_phone",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1178",
+        "family": "negative_manage",
+        "unlock": "manage_dispute_bill",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1452",
+        "family": "negative_manage",
+        "unlock": "manage_change_address",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1469",
+        "family": "negative_manage",
+        "unlock": "manage_downgrade",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1472",
+        "family": "negative_manage",
+        "unlock": "manage_change_name",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-1863",
+        "family": "negative_manage",
+        "unlock": "manage_change_address",
+        "n_candidates": 11
+      },
+      {
+        "query_id": "d-2385",
+        "family": "negative_manage",
+        "unlock": "manage_change_phone",
+        "n_candidates": 11
+      }
+    ]
+  },
+  "statuses": [
+    {
+      "query_id": "d-10403",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2150",
+        "d-221",
+        "d-4499",
+        "d-5447",
+        "d-5634",
+        "d-6653",
+        "d-6732",
+        "d-7907",
+        "d-7940",
+        "d-896"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-10532",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-4482",
+        "d-6864",
+        "d-7272",
+        "d-7294",
+        "d-7323",
+        "d-7872",
+        "d-8366",
+        "d-9006"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1150",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-4482",
+        "d-6864",
+        "d-7294",
+        "d-7872",
+        "d-8366",
+        "d-9006",
+        "d-7272",
+        "d-7323"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1365",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1449",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-7392"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1789",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1133",
+        "d-1342",
+        "d-2340",
+        "d-2646",
+        "d-3350",
+        "d-3802",
+        "d-4219",
+        "d-4716",
+        "d-5303",
+        "d-6433"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-2600",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2314",
+        "d-3827",
+        "d-3992",
+        "d-4246",
+        "d-7109",
+        "d-7542",
+        "d-8768",
+        "d-8782",
+        "d-975"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-2678",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1390",
+        "d-1762",
+        "d-3140",
+        "d-4094",
+        "d-4794",
+        "d-5964",
+        "d-6010",
+        "d-7918",
+        "d-8217",
+        "d-8294",
+        "d-9763"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-2900",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1390",
+        "d-1762",
+        "d-3140",
+        "d-4094",
+        "d-4794",
+        "d-5964",
+        "d-6010",
+        "d-7918",
+        "d-8217",
+        "d-8294",
+        "d-9763"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3031",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1737",
+        "d-3946",
+        "d-4216",
+        "d-4291",
+        "d-5508",
+        "d-5520",
+        "d-6070",
+        "d-6207",
+        "d-6701",
+        "d-8577",
+        "d-9205"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3062",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2150",
+        "d-221",
+        "d-4499",
+        "d-5447",
+        "d-5634",
+        "d-6653",
+        "d-6732",
+        "d-7907",
+        "d-7940",
+        "d-896"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3096",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10334",
+        "d-3656",
+        "d-3687",
+        "d-4703",
+        "d-5171",
+        "d-5225",
+        "d-5774",
+        "d-6794",
+        "d-6981",
+        "d-9052"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3219",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3262",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3686",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1737",
+        "d-3946",
+        "d-4216",
+        "d-4291",
+        "d-5508",
+        "d-5520",
+        "d-6070",
+        "d-6207",
+        "d-6701",
+        "d-8577",
+        "d-9205"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4002",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2147",
+        "d-2349",
+        "d-4495",
+        "d-5375",
+        "d-5573",
+        "d-7355",
+        "d-7383",
+        "d-8394",
+        "d-8669",
+        "d-9523",
+        "d-9680"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4027",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2150",
+        "d-221",
+        "d-4499",
+        "d-5447",
+        "d-5634",
+        "d-6653",
+        "d-6732",
+        "d-7907",
+        "d-7940",
+        "d-896"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4940",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10181",
+        "d-2930",
+        "d-3757",
+        "d-4280",
+        "d-6746",
+        "d-7774",
+        "d-8014",
+        "d-9469",
+        "d-9755"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4941",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-5551",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-3196",
+        "d-3541",
+        "d-6714",
+        "d-7409",
+        "d-8510",
+        "d-9024",
+        "d-9058",
+        "d-9242",
+        "d-9498"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-5690",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-5967",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10276",
+        "d-1551",
+        "d-1803",
+        "d-2686",
+        "d-3150",
+        "d-3803",
+        "d-6446",
+        "d-7467",
+        "d-8325",
+        "d-9002"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-5992",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-3140",
+        "d-4094",
+        "d-4794",
+        "d-5964",
+        "d-6010",
+        "d-7918",
+        "d-8217",
+        "d-8294",
+        "d-9763"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-6006",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10334",
+        "d-3656",
+        "d-3687",
+        "d-4703",
+        "d-5171",
+        "d-5225",
+        "d-5774",
+        "d-6794",
+        "d-6981",
+        "d-9052"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-7892",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2147",
+        "d-2349",
+        "d-4495",
+        "d-5375",
+        "d-5573",
+        "d-7355",
+        "d-7383",
+        "d-8394",
+        "d-8669",
+        "d-9523",
+        "d-9680"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8298",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10443",
+        "d-1668",
+        "d-236",
+        "d-3390",
+        "d-3706",
+        "d-4179",
+        "d-5234",
+        "d-6076",
+        "d-6810"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8650",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1892",
+        "d-2023",
+        "d-2391",
+        "d-4224",
+        "d-4673",
+        "d-4787",
+        "d-6488",
+        "d-6754",
+        "d-7800",
+        "d-847",
+        "d-8837"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-867",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10545",
+        "d-1108",
+        "d-2902",
+        "d-3301",
+        "d-3356",
+        "d-4290",
+        "d-6514",
+        "d-6694",
+        "d-7377",
+        "d-7478"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8711",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10181",
+        "d-2930",
+        "d-3757",
+        "d-4280",
+        "d-6746",
+        "d-7774",
+        "d-8014",
+        "d-9469",
+        "d-9755"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8954",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9062",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-3196",
+        "d-3541",
+        "d-6714",
+        "d-7409",
+        "d-8510",
+        "d-9024",
+        "d-9058",
+        "d-9242",
+        "d-9498"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9190",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2314",
+        "d-3827",
+        "d-3992",
+        "d-4246",
+        "d-7109",
+        "d-7542",
+        "d-8768",
+        "d-8782",
+        "d-975"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9394",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10276",
+        "d-1551",
+        "d-1803",
+        "d-2686",
+        "d-3150",
+        "d-3803",
+        "d-6446",
+        "d-7467",
+        "d-8325",
+        "d-9002"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9553",
+      "family": "howto",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1737",
+        "d-3946",
+        "d-4216",
+        "d-4291",
+        "d-5508",
+        "d-5520",
+        "d-6070",
+        "d-6207",
+        "d-6701",
+        "d-8577",
+        "d-9205"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1692",
+      "family": "site",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1149",
+        "d-2551",
+        "d-3315",
+        "d-4863",
+        "d-5400",
+        "d-6786",
+        "d-9533"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4802",
+      "family": "site",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1457",
+        "d-1799",
+        "d-534",
+        "d-8502",
+        "d-9785"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-7731",
+      "family": "site",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1457",
+        "d-1799",
+        "d-534",
+        "d-8502",
+        "d-9785"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-7941",
+      "family": "site",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1149",
+        "d-2551",
+        "d-3315",
+        "d-4863",
+        "d-5400",
+        "d-6786",
+        "d-9533"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8868",
+      "family": "site",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-5472",
+        "d-6744"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9066",
+      "family": "site",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-3507",
+        "d-3526",
+        "d-4348",
+        "d-5513",
+        "d-6744",
+        "d-7605",
+        "d-9677"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-2162",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10126",
+        "d-4586",
+        "d-6413",
+        "d-7676",
+        "d-8557",
+        "d-9604"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3036",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2397",
+        "d-4356",
+        "d-4967",
+        "d-5343",
+        "d-8183",
+        "d-8191",
+        "d-8234"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-3471",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4032",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-4815",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10126",
+        "d-4586",
+        "d-6413",
+        "d-7676",
+        "d-8557",
+        "d-9604"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-5536",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2397",
+        "d-4356",
+        "d-4967",
+        "d-5343",
+        "d-8183",
+        "d-8191",
+        "d-8234"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-5711",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10473",
+        "d-1236",
+        "d-1259",
+        "d-1406",
+        "d-2141",
+        "d-2406",
+        "d-432",
+        "d-8015",
+        "d-8423"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-6368",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10510",
+        "d-1849",
+        "d-2401",
+        "d-3531",
+        "d-4587",
+        "d-5728",
+        "d-5937",
+        "d-6124",
+        "d-7120",
+        "d-8252"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8618",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10085",
+        "d-3297",
+        "d-3483",
+        "d-497",
+        "d-7705",
+        "d-7867",
+        "d-8418",
+        "d-8682",
+        "d-9562"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-8988",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10510",
+        "d-1849",
+        "d-2401",
+        "d-3531",
+        "d-4587",
+        "d-5728",
+        "d-5937",
+        "d-6124",
+        "d-7120",
+        "d-8252"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9095",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10085",
+        "d-3297",
+        "d-3483",
+        "d-497",
+        "d-7705",
+        "d-7867",
+        "d-8418",
+        "d-8682",
+        "d-9562"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-9565",
+      "family": "negative",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-10473",
+        "d-1236",
+        "d-1259",
+        "d-1406",
+        "d-2141",
+        "d-2406",
+        "d-432",
+        "d-8015",
+        "d-8423"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1147",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1042",
+        "d-3215",
+        "d-4936",
+        "d-5289"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1151",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1530",
+        "d-1587",
+        "d-2055",
+        "d-2658",
+        "d-2742",
+        "d-2783",
+        "d-2835",
+        "d-2888",
+        "d-308",
+        "d-3736",
+        "d-655"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1178",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-2807",
+        "d-4932",
+        "d-8478",
+        "d-8632"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1452",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1289",
+        "d-1295",
+        "d-1947",
+        "d-2196",
+        "d-2506",
+        "d-2798",
+        "d-3344",
+        "d-3392",
+        "d-3758",
+        "d-400",
+        "d-942"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1469",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-4898",
+        "d-6019",
+        "d-926",
+        "d-9771"
+      ],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1472",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-1863",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [],
+      "dropped_ids": []
+    },
+    {
+      "query_id": "d-2385",
+      "family": "negative_manage",
+      "status": "labeled",
+      "useful_dialogue_ids": [
+        "d-1530",
+        "d-1587",
+        "d-2055",
+        "d-2658",
+        "d-2742",
+        "d-2783",
+        "d-2835",
+        "d-2888",
+        "d-308",
+        "d-3736",
+        "d-655"
+      ],
+      "dropped_ids": []
+    }
+  ],
+  "usage": {
+    "calls": 60,
+    "network_calls": 60,
+    "prompt_tokens": 209782,
+    "completion_tokens": 5981,
+    "ms_list": [
+      2529,
+      3311,
+      2502,
+      2134,
+      2452,
+      2686,
+      2704,
+      2685,
+      2612,
+      2512,
+      2923,
+      2412,
+      2171,
+      2410,
+      2691,
+      2788,
+      2785,
+      3230,
+      2480,
+      3080,
+      3387,
+      2706,
+      2745,
+      2958,
+      3095,
+      2340,
+      2680,
+      2680,
+      2902,
+      1955,
+      2407,
+      2272,
+      2591,
+      2377,
+      2815,
+      2611,
+      2667,
+      2653,
+      2712,
+      2813,
+      2775,
+      2961,
+      2304,
+      2578,
+      3441,
+      2644,
+      2673,
+      3225,
+      3190,
+      2883,
+      2888,
+      2994,
+      2521,
+      2937,
+      2389,
+      2782,
+      2767,
+      2411,
+      2299,
+      2929
+    ]
+  }
+}
