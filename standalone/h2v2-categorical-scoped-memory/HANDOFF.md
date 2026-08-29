@@ -17,8 +17,16 @@ bash bin/sync_h1_data.sh    # ABCD 1000+200
 
 ## Раунд 0 закрыт (2026-08-29)
 
-См. [`REPORT.md`](./REPORT.md).
+См. [`REPORT.md`](./REPORT.md). PR: #<<66>> на ветке `h2v2-round0-live-d4`.
 
 - D4 на живом S2 (`deepseek-v4-flash`): **FIT** (recall 0.81, медиана 10).
 - T vs B1: **NOT FIT** (38 = 38).
 - Вердикт продукта: **FIT WITH LIMITS**.
+
+Повтор без LLM (после `copy-from-v1.sh`):
+
+```
+python3 bin/eval_live_d4.py --run-dir runs/2026-08-29_PhaseC_live_deepseek-v4-flash
+```
+
+`tags_only.json` в этом run-dir — теги 320+60 без транскриптов. Оракул: `python3 bin/run_oracle_d4.py` (нужен `data/dialogues_pool.jsonl`).
