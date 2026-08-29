@@ -49,7 +49,8 @@ bash bin/sync_h1_data.sh
 ## Своё у v2 (не копия)
 
 - README.md, WHY-NOT-V1.md, CATEGORIES.md, ROUND-0-PLAN.md, SPEC.md, PROMPTS.md, SOURCE.md
+- FINDINGS.md, MAP.md, HANDOFF.md
 - bin/config.py, bin/prompts.py, bin/tag.py, bin/retrieve.py
-- bin/copy-from-v1.sh, bin/sync_h1_data.sh
-- fixtures/gold_tags.jsonl (словарь v2)
+- bin/copy-from-v1.sh, bin/sync_h1_data.sh, bin/patch_v1_checks.py
+- fixtures/gold_tags.jsonl (словарь v2, сверен с текстами фикстур)
 - standalone/h2-federated-scoped-memory/H2V2.md (указатель из v1)
