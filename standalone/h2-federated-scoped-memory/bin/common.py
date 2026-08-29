@@ -189,8 +189,9 @@ def read_jsonl(path: str | Path) -> list[dict]:
     rows = []
     for line in p.read_text(encoding="utf-8").splitlines():
         line = line.strip()
-        if line:
-            rows.append(json.loads(line))
+        if not line or line.startswith("#"):
+            continue  # C-GD1: consumers MUST skip `#` header lines (gold)
+        rows.append(json.loads(line))
     return rows
 
 

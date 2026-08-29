@@ -19,6 +19,8 @@ data/replay/
 # Phase C run inputs (raw transcripts — PII domain, never committed)
 data/dialogues_pool.jsonl
 data/dialogues_slice.jsonl
-
-# Phase C run dir packets (regenerable from raw tags)
+# Phase C run dirs: derived metrics files (manifest/audit/checks/metrics/
+# cost/per_query/report.md) are committed; transcripts and run state (PII
+# domain) are not.
+runs/*/data/
 runs/*/packets/
