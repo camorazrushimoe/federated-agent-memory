@@ -45,5 +45,6 @@ for rel in "${copy_list[@]}"; do
   echo "copied $rel"
 done
 
-echo "done. v2-owned files left intact: README CATEGORIES WHY-NOT-V1 SPEC PROMPTS"
-echo "config.py prompts.py tag.py retrieve.py gold_tags.jsonl"
+python3 "$here/bin/patch_v1_checks.py"
+echo "done. v2-owned files left intact: README CATEGORIES WHY-NOT-V1 SPEC PROMPTS FINDINGS MAP HANDOFF"
+echo "config.py prompts.py tag.py retrieve.py gold_tags.jsonl patch_v1_checks.py"
