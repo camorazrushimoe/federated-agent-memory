@@ -65,7 +65,7 @@ S2 ran (deepseek-v4-flash, temp 0) as part of the measured loop; tag-vs-gold agr
 - `price_source` = None
 
 ## 8. Verdict
-**NOT FIT — no stable gap vs B1; whole-session harm wrong=0.93 (gate ≤ 0.25)**
+**NOT FIT — no stable gap vs B1; whole-session harm wrong=0.93 (gate <= 0.25)**
 Trigger (eval.py write_report, EVAL-PLAN §6.4 + §6.2): T.wrong 0.9333 > 0.25 (whole-session harm — a wrong foreign whole session is expensive harm). The T.hit 0.0667 > B1.hit 0.0333 margin is a 2-query gap inside the run-to-run noise documented by the R1 cross-check (same slice: merged #61 run T 2/B1 5 ↔ cross-check/R3 T 4/B1 2), and this R3 re-test changed 0/60 T packets — no stable gap, so the ranker-vs-random gate is not met. Secondary (not verdict-driving): top3_share 0.9667 > 0.55, explore_fill 0.0167 < 0.15 — levers in §4 Diagnostic (S3 retrieval granularity first, then rotation).
 
 *L2 numbers in this report are agent-labeled gold (deepseek-v4-pro) — NOT human gold*

@@ -683,7 +683,13 @@ def write_report(run_dir: Path, metrics: dict, cost: dict, audit: dict,
     elif t["hit"] <= b1["hit"]:
         verdict = f"NOT FIT — {misses[0]}"
     elif t["wrong"] > 0.25:
-        verdict = f"NOT FIT — {misses[0]}"
+        # Byte-stable line for the whole-session-harm gate (founder dispatch,
+        # PR #63): a replay of the R3 run MUST emit the same line as the
+        # committed report.md. "no stable gap vs B1" is the R3 cross-check
+        # evidence (0/60 T packets changed; the 2-query T>B1 margin flips
+        # between runs), not a threshold move — §6.2 thresholds untouched.
+        verdict = (f"NOT FIT — no stable gap vs B1; whole-session harm "
+                   f"wrong={t['wrong']:.2f} (gate <= 0.25)")
     elif misses:
         verdict = "FIT WITH LIMITS — " + "; ".join(misses)
     else:
