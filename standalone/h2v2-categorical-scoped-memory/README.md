@@ -11,6 +11,7 @@ v1 закрыт как **NOT FIT** (PR #63 / #64): теги не давали с
 - Строки модели — [`PROMPTS.md`](./PROMPTS.md)
 - Как меряем — [`EVAL-PLAN.md`](./EVAL-PLAN.md)
 - План старта — [`ROUND-0-PLAN.md`](./ROUND-0-PLAN.md)
+- Что скопировано байт-в-байт — [`SOURCE.md`](./SOURCE.md)
 - v1 (заморожен) — [`../h2-federated-scoped-memory/`](../h2-federated-scoped-memory/)
 
 Не импортировать код H1 и не читать `unlock` на вход тегеру.
