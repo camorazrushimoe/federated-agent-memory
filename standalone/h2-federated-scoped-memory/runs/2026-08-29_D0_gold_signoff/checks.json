@@ -1,0 +1,740 @@
+[
+  {
+    "check_id": "C-ISO1",
+    "step": "iso",
+    "hard": true,
+    "passed": true,
+    "observed": "[]",
+    "expected": "no imports from research/, openspec/, H1, GitLab-POC in bin/",
+    "note": ""
+  },
+  {
+    "check_id": "C-ISO2",
+    "step": "iso",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"forbidden_tokens\": [], \"urllib_files\": [\"common.py\", \"llm.py\"], \"non_pipeline_files\": [\"adapt_h1_corpus.py\", \"label_gold_useful.py\", \"llm.py\", \"package_d0_run.py\", \"write_d0_slice.py\"]}",
+    "expected": "no embeddings/vector stores/DB drivers; urllib only inside the sanctioned wrappers (common.call_llm for the pipeline, llm.call_llm for the D0 labeler)",
+    "note": ""
+  },
+  {
+    "check_id": "C-ISO3",
+    "step": "iso",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"issues\": [], \"call_llm_defs\": [\"common.py\"], \"call_llm_callers\": [\"common.py\", \"tag.py\"], \"non_pipeline_files\": [\"adapt_h1_corpus.py\", \"label_gold_useful.py\", \"llm.py\", \"package_d0_run.py\", \"write_d0_slice.py\"]}",
+    "expected": "no key/base-url literals; H2_API_KEY only; the pipeline calls call_llm only via common.py's single wrapper (tag.py S2). D0's llm.py is a separate lane, reported but outside the pipeline contract",
+    "note": ""
+  },
+  {
+    "check_id": "C-ISO4",
+    "step": "iso",
+    "hard": true,
+    "passed": true,
+    "observed": "fx-tenant: d-001 in candidates=True, d-014 (other tenant) in candidates=True",
+    "expected": "two dialogues with different tenant_id and same tags are both candidates (fixtures d-001/d-014)",
+    "note": ""
+  },
+  {
+    "check_id": "C-ISO5",
+    "step": "iso",
+    "hard": true,
+    "passed": true,
+    "observed": "fixtures byte-identical after the run: True",
+    "expected": "the run writes only into the workdir; fixtures/ and H1 data/ untouched",
+    "note": "fixture files snapshotted before/after the fixture suite"
+  },
+  {
+    "check_id": "C-IN1",
+    "step": "S1",
+    "hard": true,
+    "passed": true,
+    "observed": "kept 10 + dropped 1 vs input rows 11",
+    "expected": "kept + dropped == rows in the input file",
+    "note": ""
+  },
+  {
+    "check_id": "C-IN2",
+    "step": "S1",
+    "hard": true,
+    "passed": true,
+    "observed": "dropped 1 (fixture d-006 has no customer turn); customer-turn counts: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]",
+    "expected": "only the no-customer chat is dropped; every kept row has >=1 customer turn (fx-drop)",
+    "note": ""
+  },
+  {
+    "check_id": "C-IN3",
+    "step": "S1",
+    "hard": true,
+    "passed": true,
+    "observed": "rows failing schema: []",
+    "expected": "required keys + turns[].role in {customer, agent, tool}",
+    "note": ""
+  },
+  {
+    "check_id": "C-IN4",
+    "step": "S1",
+    "hard": true,
+    "passed": true,
+    "observed": "rows 10, unique 10",
+    "expected": "dialogue_id unique",
+    "note": ""
+  },
+  {
+    "check_id": "C-IN5",
+    "step": "S1",
+    "hard": true,
+    "passed": true,
+    "observed": "re-ingest rewrote the same bytes",
+    "expected": "re-running ingest is byte-identical (upsert, no append-dupes)",
+    "note": ""
+  },
+  {
+    "check_id": "C-IN6",
+    "step": "S1",
+    "hard": true,
+    "passed": true,
+    "observed": "ingest.py calls_llm=False, imports_tag=False, tags on S1 output=False",
+    "expected": "S1 sets no tags and never calls the LLM",
+    "note": ""
+  },
+  {
+    "check_id": "C-PROMPT",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"mismatches\": [], \"render_ok\": true}",
+    "expected": "prompts.py == PROMPTS.md §2/§3/§5/§6; transcript render per §1",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG1",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "bad session_ids: []",
+    "expected": "session_id == 's-' + sha256(source_dialogue_id)[:12]",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG2",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "sessions with wrong channel/vertical: []",
+    "expected": "channel/vertical copied from the dialogue, not from the model answer",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG3",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "tag_key mismatches: []",
+    "expected": "tag_key == problem_shape|constraint|ending|channel|vertical, no edge spaces",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG4",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "[]",
+    "expected": "ending in enum; constraint <=12 words or 'none'; problem_shape <=12 words",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG5",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "dup source rows after re-tag: []; session_ids stable=True",
+    "expected": "re-tagging the same dialogue_id updates the same session_id; no second pool row",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG6",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"pii_no_reject\": true, \"scrubbed\": true, \"empty_shape_rejects\": true, \"contains_pii\": true}",
+    "expected": "reject only when problem_shape is empty after the scrub; PII alone never rejects (fx-pii)",
+    "note": ""
+  },
+  {
+    "check_id": "C-PII",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"patterns\": [], \"sessions\": 10}",
+    "expected": "no email/phone/>=10 digits/cvv/iban/ssn anywhere in tags and turns of the whole pool",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG7",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "d-005 alive=True, contains_pii=True, raw identifiers gone=True",
+    "expected": "fx-pii: session alive, contains_pii=true, raw email/phone/long number absent",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG8",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "d-003 contains_pii=False, transcript has 'gift card'=True",
+    "expected": "the word 'card' in 'gift card' alone does not set contains_pii",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG9",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"rejected\": true, \"tag_calls\": 2, \"unparseable\": 2, \"session\": false, \"raw_files\": 1, \"retry_ok\": true, \"prompt_is_frozen\": true}",
+    "expected": "two consecutive unparseable model answers -> reject, no invented tags; one bad + one good -> retry succeeds with the same prompt",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG10",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "raw files 10 vs bake tag_calls 10; bad keys []",
+    "expected": "raw/tag/<dialogue_id>.json with request/response/model/usage for every S2 call",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG11",
+    "step": "S2",
+    "hard": true,
+    "passed": true,
+    "observed": "sessions without a starter rating row: []; non-zero starters: []",
+    "expected": "every new session gets a starter rating row under its own tag_key with score=0, shows=0",
+    "note": ""
+  },
+  {
+    "check_id": "C-TG12",
+    "step": "S2",
+    "hard": false,
+    "passed": true,
+    "observed": "{\"tag_calls\": 10, \"unparseable\": 0, \"rejected\": 0}",
+    "expected": "share of unparseable JSON and reject rate are recorded (bake summary)",
+    "note": "SOFT"
+  },
+  {
+    "check_id": "C-TG13",
+    "step": "S2",
+    "hard": false,
+    "passed": true,
+    "observed": "{\"with_shape\": 10, \"with_constraint\": 4, \"grounded\": 10}",
+    "expected": "grounding: a >=5-char word of problem_shape present in the transcript; counted, never fails the run",
+    "note": "SOFT"
+  },
+  {
+    "check_id": "C-SELF",
+    "step": "S3",
+    "hard": true,
+    "passed": true,
+    "observed": "query session s-853f4cbd4305 / source d-007 in candidates: False",
+    "expected": "the query never appears among its own candidates",
+    "note": ""
+  },
+  {
+    "check_id": "C-RT1",
+    "step": "S3",
+    "hard": true,
+    "passed": true,
+    "observed": "candidates below TAG_FIELDS_MIN=2: []",
+    "expected": "a candidate must share >= TAG_FIELDS_MIN tag fields with the query; zero overlap is not a candidate",
+    "note": ""
+  },
+  {
+    "check_id": "C-RT2",
+    "step": "S3",
+    "hard": true,
+    "passed": true,
+    "observed": "d-001 in candidates=True, d-002 in candidates=True",
+    "expected": "fx-similar: d-007's candidates include d-001 and d-002",
+    "note": ""
+  },
+  {
+    "check_id": "C-RT3",
+    "step": "S3",
+    "hard": true,
+    "passed": true,
+    "observed": "d-003 overlap 2 vs TAG_FIELDS_MIN 2; in candidates=True",
+    "expected": "fx-far: d-003 is not required in d-007's candidates when shared fields < TAG_FIELDS_MIN",
+    "note": ""
+  },
+  {
+    "check_id": "C-RT4",
+    "step": "S3",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"src\": {\"calls_llm_directly\": false, \"imports_tag\": true}, \"delegate\": {\"delegated_calls\": 1, \"qid\": \"q-untagged\", \"system_is_frozen\": true, \"user_has_frozen_head\": true, \"tags\": {\"problem_shape\": \"login fails\", \"constraint\": \"none\", \"ending\": \"unknown\", \"channel\": \"web\", \"vertical\": \"v\"}}}",
+    "expected": "S3 calls no LLM itself; an untagged query is delegated to tag.py with the same PROMPTS.md §2-§3 strings",
+    "note": ""
+  },
+  {
+    "check_id": "C-RT5",
+    "step": "S3",
+    "hard": true,
+    "passed": true,
+    "observed": "first run ['s-09058e959d3b', 's-216689894762', 's-396245ddc31b', 's-4383fa5cf886', 's-6898b0d44417', 's-aaf369cb6757', 's-df06fa843ad1', 's-e18ceb854113', 's-ebd5c5a8fe7a'] vs re-run ['s-09058e959d3b', 's-216689894762', 's-396245ddc31b', 's-4383fa5cf886', 's-6898b0d44417', 's-aaf369cb6757', 's-df06fa843ad1', 's-e18ceb854113', 's-ebd5c5a8fe7a']",
+    "expected": "re-running retrieve on the same pool and query yields the same candidate id set",
+    "note": ""
+  },
+  {
+    "check_id": "C-RK1",
+    "step": "S4",
+    "hard": true,
+    "passed": true,
+    "observed": "top slots ['s-09058e959d3b', 's-216689894762'] with (score,shows) [('s-09058e959d3b', (0.0, 0, None)), ('s-216689894762', (0.0, 0, None))]; full recompute matches=True",
+    "expected": "first MAX_PACKET-EXPLORE_SLOTS slots are max-score pairs for (session_id, query tag_key); missing rating row -> score=0, shows=0",
+    "note": ""
+  },
+  {
+    "check_id": "C-RK2",
+    "step": "S4",
+    "hard": true,
+    "passed": true,
+    "observed": "explore slot s-396245ddc31b vs recomputed s-396245ddc31b",
+    "expected": "the last slot is exploration: fewer shows, then older last_shown_at (null oldest), then smaller session_id",
+    "note": ""
+  },
+  {
+    "check_id": "C-RK3",
+    "step": "S4",
+    "hard": true,
+    "passed": true,
+    "observed": "ranked ids ['s-09058e959d3b', 's-216689894762', 's-396245ddc31b']",
+    "expected": "exploration never duplicates an already selected id",
+    "note": ""
+  },
+  {
+    "check_id": "C-RK4",
+    "step": "S4",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"ranked_ids\": [\"s-000000000001\", \"s-000000000002\", \"s-000000000003\"], \"explore_slot\": \"s-000000000003\", \"third_by_score\": \"s-000000000005\", \"scores\": {\"A\": 5.0, \"B\": 4.0, \"C\": 3.0, \"D\": 2.0, \"E\": 1.0}}",
+    "expected": "fx-rotate: five same-tag candidates -> packet of 3 and the third id is not forced to be the third by score",
+    "note": ""
+  },
+  {
+    "check_id": "C-RK5",
+    "step": "S4",
+    "hard": true,
+    "passed": true,
+    "observed": "ranked.jsonl byte-identical on re-run",
+    "expected": "no LLM; re-ranking the same ratings is byte-identical",
+    "note": ""
+  },
+  {
+    "check_id": "C-RK6",
+    "step": "S4",
+    "hard": false,
+    "passed": true,
+    "observed": "{\"ranked_ids\": [\"s-0000000000bb\", \"s-0000000000aa\"], \"len\": 2, \"top_by_score\": \"s-0000000000bb\"}",
+    "expected": "candidates <= MAX_PACKET -> the packet is all candidates in score order, no invented explore slot",
+    "note": "SOFT"
+  },
+  {
+    "check_id": "C-SIZE",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "packet sessions 3 (MAX_PACKET=3)",
+    "expected": "no more than MAX_PACKET sessions; empty ranked -> header-only packet, no invented sessions",
+    "note": ""
+  },
+  {
+    "check_id": "C-MX1",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "[]",
+    "expected": "the packet carries whole turns, not summaries or cards",
+    "note": ""
+  },
+  {
+    "check_id": "C-MX2",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "header ok=True, blocks start with [session_id]=True",
+    "expected": "packet text is the PROMPTS.md §5 template: header on top, every block starts with [session_id]",
+    "note": ""
+  },
+  {
+    "check_id": "C-MX3",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "packet ids ['s-09058e959d3b', 's-216689894762', 's-396245ddc31b'] vs ranked ids ['s-09058e959d3b', 's-216689894762', 's-396245ddc31b']",
+    "expected": "self-mix forbidden; no id outside ranked (C-SELF on the mix output)",
+    "note": ""
+  },
+  {
+    "check_id": "C-MX4",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"query_id\": \"d-007\", \"tag_key\": \"login fails after password reset|none|unknown|web|retail-support\", \"session_ids\": [\"s-09058e959d3b\", \"s-216689894762\", \"s-396245ddc31b\"]}",
+    "expected": "serves.jsonl holds query_id, tag_key and the packet session_ids in packet order",
+    "note": ""
+  },
+  {
+    "check_id": "C-MX5",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "packet keys: ['packet_session_ids', 'packet_text', 'query_id', 'tag_key']",
+    "expected": "packet.json holds both packet_text and the session id list",
+    "note": ""
+  },
+  {
+    "check_id": "C-MX6",
+    "step": "S5",
+    "hard": true,
+    "passed": true,
+    "observed": "packet.json byte-identical on re-run",
+    "expected": "re-mixing the same ranked yields the same packet_text",
+    "note": ""
+  },
+  {
+    "check_id": "C-OC1",
+    "step": "S6",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"llm_guard\": true, \"sources\": [\"gold\"]}",
+    "expected": "the lab run uses --source gold; the LLM helper is not called in this mode",
+    "note": ""
+  },
+  {
+    "check_id": "C-OC2",
+    "step": "S6",
+    "hard": true,
+    "passed": true,
+    "observed": "outcome.py good vs gold rule good",
+    "expected": "gold outcome: packet ∩ useful non-empty -> good; non-empty packet, empty ∩ -> bad; empty packet -> unclear",
+    "note": ""
+  },
+  {
+    "check_id": "C-OC3",
+    "step": "S6",
+    "hard": true,
+    "passed": true,
+    "observed": "[\"good\"]",
+    "expected": "outcome ∈ {good, bad, unclear} only",
+    "note": ""
+  },
+  {
+    "check_id": "C-OC4",
+    "step": "S6",
+    "hard": true,
+    "passed": true,
+    "observed": "[[\"closed_at\", \"outcome\", \"packet_session_ids\", \"query_id\", \"source\", \"tag_key\"]]",
+    "expected": "outcome row carries query_id, packet_session_ids, tag_key, outcome, source, closed_at",
+    "note": ""
+  },
+  {
+    "check_id": "C-OC5",
+    "step": "S6",
+    "hard": true,
+    "passed": true,
+    "observed": "--source llm exit code 2",
+    "expected": "--source llm is guarded out in this pass (LAB-BRIEF §3); llm-mode rows never mix with gold aggregates. Full separation re-opens if L3 opens",
+    "note": ""
+  },
+  {
+    "check_id": "C-DELTA",
+    "step": "S7",
+    "hard": true,
+    "passed": true,
+    "observed": "changed non-packet rows: []",
+    "expected": "delta and shows+=1 apply only to (packet session, query tag_key) pairs; other rows stand",
+    "note": ""
+  },
+  {
+    "check_id": "C-UP1",
+    "step": "S7",
+    "hard": true,
+    "passed": true,
+    "observed": "[]",
+    "expected": "good -> GOOD_DELTA, bad -> BAD_DELTA, unclear -> UNCLEAR_DELTA; the matching outcome counter += 1",
+    "note": ""
+  },
+  {
+    "check_id": "C-UP2",
+    "step": "S7",
+    "hard": true,
+    "passed": true,
+    "observed": "last_shown_at rows: []",
+    "expected": "last_shown_at = outcome.closed_at",
+    "note": ""
+  },
+  {
+    "check_id": "C-UP3",
+    "step": "S7",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"shows\": 5, \"score\": 0.9, \"good\": 1, \"last_shown_at\": \"2026-08-01T12:00:00Z\"}",
+    "expected": "fx-decay: when shows % DECAY_EVERY_SHOWS == 0 the score drops by DECAY_AMOUNT after the outcome delta",
+    "note": ""
+  },
+  {
+    "check_id": "C-UP4",
+    "step": "S7",
+    "hard": true,
+    "passed": true,
+    "observed": "non-packet rows with delta/decay: []",
+    "expected": "sessions outside the packet get neither delta nor decay",
+    "note": ""
+  },
+  {
+    "check_id": "C-UP5",
+    "step": "S7",
+    "hard": true,
+    "passed": true,
+    "observed": "second update over the same outcomes.jsonl applied nothing (ratings byte-identical)",
+    "expected": "update is idempotent per query_id (update_state.json); a second pass does not re-apply",
+    "note": ""
+  },
+  {
+    "check_id": "C-FUTURE",
+    "step": "replay",
+    "hard": true,
+    "passed": true,
+    "observed": "future candidates: [] (query closed_at 2026-08-01T12:00:00Z)",
+    "expected": "no session with closed_at >= query.closed_at in candidates/packet. The replay-order half (S3-S5 before S2 lay) is enforced by replay.py's loop and closes with the runner",
+    "note": "data-level check at S0; ordering verified statically in C-RP1"
+  },
+  {
+    "check_id": "C-RP1",
+    "step": "replay",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"own_logic_tokens\": [], \"steps_called\": [\"mix\", \"outcome\", \"rank\", \"retrieve\", \"tag\", \"update\"], \"uses_subprocess\": true}",
+    "expected": "replay.py has no own prompts/search/rank logic; it only calls the step scripts",
+    "note": ""
+  },
+  {
+    "check_id": "C-RP2",
+    "step": "replay",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"candidates\": 0, \"ranked\": 0, \"packet_ids\": [], \"header_only\": true}",
+    "expected": "an empty pool/early dialogues yield a valid empty packet — not an error",
+    "note": ""
+  },
+  {
+    "check_id": "C-REPLAY",
+    "step": "replay",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs runner + metrics.json (D4/D5); C-REPLAY closes when the runner appears (CHECKS.md)"
+  },
+  {
+    "check_id": "C-RP3",
+    "step": "replay",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "manifest.json with input/artifact shas is written by the runner (D5), not at S0"
+  },
+  {
+    "check_id": "C-EV1",
+    "step": "eval",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs eval.py class counting + a run (D4)"
+  },
+  {
+    "check_id": "C-EV2",
+    "step": "eval",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs eval.py B0 arm (D4)"
+  },
+  {
+    "check_id": "C-EV3",
+    "step": "eval",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs eval.py single scoring path (D4)"
+  },
+  {
+    "check_id": "C-EV4",
+    "step": "eval",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs eval.py B1 --seed (D4)"
+  },
+  {
+    "check_id": "C-EV5",
+    "step": "eval",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs eval.py per_query.jsonl + metrics.json (D4/D5)"
+  },
+  {
+    "check_id": "C-EV6",
+    "step": "eval",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs corpus gold + audit.json (D3/S1)"
+  },
+  {
+    "check_id": "C-EV7",
+    "step": "eval",
+    "hard": false,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "needs cost.json from a measured run (D5)"
+  },
+  {
+    "check_id": "C-NC1",
+    "step": "control",
+    "hard": true,
+    "passed": true,
+    "observed": "{\"candidates\": 0, \"ranked\": 0, \"packet_ids\": [], \"header_only\": true}",
+    "expected": "empty pool -> all packets empty, no self-mix (B0==T closes with eval.py at D4)",
+    "note": ""
+  },
+  {
+    "check_id": "C-NC2",
+    "step": "control",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "future-closed_at control needs the runner order (S1); C-FUTURE data-level check runs at S0"
+  },
+  {
+    "check_id": "C-NC3",
+    "step": "control",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "gold_useful empty control needs eval.py T arm on corpus (D4/S1)"
+  },
+  {
+    "check_id": "C-NC4",
+    "step": "control",
+    "hard": true,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "TAG_FIELDS_MIN=5 control needs corpus pairs (S1)"
+  },
+  {
+    "check_id": "C-NC5",
+    "step": "control",
+    "hard": false,
+    "passed": null,
+    "observed": "deferred at S0",
+    "expected": "full contract closes at S1/D4/D5",
+    "note": "EXPLORE_SLOTS=0 vs B2 needs eval.py (D4)"
+  },
+  {
+    "check_id": "C-GD1",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "# AGENT-LABELED GOLD — NOT HUMAN GOLD — labeler=deepseek-v4-pro | # prompt_sha=14e5d5c792190aba9d67385020f4dbf1db6c5b8ca556b1245b3a30c0127421e8 corpus_sha=28b77a32e58932bbf1502d73975972285ec071d03f30c6ac2b5d23cd90a5abbb slice_sha=167418c335478961aa7ee47794a48bbc908ed0d86734bab56bf620b1bf8efc55 created_at=2026-08-29T09:30:45Z",
+    "expected": "# header marking agent-labeled / NOT human gold + sha/created line",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD2",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "future/unknown refs: []",
+    "expected": "every useful id has closed_at strictly earlier than the query's",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD3",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "hits: []",
+    "expected": "no email / phone / >=10 digits / cvv / iban / ssn in gold output",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD4",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "gold rows 60 vs slice 60; unique 60; extra []",
+    "expected": "rows == 60 slice rows; query_id unique and ⊆ d0_slice.jsonl",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD5",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "raw files 60 vs gold rows 60; missing []",
+    "expected": "data/raw_gold_useful/ has one <query_id>.json per gold row",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD6",
+    "step": "D0",
+    "hard": false,
+    "passed": true,
+    "observed": "seed queries with opposite direction: []",
+    "expected": "on the 6 seed rows the empty/non-empty direction matches the seed",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD7",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "H1-signature rows 3/46 non-empty (['d-1151', 'd-1452', 'd-2385']); howto no-exclusion []",
+    "expected": "<=20% of non-empty rows equal the whole same-guideline bucket; every FAQ how-to row excludes >=1 same-guideline session when one exists",
+    "note": ""
+  },
+  {
+    "check_id": "C-GD8",
+    "step": "D0",
+    "hard": true,
+    "passed": true,
+    "observed": "manifest model=deepseek-v4-pro labeler_default=deepseek-v4-pro S2_default=deepseek-v4-flash",
+    "expected": "labeler_model == deepseek-v4-pro; the S2 measured-loop model stays deepseek-v4-flash",
+    "note": ""
+  },
+  {
+    "check_id": "C-REGISTRY",
+    "step": "harness",
+    "hard": true,
+    "passed": true,
+    "observed": "rows 81, duplicate ids [], missing ids []",
+    "expected": "every CHECKS.md id appears in checks.json exactly once (missing id = fail)",
+    "note": ""
+  }
+]
