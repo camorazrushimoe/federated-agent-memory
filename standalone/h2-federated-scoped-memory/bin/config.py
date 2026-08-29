@@ -20,6 +20,13 @@ UNCLEAR_DELTA = 0.0
 # The five tag fields that participate in S3 matching (SPEC §4).
 TAG_FIELDS = ["problem_shape", "constraint", "ending", "channel", "vertical"]
 
+# Round 3 (lead dispatch 2026-08-29 13:34Z): the S4/S7 RATING key is coarse —
+# problem_shape|ending only. S3 matching still uses TAG_FIELDS above; only the
+# rating key coarsens, so queries in the same shape/ending bucket share rating
+# cells (R1: 60/60 unique 5-field keys => ratings never transfer, rank
+# degenerated to tie-break, T.hit 0.0667 == B2).
+TAG_KEY_FIELDS = ["problem_shape", "ending"]
+
 # Default tag model. Overridable via --model on every script that can call the
 # LLM (tag.py and anything that delegates to it). No key/base-url literals here.
 DEFAULT_MODEL = "deepseek-v4-flash"

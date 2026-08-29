@@ -200,7 +200,7 @@ def main() -> int:
             break
 
     audit = {
-        "run_id": "2026-08-29_PhaseC_slice_deepseek-v4-flash",
+        "run_id": Path(args.out).parent.name,
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "computed_on": {
             "gold": "data/gold_useful.jsonl (canonical, main @ 03121f2, sign-off #60)",
