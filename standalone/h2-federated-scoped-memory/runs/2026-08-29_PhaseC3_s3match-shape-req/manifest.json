@@ -1,0 +1,59 @@
+{
+  "run_id": "2026-08-29_PhaseC3_s3match-shape-req",
+  "created_at": "2026-08-29T16:10:00Z",
+  "stage": "S2",
+  "git_commit": "ae3b7e5",
+  "tag_model": "deepseek-v4-flash",
+  "base_url": "https://api.deepseek.com/v1",
+  "temperature": 0,
+  "seed": 0,
+  "arm": "T+B0+B1+B2+B3 (eval.py reconstructs B-arms; only T learns)",
+  "config": {
+    "MAX_PACKET": 3,
+    "EXPLORE_SLOTS": 1,
+    "TAG_FIELDS_MIN": 2,
+    "DECAY_EVERY_SHOWS": 5,
+    "DECAY_AMOUNT": 0.1,
+    "GOOD_DELTA": 1.0,
+    "BAD_DELTA": -1.0,
+    "UNCLEAR_DELTA": 0.0,
+    "TAG_KEY_FIELDS": [
+      "problem_shape",
+      "ending"
+    ],
+    "TAG_KEY_NOTE": "Round 3 (lead 13:34Z): coarse S4/S7 rating key; unchanged in R4",
+    "S3_MATCH_FIELDS": [
+      "problem_shape",
+      "constraint",
+      "ending"
+    ],
+    "S3_MATCH_NOTE": "Round 4 step 2: 3-field overlap + require problem_shape match",
+    "S3_REQUIRE_PROBLEM_SHAPE": true
+  },
+  "inputs": {
+    "dialogues": {
+      "path": "data/dialogues_slice.jsonl",
+      "sha256": "26bfff3368988d5785a4d3c35da08857c43866d5b412f8aa99526c6331025164",
+      "rows": 60
+    },
+    "gold_useful": {
+      "path": "data/gold_useful.jsonl",
+      "sha256": "eeeb2e5c81bf979b9c0b2f29af707382b48441efb9d2ac4b9c0ba3215478cdbd",
+      "rows": 60
+    },
+    "prompts": {
+      "path": "PROMPTS.md",
+      "sha256": "4336c7f1ba961efaf4757d20471772550ece6edc4fd0aca641544c26ac8a053f"
+    },
+    "pool_dialogues": {
+      "path": "data/dialogues_pool.jsonl",
+      "sha256": "737d70c413490a16b9df48a874c3bd53831121e96899772e4cd7010ab154654e",
+      "rows": 320
+    }
+  },
+  "outputs": {
+    "sessions.jsonl": "runs/2026-08-29_PhaseC3_s3match-shape-req/data/sessions.jsonl",
+    "per_query_state.jsonl": "runs/2026-08-29_PhaseC3_s3match-shape-req/data/per_query_state.jsonl"
+  },
+  "replay_of": "runs/2026-08-29_PhaseC_slice_deepseek-v4-flash"
+}

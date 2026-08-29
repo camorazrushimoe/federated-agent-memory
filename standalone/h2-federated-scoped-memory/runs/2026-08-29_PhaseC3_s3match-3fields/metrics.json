@@ -1,0 +1,61 @@
+{
+  "n_dialogues": 60,
+  "n_gold_tags": 0,
+  "n_gold_useful_queries": 60,
+  "tag": {
+    "publishable": false,
+    "reason": "gold_tags not authorized (ROUND-0-PLAN §8); S2 ran, tag-vs-gold agreement unpublished this round",
+    "ending_exact": null,
+    "constraint_exact": null,
+    "problem_shape_exact": null,
+    "problem_shape_jaccard": null,
+    "tag_reject_rate": null
+  },
+  "retrieve": {
+    "recall": 0.8041,
+    "empty": 0.1333,
+    "noise": 0.0
+  },
+  "arms": {
+    "B0": {
+      "hit": 0.0,
+      "wrong": 0.0,
+      "abstain": 1.0,
+      "n": 60
+    },
+    "B1": {
+      "hit": 0.0667,
+      "wrong": 0.7333,
+      "abstain": 0.2,
+      "n": 60
+    },
+    "B2": {
+      "hit": 0.05,
+      "wrong": 0.75,
+      "abstain": 0.2,
+      "n": 60
+    },
+    "B3": {
+      "hit": 0.7667,
+      "wrong": 0.0,
+      "abstain": 0.2333,
+      "n": 60
+    },
+    "T": {
+      "hit": 0.05,
+      "wrong": 0.75,
+      "abstain": 0.2,
+      "n": 60
+    }
+  },
+  "rotation": {
+    "burn_in": 0,
+    "unique_served": 5,
+    "top1_share": 0.3287,
+    "top3_share": 0.986,
+    "explore_fill": 0.0,
+    "explore_promote": 0,
+    "decay_fired": 0
+  },
+  "caveat": "agent-labeled gold (deepseek-v4-pro) — NOT human gold"
+}
