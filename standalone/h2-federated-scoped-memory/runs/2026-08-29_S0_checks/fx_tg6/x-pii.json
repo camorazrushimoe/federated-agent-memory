@@ -1,0 +1,21 @@
+{
+  "request": {
+    "model": "fake",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: v\n\nTranscript:\ncustomer: replacement to [email] call [phone]"
+  },
+  "response": {
+    "choices": [
+      {
+        "message": {
+          "content": "{\"problem_shape\":\"replacement to ada@example.com\",\"constraint\":\"none\",\"ending\":\"resolved\"}"
+        }
+      }
+    ],
+    "usage": {
+      "total_tokens": 1
+    }
+  },
+  "model": "fake",
+  "usage": {}
+}

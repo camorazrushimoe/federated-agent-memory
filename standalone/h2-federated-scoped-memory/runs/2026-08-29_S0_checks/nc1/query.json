@@ -1,0 +1,32 @@
+{
+  "session_id": "s-853f4cbd4305",
+  "source_dialogue_id": "d-007",
+  "closed_at": "2026-08-01T12:00:00Z",
+  "channel": "web",
+  "vertical": "retail-support",
+  "agent_id": "agent-a",
+  "turns": [
+    {
+      "role": "customer",
+      "text": "I just reset the password and login fails again"
+    },
+    {
+      "role": "agent",
+      "text": "Checking session cache."
+    },
+    {
+      "role": "customer",
+      "text": "Please fix it the way you did last time"
+    }
+  ],
+  "tags": {
+    "problem_shape": "login fails after password reset",
+    "constraint": "none",
+    "ending": "unknown",
+    "channel": "web",
+    "vertical": "retail-support"
+  },
+  "tag_key": "login fails after password reset|none|unknown|web|retail-support",
+  "contains_pii": false,
+  "created_at": "2026-08-01T12:00:00Z"
+}
