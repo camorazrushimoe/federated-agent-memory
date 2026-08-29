@@ -1,0 +1,15 @@
+# H2 local run state — never commit. The root .gitignore un-ignores this
+# directory on purpose (tracked docs: data/README.md, data/gold_useful.seed.jsonl),
+# so run-state files must be excluded here. fixtures/ is NEVER ignored.
+data/dialogues.jsonl
+data/sessions.jsonl
+data/ratings.jsonl
+data/candidates.jsonl
+data/ranked.jsonl
+data/packet.json
+data/serves.jsonl
+data/outcomes.jsonl
+data/query_meta.json
+data/update_state.json
+data/raw/
+data/replay/
