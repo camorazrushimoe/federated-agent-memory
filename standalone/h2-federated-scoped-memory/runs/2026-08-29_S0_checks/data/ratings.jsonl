@@ -1,0 +1,13 @@
+{"session_id": "s-216689894762", "tag_key": "password reset causing login failure|stale jwt in cache|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-6898b0d44417", "tag_key": "password reset went through but cannot log in|none|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-aaf369cb6757", "tag_key": "login keeps bouncing after reset email|none|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-df06fa843ad1", "tag_key": "sign-in still fails after reset|none|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-ebd5c5a8fe7a", "tag_key": "cannot log in after password reset|none|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-4383fa5cf886", "tag_key": "shoes arrived ripped wants refund not gift card|restocking fee policy|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-e18ceb854113", "tag_key": "login fails after password reset|cannot clear jwt cache from this channel|unresolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-09058e959d3b", "tag_key": "ship replacement to contact info|policy not storing raw identifiers|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-396245ddc31b", "tag_key": "password reset done, login fails on site|none|resolved|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-853f4cbd4305", "tag_key": "login fails after password reset|none|unknown|web|retail-support", "score": 0.0, "shows": 0, "good": 0, "bad": 0, "unclear": 0, "last_shown_at": null}
+{"session_id": "s-09058e959d3b", "tag_key": "login fails after password reset|none|unknown|web|retail-support", "score": 1.0, "shows": 1, "good": 1, "bad": 0, "unclear": 0, "last_shown_at": "2026-08-01T12:00:00Z"}
+{"session_id": "s-216689894762", "tag_key": "login fails after password reset|none|unknown|web|retail-support", "score": 1.0, "shows": 1, "good": 1, "bad": 0, "unclear": 0, "last_shown_at": "2026-08-01T12:00:00Z"}
+{"session_id": "s-396245ddc31b", "tag_key": "login fails after password reset|none|unknown|web|retail-support", "score": 1.0, "shows": 1, "good": 1, "bad": 0, "unclear": 0, "last_shown_at": "2026-08-01T12:00:00Z"}

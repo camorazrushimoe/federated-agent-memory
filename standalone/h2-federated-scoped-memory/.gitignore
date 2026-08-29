@@ -12,4 +12,7 @@ data/outcomes.jsonl
 data/query_meta.json
 data/update_state.json
 data/raw/
+data/raw_gold_useful/
+data/abcd_*.jsonl
+data/preview_10.jsonl
 data/replay/
