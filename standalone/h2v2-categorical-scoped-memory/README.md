@@ -9,6 +9,7 @@ v1 закрыт как **NOT FIT** (PR #63 / #64): теги не давали с
 Эта папка проверяет ту же продуктовую гипотезу на **закрытом словаре процедур**.
 
 - Замер до S2 — [`FINDINGS.md`](./FINDINGS.md)
+- Живой раунд 0 — [`REPORT.md`](./REPORT.md)
 - Почему v1 закрыт — [`WHY-NOT-V1.md`](./WHY-NOT-V1.md)
 - Словарь — [`CATEGORIES.md`](./CATEGORIES.md)
 - Карта unlock→id (не вход тегера) — [`MAP.md`](./MAP.md)
@@ -29,6 +30,15 @@ v1 закрыт как **NOT FIT** (PR #63 / #64): теги не давали с
 
 На ABCD-срезе золото *уже* совпадает с суброутом (393/393). Вопрос эксперимента:
 восстановит ли S2 эту ось по транскрипту, без `unlock`.
+
+## Результат раунда 0 (2026-08-29)
+
+Закрывающий отчёт: [`REPORT.md`](./REPORT.md).
+Прогон: [`runs/2026-08-29_PhaseC_live_deepseek-v4-flash/`](./runs/2026-08-29_PhaseC_live_deepseek-v4-flash/).
+
+- D4 (словарь / живой S2 / поиск): **FIT** — recall 0.81, медиана кандидатов 10, `other` 3.4%.
+- T vs B1 (ранкер внутри ячейки): **NOT FIT** — T.hit = B1.hit = 38.
+- Продукт целиком: **FIT WITH LIMITS** — ось поиска есть, ранкер на срезе не нужен.
 
 ## Гейт до hit (числа с оракула)
 
@@ -51,4 +61,5 @@ bash bin/copy-from-v1.sh
 bash bin/sync_h1_data.sh
 ```
 
-Дальше — [`HANDOFF.md`](./HANDOFF.md) и [`ROUND-0-PLAN.md`](./ROUND-0-PLAN.md).
+Дальше — [`HANDOFF.md`](./HANDOFF.md), [`ROUND-0-PLAN.md`](./ROUND-0-PLAN.md)
+и воспроизведение в [`REPORT.md`](./REPORT.md).

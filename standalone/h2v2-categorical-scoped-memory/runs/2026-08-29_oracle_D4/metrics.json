@@ -1,0 +1,26 @@
+{
+  "mode": "oracle-unlock-map",
+  "note": "NOT live S2. Ceiling if tagger recovers MAP.md from transcript.",
+  "pool_n": 320,
+  "query_n": 60,
+  "gold_pairs": 393,
+  "gates": {
+    "used_ids": 30,
+    "used_ids_ok": true,
+    "other_share": 0.0,
+    "other_ok": true,
+    "top1_id": "wash_jacket",
+    "top1_share": 0.034375,
+    "top1_ok": true,
+    "median_n_candidates": 11.0,
+    "median_ok": true,
+    "empty_query_share": 0.0,
+    "empty_ok": true,
+    "retrieve_recall": 1.0,
+    "recall_ok": true,
+    "D4": true
+  },
+  "precision_pairs": 0.6140625,
+  "query_mean_precision": 0.6157575757575757,
+  "query_mean_precision_nonempty_gold": 0.8031620553359684
+}
