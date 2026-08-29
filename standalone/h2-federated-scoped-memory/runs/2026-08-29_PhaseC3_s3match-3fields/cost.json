@@ -1,0 +1,17 @@
+{
+  "tag_calls": 0,
+  "tag_tokens_in": 0,
+  "tag_tokens_out": 0,
+  "tag_usd_per_1000": null,
+  "tag_latency_p50": null,
+  "tag_latency_p95": null,
+  "packet_tokens_p50": 1088,
+  "packet_tokens_p95": 1088,
+  "packet_tokens_max": 1088,
+  "packet_tokens_per_query_mean": 869.1,
+  "implied_agent_usd_per_1000": null,
+  "serve_latency_p50": 150.0,
+  "serve_latency_p95": 158.0,
+  "token_method": "tag tokens from provider usage in raw/tag; packet tokens len(text)//4 fallback (EVAL-PLAN §4.6)",
+  "price_source": null
+}
