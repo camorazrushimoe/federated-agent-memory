@@ -1,5 +1,12 @@
 # Hypotheses — H2 federated scoped memory (whole past session as a hint)
 
+**CLOSED 2026-08-29 (founder decision): H2 v1 FINAL — NOT FIT.** Whole-session
+hints via tag-overlap retrieval do not beat a random similar past session,
+because the tag schema has no discriminating axis. This is a result, not a bug.
+All v1 work stopped: no R5, no full-corpus run, no further fixes (recorded on
+main @ 7e4fe9f, PRs #53–#64 merged). v2 = new tag schema design (consulting);
+this log + `h2_research_report.md` are preserved on branch `h2/v2-context`.
+
 Source of truth for hypothesis status. Live board: issue #51.
 Round plan: `standalone/h2-federated-scoped-memory/ROUND-0-PLAN.md` (docs/h2-round0-plan, PR #52).
 
