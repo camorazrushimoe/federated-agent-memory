@@ -4,7 +4,9 @@
 - output: data/candidates.jsonl for this query (+ data/query_meta.json)
 - prompt: none. If the query is not tagged yet, S3 delegates to S2 (tag.py)
   with the same PROMPTS.md §2–§3 strings — it has no text of its own (C-RT4)
-- a candidate MUST match on >= TAG_FIELDS_MIN of the five tag fields (C-RT1)
+- a candidate MUST match on >= TAG_FIELDS_MIN of the S3 matching fields
+  (C-RT1; S3_MATCH_FIELDS — Round 4: problem_shape|constraint|ending; the
+  constant channel/vertical fields are excluded from the overlap count)
 - the query MUST NOT appear among its own candidates (C-SELF)
 - order is not important here — that is S4's job
 - MUST NOT call the LLM itself (delegation to tag.py only)
@@ -22,7 +24,14 @@ import config  # noqa: E402
 
 
 def overlap_count(query_tags: dict, session_tags: dict) -> int:
-    return sum(1 for f in config.TAG_FIELDS
+    """Overlap over config.S3_MATCH_FIELDS only (Round 4).
+
+    channel/vertical are constant across the pool, so counting them made
+    TAG_FIELDS_MIN=2 admit the whole pool; the overlap count now uses the
+    three variable tag fields (config.S3_MATCH_FIELDS). The tag schema and
+    the S4/S7 rating key are untouched.
+    """
+    return sum(1 for f in config.S3_MATCH_FIELDS
                if str(query_tags.get(f, "")).strip() != ""
                and str(query_tags.get(f, "")).strip()
                == str(session_tags.get(f, "")).strip())

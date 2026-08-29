@@ -20,6 +20,14 @@ UNCLEAR_DELTA = 0.0
 # The five tag fields that participate in S3 matching (SPEC §4).
 TAG_FIELDS = ["problem_shape", "constraint", "ending", "channel", "vertical"]
 
+# Round 4 (founder dispatch 2026-08-29, PR #63): S3 matching fields ONLY.
+# channel/vertical are constant across the pool ('web'/'customer-support'),
+# so counting them makes TAG_FIELDS_MIN=2 admit every session (whole-pool
+# candidates, ranker degenerates to tie-break). The overlap count now uses
+# these three variable fields; the tag schema (TAG_FIELDS) and the S4/S7
+# rating key (TAG_KEY_FIELDS) are unchanged.
+S3_MATCH_FIELDS = ["problem_shape", "constraint", "ending"]
+
 # Round 3 (lead dispatch 2026-08-29 13:34Z): the S4/S7 RATING key is coarse —
 # problem_shape|ending only. S3 matching still uses TAG_FIELDS above; only the
 # rating key coarsens, so queries in the same shape/ending bucket share rating
