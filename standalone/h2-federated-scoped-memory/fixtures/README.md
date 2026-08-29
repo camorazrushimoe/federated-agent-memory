@@ -10,6 +10,15 @@
 | `gold_tags.jsonl` | человеческие теги для тех же id |
 | `gold_useful.jsonl` | какие прошлые чаты были бы подсказкой |
 | `queries/d-007.json` | готовый query для одиночного S3 |
+| `tagged_sessions.jsonl` | **запечённый выход S2** — результат одного реального прогона `tag.py` (deepseek-v4-flash, temperature 0) по `dialogues.jsonl` |
+| `raw/tag/*.json` | сырые request/response того же прогона S2 (по файлу на диалог) |
+| `tag_summary.json` | статистика того же прогона: `tag_calls`, `unparseable`, `rejected`, `pii_sessions` |
+
+Харнесс чеков (`bin/checks.py`) проигрывает S2 по `tagged_sessions.jsonl` в
+replay-режиме — ноль LLM-вызовов, детерминированный прогон. `raw/tag/` и
+`tag_summary.json` нужны для `C-TG10` / `C-TG12`. Перепекать фикстуры только
+вместе с новым реальным прогоном S2; в PR класть и session-строки, и raw, и
+summary.
 
 `d-006` специально без customer-turn: ingest MUST его отбросить. В золоте его нет.
 

@@ -1,0 +1,53 @@
+{
+  "request": {
+    "model": "deepseek-v4-flash",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: retail-support\n\nTranscript:\ncustomer: I cannot log in after resetting the password\nagent: The app is holding an old jwt. Clearing cache now.\ncustomer: I am logged in"
+  },
+  "response": {
+    "id": "cca81ffb-2c1a-47df-a193-9552bad9b92a",
+    "object": "chat.completion",
+    "created": 1787971936,
+    "model": "deepseek-v4-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"problem_shape\": \"cannot log in after password reset\",\n  \"constraint\": \"none\",\n  \"ending\": \"resolved\"\n}",
+          "reasoning_content": "We need to produce JSON. Problem shape: customer couldn't log in after password reset, but agent cleared cache and customer logged in. So request kind: \"password reset login issue\" or \"cannot log in after password reset\". Constraint: none, because nothing blocked progress. Ending: resolved. Need to avoid names etc. No issue. Output JSON only."
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 368,
+      "completion_tokens": 105,
+      "total_tokens": 473,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 73
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 112
+    },
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+  },
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 368,
+    "completion_tokens": 105,
+    "total_tokens": 473,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 73
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 112
+  }
+}
