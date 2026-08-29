@@ -670,9 +670,19 @@ def write_report(run_dir: Path, metrics: dict, cost: dict, audit: dict,
         misses.append(f"explore_fill {rot['explore_fill']} < 0.15 (explore slot never differs under whole-pool candidates)")
     if cost["packet_tokens_p50"] > 1500:
         misses.append(f"packet_tokens_p50 {cost['packet_tokens_p50']} > 1500 (whole session expensive; next lever: slicing)")
+    # §6.4: NOT FIT = hard gate red, OR T.hit <= B1.hit (ranker adds nothing
+    # over random), OR whole-session harm T.wrong > 0.25 — §6.2 calls a wrong
+    # foreign whole session "expensive harm": when the mechanism is wrong for
+    # most queries it fails fitness-for-purpose, it is not a fixable LIMIT.
+    # Lead correction 2026-08-29 (PR #63): verdict mapping only — all §6.2
+    # thresholds unchanged (R3: T.wrong 0.9333 > 0.25 ⇒ NOT FIT; the 2-query
+    # T>B1 margin is inside the R1 cross-check noise, so the ranker-vs-random
+    # gate is not met either).
     if not hard_green:
         verdict = f"NOT FIT — hard gate red (see checks.json)"
     elif t["hit"] <= b1["hit"]:
+        verdict = f"NOT FIT — {misses[0]}"
+    elif t["wrong"] > 0.25:
         verdict = f"NOT FIT — {misses[0]}"
     elif misses:
         verdict = "FIT WITH LIMITS — " + "; ".join(misses)
