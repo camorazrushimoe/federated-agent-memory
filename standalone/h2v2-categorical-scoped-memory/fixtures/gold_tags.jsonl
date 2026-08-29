@@ -1,0 +1,10 @@
+{"dialogue_id": "d-001", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-002", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-011", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-012", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-013", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-003", "tags": {"problem_shape": "refund_process", "constraint": "policy_block", "ending": "resolved_action"}}
+{"dialogue_id": "d-004", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "unresolved"}}
+{"dialogue_id": "d-005", "tags": {"problem_shape": "other", "constraint": "none", "ending": "resolved_info"}}
+{"dialogue_id": "d-014", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-007", "tags": {"problem_shape": "login_session", "constraint": "system_limit", "ending": "unknown"}}
