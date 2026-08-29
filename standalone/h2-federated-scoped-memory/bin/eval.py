@@ -575,6 +575,18 @@ def write_report(run_dir: Path, metrics: dict, cost: dict, audit: dict,
         "**Primary read:** T.hit = {t_hit} vs B1.hit = {b1_hit} on the same n=60"
         .format(t_hit=metrics['arms']['T']['hit'], b1_hit=metrics['arms']['B1']['hit']),
         "",
+        "**Diagnostic (why the numbers look like this):** `channel=web` and "
+        "`vertical=customer-support` are constant across all 380 pool sessions, so "
+        "with TAG_FIELDS_MIN=2 **every session is an S3 candidate for every query** "
+        "(n_candidates 320-380 per query). The ranker sees the whole pool, all scores "
+        "start at 0, and ties break deterministically (shows → last_shown_at → id), so "
+        "T serves the same ~7 sessions repeatedly (unique_served=7, top3_share=0.9667, "
+        "explore_fill=0.0167). T ≈ B2 (0.0667 vs 0.0667) because the explore slot "
+        "almost never differs from the top-by-score pick. B3 = 0.7667 = A1 confirms the "
+        "data ceiling is healthy — the failure is in S3 tag-matching granularity, not "
+        "the gold or the corpus. Thinnest lever: retrieval (tag schema / TAG_FIELDS_MIN), "
+        "not the ranker, not rotation tuning (LAB-BRIEF §6 symptom map).",
+        "",
         "## 5. Tagging",
         "S2 ran (deepseek-v4-flash, temp 0) as part of the measured loop; "
         "tag-vs-gold agreement is NOT published this round — gold_tags is not "
@@ -601,14 +613,24 @@ def write_report(run_dir: Path, metrics: dict, cost: dict, audit: dict,
     # verdict per EVAL-PLAN §6.4 (computed here for the report; the lead owns D7)
     hard_green = hard_failed == 0 and hard_def == 0
     t, b1 = metrics["arms"]["T"], metrics["arms"]["B1"]
+    rot = metrics["rotation"]
+    misses = []
+    if t["hit"] <= b1["hit"]:
+        misses.append(f"T.hit {t['hit']} <= B1.hit {b1['hit']} (ranker adds nothing over random similar session)")
+    if t["wrong"] > 0.25:
+        misses.append(f"T.wrong {t['wrong']} > 0.25 (whole-session harm; lever: S3 retrieval — channel/vertical constant ⇒ TAG_FIELDS_MIN=2 degenerates to whole-pool candidates)")
+    if rot["top3_share"] > 0.55:
+        misses.append(f"top3_share {rot['top3_share']} > 0.55 (rotation dead; lever: retrieval granularity first, not explore tuning)")
+    if rot["explore_fill"] < 0.15:
+        misses.append(f"explore_fill {rot['explore_fill']} < 0.15 (explore slot never differs under whole-pool candidates)")
+    if cost["packet_tokens_p50"] > 1500:
+        misses.append(f"packet_tokens_p50 {cost['packet_tokens_p50']} > 1500 (whole session expensive; next lever: slicing)")
     if not hard_green:
         verdict = f"NOT FIT — hard gate red (see checks.json)"
     elif t["hit"] <= b1["hit"]:
-        verdict = f"NOT FIT — T.hit {t['hit']} <= B1.hit {b1['hit']} (ranker adds nothing over random similar session)"
-    elif t["wrong"] > 0.25:
-        verdict = f"FIT WITH LIMITS — T.wrong {t['wrong']} > 0.25 (whole-session harm)"
-    elif cost["packet_tokens_p50"] > 1500:
-        verdict = f"FIT WITH LIMITS — packet_tokens_p50 {cost['packet_tokens_p50']} > 1500 (whole session expensive; next lever: slicing)"
+        verdict = f"NOT FIT — {misses[0]}"
+    elif misses:
+        verdict = "FIT WITH LIMITS — " + "; ".join(misses)
     else:
         verdict = "FIT"
     lines.append(f"**{verdict}**")
