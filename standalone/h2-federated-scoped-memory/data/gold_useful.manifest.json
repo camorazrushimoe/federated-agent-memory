@@ -1354,5 +1354,35 @@
       2299,
       2929
     ]
+  },
+  "signoff": {
+    "date": "2026-08-29",
+    "by": "research-lead (issue #51)",
+    "comment_id": 5462141906,
+    "overrides": {
+      "d-5711": {
+        "from": "9 ids (promo-code exception)",
+        "to": "[]",
+        "reason": "query resolution is 'prices cannot be changed'; promo-code move is a one-time exception teaching the opposite policy + leaks account/order ids; labeler rubric excludes one-off exceptions"
+      },
+      "d-4815": {
+        "from": "6 ids (refund sequence)",
+        "to": "[]",
+        "reason": "refund step sequence already fully visible in the query transcript; candidates identifier-heavy (names/emails/cards/amounts); whole-session refund transcript is not a hint"
+      }
+    },
+    "seed_fix": {
+      "d-3219": {
+        "from": "2 ids (seed assumed boots width)",
+        "to": "[]",
+        "reason": "seed misread the query (assumed 'boots width'; actual query is zipper-material allergy); width chats are not a transferable move for an allergy question; labeler's empty is correct"
+      }
+    },
+    "accepts": [
+      "d-1789 (empty: query already contains tailoring policy)",
+      "d-5551 (empty: product-info fact already answered in query)"
+    ],
+    "checks_after": "C-GD1..8 all PASS (65 HARD / 0 fail, 6 SOFT / 0 fail) @ runs/2026-08-29_D0_gold_signoff",
+    "gold_sha_after": "eeeb2e5c81bf979b9c0b2f29af707382b48441efb9d2ac4b9c0ba3215478cdbd"
   }
 }
