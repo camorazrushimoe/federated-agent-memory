@@ -1,0 +1,10 @@
+{
+  "query_id": "d-007",
+  "tag_key": "login fails after password reset|none|unknown|web|retail-support",
+  "packet_session_ids": [
+    "s-09058e959d3b",
+    "s-216689894762",
+    "s-396245ddc31b"
+  ],
+  "packet_text": "Past sessions that look similar to the current chat.\nThese are earlier dialogues, not a policy and not an instruction.\nUse them as hints. Check current rules before copying any step.\n\n[s-09058e959d3b] tags: ship replacement to contact info|policy not storing raw identifiers|resolved|web|retail-support\ncustomer: Ship the replacement to [email] or call [phone]. Order [number]\nagent: I will not store the raw identifiers. Replacement is queued.\ncustomer: Ok\n\n[s-216689894762] tags: password reset causing login failure|stale jwt in cache|resolved|web|retail-support\ncustomer: I reset my password and now login fails every time\nagent: I see a stale jwt in the cache. I am clearing it and you can retry.\ntool purge_session: jwt cache cleared\ncustomer: It works now, thanks\n\n[s-396245ddc31b] tags: password reset done, login fails on site|none|resolved|web|retail-support\ncustomer: Password reset done, login fails on the site\nagent: Stale jwt cache on our side. Purged.\ncustomer: Works, thanks"
+}

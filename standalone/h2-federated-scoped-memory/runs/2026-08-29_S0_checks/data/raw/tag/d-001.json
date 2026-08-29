@@ -1,0 +1,53 @@
+{
+  "request": {
+    "model": "deepseek-v4-flash",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: retail-support\n\nTranscript:\ncustomer: I reset my password and now login fails every time\nagent: I see a stale jwt in the cache. I am clearing it and you can retry.\ntool purge_session: jwt cache cleared\ncustomer: It works now, thanks"
+  },
+  "response": {
+    "id": "654fc9d2-0ca2-4370-bde9-192c198b840c",
+    "object": "chat.completion",
+    "created": 1787971923,
+    "model": "deepseek-v4-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"problem_shape\":\"password reset causing login failure\",\"constraint\":\"stale jwt in cache\",\"ending\":\"resolved\"}",
+          "reasoning_content": "We need to produce JSON with keys: problem_shape, constraint, ending. Need to follow rules.\n\nTranscript: customer resets password, login fails. Agent clears stale JWT cache. Customer says it works now. So resolved. Constraint: what blocked progress? The stale JWT in cache is a system limit/state issue. So constraint could be \"stale jwt in cache\" but must be ≤12 words, lowercase. Also problem_shape: kind of request, prefer customer's wording. Customer said \"I reset my password and now login fails every time\" so shape: \"password reset causing login failure\" or \"login fails after password reset\". Need ≤12 words, lowercase. Also no identifiers. No raw ids. There is no sensitive info. Also don't copy names etc. So final JSON.\n\nLet's craft:\n\nproblem_shape: \"password reset causes login failure\"\nconstraint: \"stale jwt cache\" or \"stale jwt in cache\" - exactly what blocked. But note: agent says \"I see a stale jwt in the cache. I am clearing it\" so constraint is stale jwt in cache. It's a system state. That's fine.\nending: \"resolved\"\n\nEnsure lowercase. problem_shape: \"password reset causing login failure\" is 5 words. But need to ensure not too long. Good.\n\nconstraint: \"stale jwt in cache\" is 4 words. Good.\n\nReturn only JSON. No markdown."
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 385,
+      "completion_tokens": 322,
+      "total_tokens": 707,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 297
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 1
+    },
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+  },
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 385,
+    "completion_tokens": 322,
+    "total_tokens": 707,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 297
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1
+  }
+}

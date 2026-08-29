@@ -1,0 +1,53 @@
+{
+  "request": {
+    "model": "deepseek-v4-flash",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: retail-support\n\nTranscript:\ncustomer: Login still fails after I reset the password\nagent: I cannot clear the jwt cache from this channel. Trying a different path.\ncustomer: Still blocked. I will write later"
+  },
+  "response": {
+    "id": "090aecd7-2b52-46e7-af53-072c10340166",
+    "object": "chat.completion",
+    "created": 1787971943,
+    "model": "deepseek-v4-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"problem_shape\":\"login fails after password reset\",\"constraint\":\"cannot clear jwt cache from this channel\",\"ending\":\"unresolved\"}",
+          "reasoning_content": "We need answer JSON. Need obey. Need no extra. Transcript thin. Problem shape from customer wording: \"Login still fails after I reset the password\" maybe \"login fails after password reset\" ≤12 words lowercase. Constraint: agent cannot clear jwt cache from this channel. That's system limit blocking progress. Ending: unresolved? The customer says still blocked, will write later. No fix. unresolved. Need generic no identifiers. No issue. Output only JSON."
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 122,
+      "total_tokens": 495,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 94
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 117
+    },
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+  },
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 373,
+    "completion_tokens": 122,
+    "total_tokens": 495,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 94
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 117
+  }
+}

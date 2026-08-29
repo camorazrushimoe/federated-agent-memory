@@ -1,0 +1,53 @@
+{
+  "request": {
+    "model": "deepseek-v4-flash",
+    "system": "You tag a finished customer-support chat so a later agent can find it.\n\nReturn ONLY a JSON object with these keys:\n  problem_shape   string, ≤12 words, lowercase, the kind of request\n  constraint      string, ≤12 words, what blocked progress, or \"none\"\n  ending          one of \"resolved\", \"unresolved\", \"escalated\", \"unknown\"\n\nRules:\n- Prefer the customer's wording for problem_shape.\n- constraint is the policy, missing data, or system limit that stalled the chat.\n  Use \"none\" if nothing blocked it.\n- ending:\n    resolved    = the request was handled in this chat\n    unresolved  = the chat ended without a fix\n    escalated   = handed to a human or another team\n    unknown     = the transcript is too thin to tell\n- Never copy customer names, emails, phones, addresses, payment numbers,\n  or raw order/account identifiers into any field. Replace them with a\n  generic token (\"order id\", \"account\", \"photo\").\n- Do not invent channel or vertical. Do not summarize the whole chat.\n- No markdown. No extra keys. No commentary.",
+    "user": "Channel: web\nVertical: retail-support\n\nTranscript:\ncustomer: Ship the replacement to [email] or call [phone]. Order [number]\nagent: I will not store the raw identifiers. Replacement is queued.\ncustomer: Ok"
+  },
+  "response": {
+    "id": "5a4f5ebc-2098-4507-b6f0-dfa3f023fae1",
+    "object": "chat.completion",
+    "created": 1787971945,
+    "model": "deepseek-v4-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"problem_shape\": \"ship replacement to contact info\", \"constraint\": \"policy not storing raw identifiers\", \"ending\": \"resolved\"}",
+          "reasoning_content": "We need answer JSON. Need obey. Need analyze transcript. Need produce only JSON.\n\nProblem shape: customer requested ship replacement to email or call phone, order number. Agent says will not store raw identifiers. Replacement queued. Customer ok. Need classify ending resolved? Agent queued replacement, likely handled. Constraint? Agent refused/does not store raw identifiers? But replacement queued. The constraint is \"cannot store raw identifiers\" maybe policy blocked storing contact info? But replacement is queued. Need problem_shape <=12 words lowercase, prefer customer wording. Could be \"ship replacement to email or call phone\" but include order? Need not copy identifiers. Use generic. Maybe \"ship replacement to contact info\" or \"replacement shipping request\". Need constraint: \"policy not storing raw identifiers\" <=12. Ending resolved because request handled in this chat: replacement queued, customer ok. Need mention no raw identifiers. JSON.\n\nNeed ensure no markdown. Let's craft:\n{\"problem_shape\": \"ship replacement to contact info\", \"constraint\": \"policy not storing raw identifiers\", \"ending\": \"resolved\"}\n\nNeed maybe \"call phone\" included? Let's think. The request is \"Ship the replacement to [email] or call [phone]. Order [number]\" The agent says \"Replacement is queued.\" That resolves. Constraint \"will not store raw identifiers\" blocked storing contact info, but not replacement. It is a policy constraint. Ending resolved.\n\nNeed final only JSON."
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 372,
+      "completion_tokens": 334,
+      "total_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 304
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 116
+    },
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+  },
+  "model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 372,
+    "completion_tokens": 334,
+    "total_tokens": 706,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 304
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 116
+  }
+}
