@@ -16,3 +16,6 @@ data/raw_gold_useful/
 data/abcd_*.jsonl
 data/preview_10.jsonl
 data/replay/
+
+# Phase C run dir packets (regenerable from raw tags)
+runs/*/packets/

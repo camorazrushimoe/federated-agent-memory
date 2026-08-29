@@ -1,0 +1,60 @@
+{
+  "run_id": "2026-08-29_PhaseC_slice_deepseek-v4-flash",
+  "created_at": "2026-08-29T12:37:44.137558+00:00",
+  "stage": "S1-slice",
+  "git_commit": "03121f2aa1e7556d53549a7f794660128e92537d (dirty)",
+  "tag_model": "deepseek-v4-flash",
+  "base_url": "https://api.deepseek.com/v1",
+  "temperature": 0,
+  "seed": 0,
+  "arm": "T+B0+B1+B2+B3 (one run, one scoring function)",
+  "config": {
+    "MAX_PACKET": 3,
+    "EXPLORE_SLOTS": 1,
+    "TAG_FIELDS_MIN": 2,
+    "DECAY_EVERY_SHOWS": 5,
+    "DECAY_AMOUNT": 0.1,
+    "GOOD_DELTA": 1.0,
+    "BAD_DELTA": -1.0,
+    "UNCLEAR_DELTA": 0.0
+  },
+  "inputs": {
+    "dialogues": {
+      "path": "data/dialogues.jsonl",
+      "sha256": "1bf94112a678575691599a908c3e33fa4945a86d4691a8210e25e5edab4dd347",
+      "rows": 1200
+    },
+    "pool_raw": {
+      "path": "data/abcd_1000_pool.jsonl",
+      "sha256": "28b77a32e58932bbf1502d73975972285ec071d03f30c6ac2b5d23cd90a5abbb"
+    },
+    "slice": {
+      "path": "data/d0_slice.jsonl",
+      "sha256": "56b5bfc0432f025f7b797e6f8824b3aaf6e86c9b9c814111349744f71bd33b81",
+      "rows": 60
+    },
+    "gold_useful": {
+      "path": "data/gold_useful.jsonl",
+      "sha256": "eeeb2e5c81bf979b9c0b2f29af707382b48441efb9d2ac4b9c0ba3215478cdbd",
+      "rows": 60,
+      "agent_labeled": true,
+      "human_gold": false,
+      "labeler_model": "deepseek-v4-pro"
+    },
+    "prompts": {
+      "path": "PROMPTS.md",
+      "sha256": "4336c7f1ba961efaf4757d20471772550ece6edc4fd0aca641544c26ac8a053f"
+    }
+  },
+  "pool_scope": {
+    "same_unlock_union": 320,
+    "note": "labeler candidate universe; all gold useful ids inside"
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "cost": "cost.json",
+    "per_query": "per_query.jsonl",
+    "audit": "audit.json"
+  },
+  "caveat": "AGENT-LABELED GOLD — NOT HUMAN GOLD"
+}

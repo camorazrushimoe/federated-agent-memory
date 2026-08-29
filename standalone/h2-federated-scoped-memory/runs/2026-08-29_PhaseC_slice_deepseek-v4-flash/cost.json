@@ -1,0 +1,17 @@
+{
+  "method": "tag tokens from provider usage (raw S2 records); packet tokens len(text)//4 fallback",
+  "tag_calls": 380,
+  "tag_tokens_in": 221591,
+  "tag_tokens_out": 96492,
+  "tag_latency_p50": null,
+  "tag_latency_p95": null,
+  "tag_latency_note": "raw tag records carry no ms; latency not measured this pass",
+  "packet_tokens_p50": 1101,
+  "packet_tokens_p95": 1101,
+  "packet_tokens_max": 1101,
+  "packet_tokens_per_query_mean": 1101.0,
+  "packet_n": 60,
+  "usd": null,
+  "implied_agent_usd_per_1000": null,
+  "card_ratio_note": "typical H1 card ~30-40 words; whole-session packet multiplier in report"
+}

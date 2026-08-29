@@ -1,0 +1,26 @@
+{
+  "A1_pool_ceiling": 0.7666666666666667,
+  "A2_gold_tag_overlap": null,
+  "A3_tag_key_bucket_median": null,
+  "A4_explore_fill_feasible": 1.0,
+  "A5_gold_coverage": {
+    "queries": 60,
+    "non_empty": 46,
+    "empty": 14
+  },
+  "A6_packet_token_ceiling": {
+    "median_transcript_tokens": 204,
+    "x_max_packet": 612
+  },
+  "notes": "A2/A3 need gold_tags (human-authored, pending founder decision ROUND-0-PLAN §8). A4 computed from actual S3 tag-retrieval.",
+  "A3_flash_schema": {
+    "query_tag_keys_unique": 60,
+    "query_tag_keys_total": 60,
+    "query_median_bucket": 1,
+    "query_tag_keys_also_in_pool": 6,
+    "pool_tag_keys_unique": 284,
+    "pool_tag_keys_total": 320,
+    "finding": "S7 ratings are keyed (session_id, query tag_key); with 60/60 unique query tag_keys (median bucket 1), learned ratings never transfer between queries -> ranker degenerates to tie-break picking. A3 predicted this (EVAL-PLAN: 'если почти все ключи уникальны — рейтинг не накопится'). gold_tags version still pending founder decision.",
+    "s3_degenerate": "channel+vertical constant ('web'/'customer-support') across the pool -> TAG_FIELDS_MIN=2 passes for every session -> 320/320 candidates for every query; retrieval is a non-filter this pass."
+  }
+}
