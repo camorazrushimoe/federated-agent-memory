@@ -27,11 +27,13 @@ copy_list=(
   D0-GOLD.md
   DATA-AUDIT.md
   ENGINEERING-LAYER.md
+  EVAL-PLAN.md
   RUN-PROTOCOL.md
   SIMPLIFICATIONS.md
   data/gold_useful.jsonl
   data/gold_useful.manifest.json
   data/d0_slice.jsonl
+  fixtures/README.md
   fixtures/dialogues.jsonl
   fixtures/gold_useful.jsonl
   fixtures/queries/d-007.json
