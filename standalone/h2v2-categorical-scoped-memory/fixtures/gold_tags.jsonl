@@ -1,0 +1,10 @@
+{"dialogue_id": "d-001", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-002", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-011", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-012", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-013", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-003", "tags": {"problem_shape": "return_refund", "constraint": "policy_block", "ending": "resolved_action"}}
+{"dialogue_id": "d-004", "tags": {"problem_shape": "account_login", "constraint": "none", "ending": "unresolved"}}
+{"dialogue_id": "d-005", "tags": {"problem_shape": "shipping_delivery", "constraint": "none", "ending": "resolved_action"}}
+{"dialogue_id": "d-014", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "resolved_action"}}
+{"dialogue_id": "d-007", "tags": {"problem_shape": "account_login", "constraint": "system_limit", "ending": "unknown"}}
