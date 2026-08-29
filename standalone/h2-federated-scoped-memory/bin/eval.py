@@ -260,6 +260,22 @@ def compute_cost(run_dir: Path, per_query: list[dict],
     p50 = pt[len(pt) // 2] if pt else 0
     p95 = _pct([float(t) for t in packet_tokens], 0.95)
     serve_lat = [float(row.get("serve_ms") or 0) for row in per_query]
+    # Round 3 recompute run (lead dispatch 2026-08-29 13:34Z): the run dir has
+    # NO local raw/tag records (they stay in the frozen Phase C run dir, see
+    # manifest.replay_of) — tag_calls MUST be 0 and the method recorded as
+    # recompute-from-frozen-tags, never as fresh S2 spend.
+    manifest = {}
+    try:
+        manifest = common.read_json(run_dir / "manifest.json")
+    except Exception:
+        pass
+    if tag_calls == 0 and manifest.get("replay_of"):
+        token_method = ("recompute-from-frozen-tags: zero new S2 calls; tag usage "
+                        "re-derived from frozen raw/tag records in replay_of="
+                        + str(manifest["replay_of"]))
+    else:
+        token_method = ("tag tokens from provider usage in raw/tag; packet tokens "
+                        "len(text)//4 fallback (EVAL-PLAN §4.6)")
     return {
         "tag_calls": tag_calls,
         "tag_tokens_in": tok_in,
@@ -279,8 +295,7 @@ def compute_cost(run_dir: Path, per_query: list[dict],
         # delegation call for untagged queries; no LLM calls inside S4/S5)
         "serve_latency_p50": _pct(serve_lat, 0.5),
         "serve_latency_p95": _pct(serve_lat, 0.95),
-        "token_method": "tag tokens from provider usage in raw/tag; packet tokens "
-                        "len(text)//4 fallback (EVAL-PLAN §4.6)",
+        "token_method": token_method,
         "price_source": None,
     }
 
@@ -547,6 +562,22 @@ def write_report(run_dir: Path, metrics: dict, cost: dict, audit: dict,
         f"- audit: A1 = {audit.get('A1', {}).get('value')}, A4 proxy = "
         f"{audit.get('A4', {}).get('proxy_unlock_universe')}, A5 pairs = "
         f"{audit.get('A5', {}).get('value')}, A6 = {audit.get('A6', {}).get('value')}",
+        "",
+        "## 1b. A3 recheck (Round 3 coarse tag_key, lead dispatch 13:34Z)",
+    ]
+    # Deterministic from the run's own pool (no LLM): unique tag_key count and
+    # median bucket size on the ACTUAL coarse keys (problem_shape|ending).
+    from collections import Counter
+    try:
+        sess = common.read_jsonl(run_dir / "data" / "sessions.jsonl")
+        keys = [s.get("tag_key", "") for s in sess if s.get("tag_key")]
+        cnt = Counter(keys)
+        med = sorted(cnt.values())[len(cnt) // 2] if cnt else 0
+        lines.append(f"- pool sessions: {len(sess)}, unique tag_keys: {len(cnt)}, "
+                     f"median bucket size: {med} (success criterion: median > 1)")
+    except Exception as exc:  # noqa: BLE001
+        lines.append(f"- A3 recheck unavailable: {exc!r}")
+    lines += [
         "",
         "## 2. Checks",
         f"- HARD {hard_passed} passed / {hard_failed} failed / {hard_def} deferred; "
