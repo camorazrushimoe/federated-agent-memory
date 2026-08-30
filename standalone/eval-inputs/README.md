@@ -1,32 +1,21 @@
-# eval-inputs — shared pack for the auto-evaluation framework
+# Auto-eval pack
 
-Not an experiment. Shared inputs and the auto-eval spec, next to the H2 / H2v2 labs.
+Shared inputs and spec for the auto-evaluation framework. All docs in this folder are in English.
 
-Read `AUTOEVAL.md` first. That is what the engineer builds.
+| file | what |
+|---|---|
+| `AUTOEVAL.md` | what to build and how to score |
+| `CATEGORIES.md` | closed procedure dictionary |
+| `MAP.md` | unlock → procedure (oracle / audit only; hide from the tagger) |
+| `d0_slice.jsonl` | 60 question ids |
+| `gold_useful.seed.jsonl` | 6-row example only, not the gold |
+| `build_ready_pack.py` | builds `dialogues_pool_320.jsonl`, `dialogues_slice_60.jsonl`, full `gold_useful.jsonl` |
 
-## One-command pack
-
-Sources already live in this repo (do not re-download):
-
-- pool raw: `standalone/h1-experience-cards/data/abcd_1000_pool.jsonl` (1000)
-- hold-out raw: `standalone/h1-experience-cards/data/abcd_200_holdout.jsonl` (200)
-- gold: `standalone/h2-federated-scoped-memory/data/gold_useful.jsonl`
+Full session jsonl files are produced by:
 
 ```bash
 python3 standalone/eval-inputs/build_ready_pack.py
 ```
 
-Writes into this folder:
-
-| file | rows | role |
-|---|---:|---|
-| `dialogues_pool_320.jsonl` | 320 | memory pool to tag (cold start) |
-| `dialogues_slice_60.jsonl` | 60 | eval questions, with transcripts |
-| `gold_useful.jsonl` | 60 | oracle usefulness labels |
-| `d0_slice.jsonl` | 60 | question ids only |
-
-The live D4 run does **not** ingest all 1000. It tags the 320-session same-unlock union, then evaluates 60 questions.
-
-`unlock` is present on the raw / packed rows so the oracle path can be audited. The tagger must **not** see `unlock`.
-
-Gold is agent-labeled (`deepseek-v4-pro`), not human gold. Do not relabel.
+Do not give `unlock` to the tagger.
+Headline metric: packet hit rate = hits / 60.

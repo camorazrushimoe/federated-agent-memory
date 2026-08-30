@@ -13,13 +13,13 @@ Reference numbers from the H2v2 close-out (same pack, live tagger `deepseek-v4-f
 
 ## Inputs
 
-Produce them with `python3 standalone/eval-inputs/build_ready_pack.py`.
+All in this folder (no other repo paths required for data):
 
 - `dialogues_pool_320.jsonl` — 320 closed sessions (memory).
-- `dialogues_slice_60.jsonl` — 60 hold-out questions.
+- `dialogues_slice_60.jsonl` — 60 hold-out questions with transcripts.
 - `gold_useful.jsonl` — per question, `useful_dialogue_ids` (may be empty).
-- Closed procedure dictionary: `standalone/h2v2-categorical-scoped-memory/bin/config.py` (`PROBLEM_SHAPES`).
-- Tagger prompts: that experiment's `PROMPTS.md` / `bin/tag.py`.
+- `CATEGORIES.md` — closed procedure dictionary (`problem_shape` ids).
+- `MAP.md` — unlock → procedure for the oracle path only.
 
 Do not pass `unlock` into the tagger.
 
