@@ -1,0 +1,23 @@
+# H2v3 local run state — never commit.
+data/dialogues.jsonl
+data/sessions.jsonl
+data/ratings.jsonl
+data/candidates.jsonl
+data/ranked.jsonl
+data/packet.json
+data/serves.jsonl
+data/outcomes.jsonl
+data/query_meta.json
+data/update_state.json
+data/raw/
+data/raw_gold_useful/
+data/abcd_*.jsonl
+data/preview_10.jsonl
+data/replay/
+data/dialogues_pool.jsonl
+data/dialogues_slice.jsonl
+runs/*/data/
+runs/*/packets/
+*.pyc
+__pycache__/
+.env
